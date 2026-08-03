@@ -1,0 +1,30 @@
+# Large data files
+*.jsonl
+*.bin
+*.pt
+*.pth
+*.zip
+*.db
+*.safetensors
+*.gguf
+
+# Model outputs (regenerable)
+stage1_sft/output/phi3_qlora/
+stage1_domain-adapt/output/model/
+stage2_sft/output/model/
+stage2_sft/output/model_direct/
+stage3_alignment/output/model/
+SecGPTv2/stage1_pre-training/step5_training/output/
+SecGPTv2/stage1_pre-training/step0_corpus/output/corpus.txt
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# OS
+Thumbs.db
+.DS_Store
+
+# HuggingFace cache
+.cache/

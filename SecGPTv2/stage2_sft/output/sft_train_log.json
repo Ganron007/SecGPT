@@ -1,0 +1,7 @@
+{
+  "steps": 1500,
+  "lr": 0.0001,
+  "total_time_s": 84.5,
+  "sft_tokens": 84948,
+  "base_checkpoint": "stage1 step 20000"
+}

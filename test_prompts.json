@@ -1,0 +1,98 @@
+{
+  "ttp": [
+    "<|ttp|>\nQ: What is MITRE technique T1059?\nA:",
+    "<|ttp|>\nQ: Explain T1055 Process Injection and how adversaries use it.\nA:",
+    "<|ttp|>\nQ: What is lateral movement and which techniques are commonly used?\nA:",
+    "<|ttp|>\nQ: Describe T1078 Valid Accounts and why it is hard to detect.\nA:",
+    "<|ttp|>\nQ: What is T1027 Obfuscated Files or Information?\nA:",
+    "<|ttp|>\nQ: How does T1082 System Information Discovery help an attacker?\nA:",
+    "<|ttp|>\nQ: What is CVE-2021-44228 (Log4Shell) and how is it exploited?\nA:",
+    "<|ttp|>\nQ: Explain the kill chain model and its stages.\nA:",
+    "<|ttp|>\nQ: What is T1486 Data Encrypted for Impact (ransomware)?\nA:",
+    "<|ttp|>\nQ: Describe T1071 Application Layer Protocol for C2 communication.\nA:"
+  ],
+  "rule": [
+    "<|rule|>\nQ: Write a Sigma rule for suspicious PowerShell encoded command execution.\nA:",
+    "<|rule|>\nQ: Write a detection rule for WMI lateral movement (wmic.exe remote execution).\nA:",
+    "<|rule|>\nQ: Write a YARA rule to detect Mimikatz in memory.\nA:",
+    "<|rule|>\nQ: Write a Sigma rule for new service creation via sc.exe.\nA:",
+    "<|rule|>\nQ: Write a detection rule for suspicious scheduled task creation.\nA:",
+    "<|rule|>\nQ: Write a Sigma rule for LSASS memory access (credential dumping).\nA:",
+    "<|rule|>\nQ: Write a detection rule for DNS tunneling indicators.\nA:",
+    "<|rule|>\nQ: Write a Sigma rule for registry Run key persistence.\nA:",
+    "<|rule|>\nQ: Write a YARA rule for Emotet malware loader.\nA:",
+    "<|rule|>\nQ: Write a detection rule for certutil file download activity.\nA:"
+  ],
+  "ref": [
+    "<|ref|>\nQ: How can certutil.exe be abused for living-off-the-land attacks?\nA:",
+    "<|ref|>\nQ: How can mshta.exe be used to execute malicious code?\nA:",
+    "<|ref|>\nQ: What is the Amcache.hve forensic artifact and why is it useful?\nA:",
+    "<|ref|>\nQ: How can regsvr32.exe bypass application whitelisting?\nA:",
+    "<|ref|>\nQ: What is the Windows Prefetch artifact and what does it prove?\nA:",
+    "<|ref|>\nQ: How can rundll32.exe be abused for code execution?\nA:",
+    "<|ref|>\nQ: What is the $MFT and how is it used in forensic investigations?\nA:",
+    "<|ref|>\nQ: How can PowerShell download cradles be used maliciously?\nA:",
+    "<|ref|>\nQ: What is the ShimCache (AppCompatCache) and what does it prove?\nA:",
+    "<|ref|>\nQ: How can wmic.exe be used for reconnaissance and lateral movement?\nA:"
+  ],
+  "kb": [
+    "<|kb|>\nQ: What is the difference between a red team and a penetration test?\nA:",
+    "<|kb|>\nQ: Explain the concept of defense in depth in cybersecurity.\nA:",
+    "<|kb|>\nQ: What is threat hunting and how does it differ from incident response?\nA:",
+    "<|kb|>\nQ: Describe the MITRE ATT&CK framework and its purpose.\nA:",
+    "<|kb|>\nQ: What is the Cyber Kill Chain model?\nA:",
+    "<|kb|>\nQ: Explain the concept of zero trust architecture.\nA:",
+    "<|kb|>\nQ: What are IOCs and IOAs in threat intelligence?\nA:",
+    "<|kb|>\nQ: Describe the incident response lifecycle (NIST).\nA:",
+    "<|kb|>\nQ: What is the difference between EDR and antivirus?\nA:",
+    "<|kb|>\nQ: Explain the concept of attacker TTPs and why they matter.\nA:"
+  ],
+  "spam": [
+    "<|spam|>\nQ: Generate an example of a phishing SMS message.\nA:",
+    "<|spam|>\nQ: Write a sample spam text about a fake prize winning.\nA:",
+    "<|spam|>\nQ: Generate a smishing message pretending to be a bank alert.\nA:",
+    "<|spam|>\nQ: Write a spam SMS advertising fake cryptocurrency investment.\nA:",
+    "<|spam|>\nQ: Generate a spam message about an urgent account suspension.\nA:",
+    "<|spam|>\nQ: Write a sample SMS scam offering free gift cards.\nA:",
+    "<|spam|>\nQ: Generate a phishing SMS pretending to be a delivery notification.\nA:",
+    "<|spam|>\nQ: Write a spam text about a limited-time discount offer.\nA:",
+    "<|spam|>\nQ: Generate a smishing message claiming suspicious login activity.\nA:",
+    "<|spam|>\nQ: Write a spam SMS about winning a lottery you never entered.\nA:"
+  ],
+  "ham": [
+    "<|ham|>\nQ: Generate a normal text message confirming dinner plans.\nA:",
+    "<|ham|>\nQ: Write a casual SMS asking a friend to call back.\nA:",
+    "<|ham|>\nQ: Generate a text message about running late to a meeting.\nA:",
+    "<|ham|>\nQ: Write a normal SMS thanking someone for help.\nA:",
+    "<|ham|>\nQ: Generate a text asking about weekend plans.\nA:",
+    "<|ham|>\nQ: Write a casual message saying you arrived safely.\nA:",
+    "<|ham|>\nQ: Generate a text reminding someone about an appointment.\nA:",
+    "<|ham|>\nQ: Write a normal SMS congratulating someone on a new job.\nA:",
+    "<|ham|>\nQ: Generate a text message asking to pick up groceries.\nA:",
+    "<|ham|>\nQ: Write a casual SMS about watching a movie tonight.\nA:"
+  ],
+  "net": [
+    "<|net|>\nQ: Generate a normal HTTP connection record in NSL-KDD format.\nA:",
+    "<|net|>\nQ: Generate a neptune (DoS) attack connection record.\nA:",
+    "<|net|>\nQ: Generate an FTP data connection record showing normal traffic.\nA:",
+    "<|net|>\nQ: Generate a smurf attack connection record in NSL-KDD format.\nA:",
+    "<|net|>\nQ: Generate a telnet connection record with backdoor indicators.\nA:",
+    "<|net|>\nQ: Generate a normal SMTP connection record.\nA:",
+    "<|net|>\nQ: Generate a portsweep (probing) attack connection record.\nA:",
+    "<|net|>\nQ: Generate a normal DNS query connection record.\nA:",
+    "<|net|>\nQ: Generate a satan (vulnerability scan) connection record.\nA:",
+    "<|net|>\nQ: Generate a normal SSH connection record in NSL-KDD format.\nA:"
+  ],
+  "malware": [
+    "<|malware|>\nQ: Generate a hex byte signature for a PE executable header.\nA:",
+    "<|malware|>\nQ: Show the first 64 bytes of a typical Windows DLL file.\nA:",
+    "<|malware|>\nQ: Generate a byte pattern characteristic of packed malware.\nA:",
+    "<|malware|>\nQ: Show the magic bytes for a PDF file used as a malware vector.\nA:",
+    "<|malware|>\nQ: Generate a hex dump showing shellcode NOP sled pattern.\nA:",
+    "<|malware|>\nQ: Show byte patterns indicating a .NET assembly malware sample.\nA:",
+    "<|malware|>\nQ: Generate hex bytes for an ELF binary header (Linux malware).\nA:",
+    "<|malware|>\nQ: Show the byte signature of a macro-enabled Office document.\nA:",
+    "<|malware|>\nQ: Generate a hex pattern for a Java class file malware dropper.\nA:",
+    "<|malware|>\nQ: Show byte patterns indicating UPX-packed executable.\nA:"
+  ]
+}

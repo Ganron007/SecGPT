@@ -1,0 +1,24 @@
+{
+  "tokenizer_type": "BPE (ByteLevel)",
+  "vocab_size": 8000,
+  "total_tokens": 33441264,
+  "train_tokens": 30097137,
+  "val_tokens": 3344127,
+  "train_ratio": 0.9,
+  "seed": 42,
+  "corpus_chars": 81340081,
+  "compression_ratio": 2.43,
+  "block_size_suggestion": 256,
+  "random_guess_loss": 8.9872,
+  "special_tokens": [
+    "<|kb|>",
+    "<|rule|>",
+    "<|ttp|>",
+    "<|ref|>",
+    "<|spam|>",
+    "<|ham|>",
+    "<|net|>",
+    "<|malware|>",
+    "<|pad|>"
+  ]
+}

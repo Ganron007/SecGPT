@@ -1,0 +1,6 @@
+{
+  "install_method": "download",
+  "bundle_tag": "triage-db-v2026.02.25",
+  "known_good_db": "known_good.db",
+  "context_db": "context.db"
+}

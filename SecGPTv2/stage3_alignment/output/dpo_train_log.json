@@ -1,0 +1,8 @@
+{
+  "steps": 500,
+  "lr": 5e-05,
+  "beta": 0.1,
+  "total_time_s": 75.2,
+  "pairs": 381,
+  "base": "stage2_sft checkpoint"
+}

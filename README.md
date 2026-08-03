@@ -1,0 +1,110 @@
+# SecGPT: Building a Cybersecurity LLM from Scratch to Production
+
+A comparative study of three approaches to building a domain-specific security language model on consumer hardware (RTX 4060 Laptop, 8 GB VRAM).
+
+## The Question
+
+> Can you build a useful cybersecurity assistant locally, and what does the journey from "random weights" to "accurate answers" actually look like?
+
+## The Three Models
+
+| | SecGPTv2 | SecGPT-Prod | SecGPTv3 |
+|---|---|---|---|
+| **Approach** | Built from scratch | Pretrained GPT-2 + SFT | Pretrained Qwen2.5-3B + QLoRA |
+| **Params** | 17.4M | 124M | 1.7B |
+| **Training data** | 77.8 MB corpus | 600 Q&A pairs | 31,111 Q&A pairs |
+| **Pipeline** | Pretrain → SFT → DPO | Domain-adapt → SFT → DPO | QLoRA SFT |
+| **Result** | Readable fragments | Broken (collapsed) | ✅ Accurate security answers |
+| **Pass rate** | 0/7 benchmarks | 0/7 benchmarks | **7/7 benchmarks** |
+| **Train time** | 51 min | 27 min | 2 hours |
+
+## Key Findings
+
+1. **From-scratch training teaches the pipeline, not the product.** SecGPTv2 demonstrates every concept (tokenization, attention, loss, generation) but can't produce useful output at 17M params.
+
+2. **Pretrained base + tiny data = failure.** GPT-2 Small with 600 SFT pairs collapsed into repetition. You need BOTH a capable base AND sufficient domain data.
+
+3. **QLoRA on a strong base + 31K pairs = working product.** Qwen2.5-3B with 4-bit quantization + LoRA adapters produces accurate MITRE descriptions, valid Sigma rules, and correct vulnerability analysis — all in 5 GB VRAM.
+
+4. **The 3-stage pipeline (Pretrain → SFT → Align) is universal.** Same pattern whether you're training from scratch or fine-tuning a 175B model. Scale changes, concepts don't.
+
+## Repository Structure
+
+```
+03_LLM_Build/
+├── README.md              ← this file
+├── test_prompts.json      ← 80 benchmark prompts (10 per category)
+│
+├── SecGPTv2/              ← From-scratch model (learning exercise)
+│   ├── llm_build.md       ← Full build log with all 3 stages
+│   ├── src/               ← Training scripts (custom GPT, tokenizer, SFT, DPO)
+│   └── stage1_pre-training/  ← 8-step pipeline with per-step docs
+│   └── stage2_sft/        ← SFT documentation + results
+│   └── stage3_alignment/  ← DPO documentation + results
+│
+├── SecGPT-Prod/           ← GPT-2 attempt (documented failure + lessons)
+│   ├── doc.md             ← Honest analysis of what went wrong
+│   └── src/               ← Pipeline scripts
+│
+└── SecGPTv3/              ← Final working model (Qwen2.5-3B + QLoRA)
+    ├── doc.md             ← Build documentation (metrics, architecture, locations)
+    ├── BENCHMARK.md       ← 7-prompt comparison across all 3 models
+    ├── USAGE.md           ← How to run and use the model
+    ├── src/               ← Dataset generation, QLoRA training, quality check
+    └── stage1_sft/        ← Trained LoRA checkpoint
+```
+
+## Quick Start (SecGPTv3)
+
+```bash
+pip install torch transformers peft bitsandbytes accelerate trl datasets
+cd SecGPTv3
+python src/quality_check.py
+```
+
+See [SecGPTv3/USAGE.md](SecGPTv3/USAGE.md) for full instructions.
+
+## Benchmark Sample
+
+**Prompt:** *"Write a Sigma detection rule for suspicious PowerShell encoded command execution."*
+
+| SecGPTv2 (17.4M) | SecGPT-Prod (124M) | SecGPTv3 (1.7B) |
+|---|---|---|
+| Format correct, content garbled | Repetitive garbage | ✅ Valid Sigma rule with proper detection logic |
+
+See [SecGPTv3/BENCHMARK.md](SecGPTv3/BENCHMARK.md) for full 7-prompt comparison.
+
+## Hardware Requirements
+
+- GPU: NVIDIA with 6+ GB VRAM (tested: RTX 4060 Laptop, 8 GB)
+- RAM: 16+ GB
+- Disk: ~10 GB (base model + dependencies)
+- Python: 3.11+
+- OS: Windows/Linux
+
+## Datasets Used
+
+| Source | Records | Content |
+|---|---|---|
+| DFIR-Nexus (MITRE, Sigma, LOLBAS, GTFOBins, etc.) | 17,950 | Detection rules, TTPs, tool references |
+| CADRE KB (SANS, HTB Academy, Malpedia, Mandiant, etc.) | 483,800 chunks | Security courses, IR reports, malware descriptions |
+| UCI SMS Spam Collection | 5,574 | Spam/ham classification |
+| NSL-KDD | 148,517 | Network intrusion detection |
+
+## What's Next
+
+- [ ] DPO alignment on SecGPTv3 (prefer structured over verbose)
+- [ ] RAG integration (retrieval over full corpus for factual grounding)
+- [ ] Scale to Qwen2.5-7B for better reasoning
+- [ ] Multi-turn conversation support
+- [ ] Security-specific evaluation framework (beyond 7 prompts)
+
+## License
+
+Educational/research use. Base models subject to their respective licenses:
+- Qwen2.5-3B-Instruct: [Qwen License](https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/blob/main/LICENSE)
+- GPT-2: OpenAI Modified MIT License
+
+## Author
+
+Built as part of the HTB AI Red Teamer certification study — learning by building.
