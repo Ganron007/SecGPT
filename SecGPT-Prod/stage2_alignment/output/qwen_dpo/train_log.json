@@ -1,0 +1,10 @@
+{
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "sft_lora": "C:\\STUDY\\Github\\SecGPT\\SecGPT-Prod\\stage1_sft\\output\\qwen_qlora\\checkpoint-500",
+  "pairs": 3818,
+  "beta": 0.3,
+  "lr": 5e-06,
+  "epochs": 1.0,
+  "effective_batch": 16,
+  "train_time_min": 147.6
+}

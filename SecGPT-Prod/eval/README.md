@@ -52,6 +52,33 @@ python src/eval.py --compare results/sft500_xxx.json results/dpo_xxx.json
 Results land in `eval/results/<name>_<timestamp>.json` (tracked in git as the
 project's progress history). Eval sets are gitignored (`*.jsonl`).
 
+## Stage history — SecGPT-Prod (Qwen2.5-3B)
+
+Standard ritual: **every model is benchmarked after every training stage**
+(SFT, DPO, scale, multi-turn). Results in `eval/results/`, comparisons here.
+
+| Stage | Checkpoint | Overall | Held-out | Recall | TTP halluc. | Result file |
+|---|---|---|---|---|---|---|
+| SFT-500 | `qwen_qlora/checkpoint-500` | 62.2% | 79.2% | 52.4% | 87.5% | `sft500_20260803_2311.json` |
+| SFT + DPO | `qwen_dpo/final` | 60.1% | 79.2% | 49.2% | 83.3% | `dpo_20260804_0248.json` |
+
+### SFT vs DPO verdict (2026-08-04)
+
+**Accuracy-neutral, slight hallucination improvement, pipeline healthy.**
+
+- DPO training was clean: 99.3% reward accuracy, margin 3.12, no collapse
+  (β=0.3, 1 epoch, 3,818 pairs, 147 min)
+- Benchmark delta: −2.1 pts overall (within noise: largest single-category
+  drops are 1–3 items), held-out identical at 79.2%
+- TTP hallucination improved 87.5% → 83.3% (−4.2 pts) but remains the
+  dominant weakness
+- **Lesson:** DPO learned the *style* preference (structured > verbose) it was
+  trained on, but the benchmark measures *accuracy* — and hallucination is a
+  knowledge problem, not a preference problem. Fixing it needs better/more
+  data (or 7B capacity), not more alignment.
+- Decision: keep `qwen_dpo/final` as the Prod reference checkpoint (equal
+  accuracy, marginally less hallucination, trained style preference).
+
 ## Baseline: SFT checkpoint-500 (Qwen2.5-3B + LoRA, 31K pairs)
 
 Run: `sft500_20260803_2311.json` — 291 prompts, greedy, batch 8, 33.7 tok/s, peak 2.5 GB VRAM.

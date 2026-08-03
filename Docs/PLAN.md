@@ -35,7 +35,7 @@ Pretrain → SFT → DPO (alignment)
 | SecGPTv2 | ✅ 20K steps | ✅ 1500 (overfit 0.16/2.18) | ✅ 500 (0.69→0.07) | ⬜ | benchmark run + results chapter |
 | SecGPTv2.5 | ⬜ | ⬜ | ⬜ | ⬜ | **everything** |
 | SecGPTv3 | ✅ OpenAI | 🟨 600 pairs (unfair) | 🟨 collapsed | ⬜ | SFT-31K → DPO fairness run |
-| SecGPT-Prod | ✅ Alibaba | ✅ 500/1500 steps | ⬜ | ⬜ | DPO + benchmark baseline |
+| SecGPT-Prod | ✅ Alibaba | ✅ 500/1500 steps | ✅ accuracy-neutral | ✅ SFT+DPO | — pipeline complete |
 
 ## SecGPTv2.5 design (from scratch, max effort on RTX 4060 8 GB)
 

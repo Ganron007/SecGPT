@@ -1,0 +1,73 @@
+================================================================
+  SecGPT-Prod Benchmark — dpo
+================================================================
+
+  Eval set: 291 prompts (model=Qwen/Qwen2.5-3B-Instruct, lora=stage2_alignment/output/qwen_dpo/final)
+  Loading LoRA: stage2_alignment/output/qwen_dpo/final
+    [ttp] 8/50
+    [ttp] 16/50
+    [ttp] 24/50
+    [ttp] 32/50
+    [ttp] 40/50
+    [ttp] 48/50
+    [ttp] 50/50
+    [rule] 8/50
+    [rule] 16/50
+    [rule] 24/50
+    [rule] 32/50
+    [rule] 40/50
+    [rule] 48/50
+    [rule] 50/50
+    [ref] 8/50
+    [ref] 16/50
+    [ref] 24/50
+    [ref] 32/50
+    [ref] 40/50
+    [ref] 48/50
+    [ref] 50/50
+    [kb] 8/40
+    [kb] 16/40
+    [kb] 24/40
+    [kb] 32/40
+    [kb] 40/40
+    [classification] 8/50
+    [classification] 16/50
+    [classification] 24/50
+    [classification] 32/50
+    [classification] 40/50
+    [classification] 48/50
+    [classification] 50/50
+    [soc_triage] 8/15
+    [soc_triage] 15/15
+    [ttp_extract] 8/10
+    [ttp_extract] 10/10
+    [forensic_interp] 8/10
+    [forensic_interp] 10/10
+    [rule_from_scenario] 8/10
+    [rule_from_scenario] 10/10
+    [consistency] 8/18
+    [consistency] 16/18
+    [consistency] 18/18
+
+================================================================
+  RESULTS: dpo
+================================================================
+  Overall pass rate:   60.1%  (291 prompts)
+  Held-out (general):  79.2%  (106)
+  Recall (trained):    49.2%  (185)
+
+  Category           n    pass                          extra
+  classification    50   82.0%                               
+  consistency        6   50.0%                               
+  forensic_interp   10   40.0%                               
+  kb                40   85.0%                               
+  ref               50   28.0%                               
+  rule              50   70.0%        yaml 6.0% / schema 0.0%
+  rule_from_scenario   10   90.0%                               
+  soc_triage        15  100.0%                               
+  ttp               50   28.0%            hallucination 83.3%
+  ttp_extract       10   60.0%                               
+
+  Perf: load 10.8s | gen 3514.4s | 22.4 tok/s | peak VRAM 2.48 GB
+
+  Saved: C:\STUDY\Github\SecGPT\SecGPT-Prod\eval\results\dpo_20260804_0248.json
