@@ -65,6 +65,7 @@ SecGPT/
 ├── README.md              ← this file
 ├── LICENSE                ← educational/research use terms
 ├── DATA.md                ← data availability + reproduction pipelines
+├── Docs/PLAN.md           ← master plan: 4-model study, status, sequence
 ├── assets/logo.svg        ← project logo
 ├── test_prompts.json      ← 80 benchmark prompts (10 per category)
 │                            (v2-style <|tag|> prefixes; strip tags for Prod chat prompts)
@@ -137,10 +138,12 @@ See [SecGPT-Prod/BENCHMARK.md](SecGPT-Prod/BENCHMARK.md) for full 7-prompt compa
 ## What's Next
 
 - [ ] DPO alignment on SecGPT-Prod (prefer structured over verbose)
-- [ ] RAG integration (retrieval over full corpus for factual grounding)
+- [x] Security-specific evaluation framework (beyond 7 prompts) → `SecGPT-Prod/eval/` (291 prompts, baseline: 62.2% overall, 87.5% TTP hallucination)
+- [ ] SecGPTv2.5: ~100M from scratch (max effort on 8 GB VRAM)
+- [ ] SecGPTv3 fairness run: GPT-2 + SFT on 31K pairs + DPO
 - [ ] Scale to Qwen2.5-7B for better reasoning
 - [ ] Multi-turn conversation support
-- [ ] Security-specific evaluation framework (beyond 7 prompts)
+- [ ] RAG integration (post-cutoff facts only; corpus already baked into weights)
 
 ## License
 
