@@ -21,8 +21,11 @@ SecGPTv2/stage1_pre-training/step0_corpus/output/corpus.txt
 SecGPTv2/data/KDD+.txt
 
 # Large tokenizer files (identical to base model's; regenerable)
-SecGPT-Prod/stage1_sft/output/qwen_qlora/checkpoint-500/tokenizer.json
+SecGPT-Prod/stage*/output/**/tokenizer.json
 SecGPTv3/*/output/model*/tokenizer.json
+
+# Run logs
+*.log
 
 # Python
 __pycache__/
