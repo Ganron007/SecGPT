@@ -64,6 +64,7 @@
 SecGPT/
 ├── README.md              ← this file
 ├── LICENSE                ← educational/research use terms
+├── DATA.md                ← data availability + reproduction pipelines
 ├── assets/logo.svg        ← project logo
 ├── test_prompts.json      ← 80 benchmark prompts (10 per category)
 │                            (v2-style <|tag|> prefixes; strip tags for v3 chat prompts)
@@ -95,36 +96,16 @@ SecGPT/
 ```bash
 pip install -r SecGPTv3/requirements.txt
 cd SecGPTv3
-python src/quality_check.py   # needs the trained LoRA adapter — see below
+python src/quality_check.py   # needs the trained LoRA adapter — see DATA.md
 ```
 
 See [SecGPTv3/USAGE.md](SecGPTv3/USAGE.md) for full instructions.
 
 ## Data Availability & Reproducing
 
-Model weights and generated datasets are **gitignored** (too large / regenerable). A fresh clone contains only code, configs, and docs. Missing pieces and how to restore them:
+Model weights and generated datasets are not tracked in git (too large / regenerable / non-redistributable) — a fresh clone contains code, configs, and docs only.
 
-| Missing (gitignored) | Needed by | How to restore |
-|---|---|---|
-| `SecGPTv3/stage1_sft/output/qwen_qlora/checkpoint-500/adapter_model.safetensors` (57 MB) — the trained LoRA | v3 inference | Retrain: steps below (~2 h on RTX 4060) |
-| `SecGPTv3/data/sft_32k.jsonl` (31,111 pairs) | v3 training | `python src/build_sft_32k.py` (reads `SecGPTv2/data/`) |
-| `SecGPTv2/data/cadre_kb.jsonl` (1.75 GB, 483K chunks) | v2 + v3 dataset builders | CADRE KB — proprietary corpus, not redistributable |
-| `SecGPTv2/data/dfir_nexus_sources/*.jsonl` (23 files) | v2 + v3 dataset builders | DFIR-Nexus exports (MITRE, Sigma, LOLBAS, GTFOBins, etc.) |
-| `SecGPTv2/data/KDD+.txt` (20 MB) | v2 corpus + v3 builder | NSL-KDD dataset (public) |
-| `SecGPTv2/data/sms+spam+collection.zip` | v2 corpus + v3 builder | UCI SMS Spam Collection (public) |
-| `SecGPTv2/data/malimg.zip` | v2 corpus | Malimg dataset (public; auto-extracted by `build_corpus.py`) |
-| `SecGPTv2/stage1_pre-training/**` checkpoints, `SecGPT-Prod/**/model.safetensors` | v2/Prod inference | Retrain per `llm_build.md` / `SecGPT-Prod/doc.md` |
-
-Without the proprietary CADRE KB and DFIR-Nexus exports the datasets cannot be regenerated at full size; the public sources (NSL-KDD, UCI SMS, Malimg) restore the classification portions.
-
-### Full v3 reproduction (given the data above)
-
-```bash
-cd SecGPTv3
-python src/build_sft_32k.py        # 1. dataset (~2 min)  → data/sft_32k.jsonl
-python src/qlora_sft.py            # 2. QLoRA training (~2 h) → stage1_sft/output/qwen_qlora/
-python src/quality_check.py        # 3. benchmark 14 prompts
-```
+See [DATA.md](DATA.md) for the annotated folder map and full reproduction pipelines.
 
 ## Benchmark Sample
 
