@@ -1,5 +1,5 @@
 """
-qlora_sft.py — SecGPTv3: QLoRA SFT on Qwen2.5-3B-Instruct with 31K security Q&A pairs.
+qlora_sft.py — SecGPT-Prod: QLoRA SFT on Qwen2.5-3B-Instruct with 31K security Q&A pairs.
 
 4-bit quantized base + LoRA adapters. Fits in ~5 GB VRAM.
 
@@ -53,7 +53,7 @@ def main():
     args = parser.parse_args()
 
     print("=" * 60)
-    print("SecGPTv3 — Qwen2.5-3B QLoRA SFT")
+    print("SecGPT-Prod — Qwen2.5-3B QLoRA SFT")
     print("=" * 60)
 
     print(f"\n  Loading dataset: {DATA_PATH}")

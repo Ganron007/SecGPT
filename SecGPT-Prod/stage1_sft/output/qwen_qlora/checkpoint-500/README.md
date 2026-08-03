@@ -11,7 +11,7 @@ tags:
 - cybersecurity
 ---
 
-# SecGPTv3 — Qwen2.5-3B Cybersecurity LoRA (checkpoint-500)
+# SecGPT-Prod — Qwen2.5-3B Cybersecurity LoRA (checkpoint-500)
 
 QLoRA adapter that turns Qwen2.5-3B-Instruct into a single-turn cybersecurity
 Q&A assistant: MITRE ATT&CK/CAPEC/KEV explanations, Sigma-style detection
@@ -28,14 +28,14 @@ SMS/network-traffic classification.
 
 ### Model Sources
 
-- **Repository:** https://github.com/ (SecGPT — see `SecGPTv3/doc.md` and `USAGE.md`)
+- **Repository:** https://github.com/ (SecGPT — see `SecGPT-Prod/doc.md` and `USAGE.md`)
 
 ## Uses
 
 ### Direct Use
 
 Single-turn security Q&A via the Qwen chat template. Load base model in
-4-bit, then apply this adapter (see `SecGPTv3/USAGE.md` for full code):
+4-bit, then apply this adapter (see `SecGPT-Prod/USAGE.md` for full code):
 
 ```python
 from peft import PeftModel
@@ -80,8 +80,8 @@ token accuracy 62.1% → 74.4% — see `trainer_state.json`).
 ## Evaluation
 
 14-prompt quality check across 5 categories (TTP, rules, tool reference,
-KB, classification): 100% pass — samples in `SecGPTv3/doc.md`. 7-prompt
-3-model comparison in `SecGPTv3/BENCHMARK.md` (7/7 vs 0/7 for the project's
+KB, classification): 100% pass — samples in `SecGPT-Prod/doc.md`. 7-prompt
+3-model comparison in `SecGPT-Prod/BENCHMARK.md` (7/7 vs 0/7 for the project's
 from-scratch and GPT-2 models).
 
 ## Environmental Impact

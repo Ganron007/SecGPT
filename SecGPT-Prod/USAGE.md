@@ -1,4 +1,4 @@
-# SecGPTv3 — Usage Guide
+# SecGPT-Prod — Usage Guide
 
 A locally-running cybersecurity assistant. Qwen2.5-3B-Instruct + QLoRA, trained on 31K security Q&A pairs. Runs on RTX 4060 Laptop (8 GB VRAM).
 
@@ -21,7 +21,7 @@ GPU: NVIDIA with 6+ GB VRAM (tested on RTX 4060 Laptop, 8 GB)
 ## Quick Start
 
 ```powershell
-cd SecGPTv3
+cd SecGPT-Prod
 python src/quality_check.py
 ```
 
@@ -51,7 +51,7 @@ model = AutoModelForCausalLM.from_pretrained(
 )
 
 # 2. Load security LoRA adapters
-LORA_PATH = "stage1_sft/output/qwen_qlora/checkpoint-500"  # run from SecGPTv3/
+LORA_PATH = "stage1_sft/output/qwen_qlora/checkpoint-500"  # run from SecGPT-Prod/
 model = PeftModel.from_pretrained(model, LORA_PATH)
 model.eval()
 
@@ -192,7 +192,7 @@ Headroom: 3 GB free. Can increase `max_new_tokens` to 512+ without OOM.
 ## Retraining / Fine-Tuning
 
 ```powershell
-cd SecGPTv3
+cd SecGPT-Prod
 
 # Regenerate dataset (if corpus changed)
 python src/build_sft_32k.py
@@ -247,7 +247,7 @@ python src/quality_check.py
 ## Citing This Work
 
 ```
-SecGPTv3: A locally-trained cybersecurity assistant
+SecGPT-Prod: A locally-trained cybersecurity assistant
 Base: Qwen2.5-3B-Instruct (Qwen Team, 2024)
 Method: QLoRA SFT on 31K security Q&A pairs
 Hardware: NVIDIA RTX 4060 Laptop (8 GB VRAM)

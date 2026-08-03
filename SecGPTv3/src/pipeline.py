@@ -271,7 +271,7 @@ def generate(model, tokenizer, prompt, max_new_tokens=200, temperature=0.7):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="SecGPT-Prod Pipeline")
+    parser = argparse.ArgumentParser(description="SecGPTv3 Pipeline")
     parser.add_argument("--stage", type=int, default=0, help="Run specific stage (1/2/3), 0=all")
     parser.add_argument("--generate", action="store_true", help="Test generation from final model")
     parser.add_argument("--prompt", type=str, default=None)

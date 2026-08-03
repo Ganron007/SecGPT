@@ -1,4 +1,4 @@
-# SecGPTv3 — Prompt Benchmark: 3-Model Comparison
+# SecGPT-Prod — Prompt Benchmark: 3-Model Comparison
 
 ## Purpose
 
@@ -7,7 +7,7 @@ Demonstrates the progression from "built from scratch" → "pretrained + tiny SF
 
 ## Models Compared
 
-| | SecGPTv2 | SecGPT-Prod | SecGPTv3 |
+| | SecGPTv2 | SecGPTv3 | SecGPT-Prod |
 |---|---|---|---|
 | Architecture | Custom GPT (from scratch) | GPT-2 Small (pretrained) | Qwen2.5-3B + QLoRA |
 | Parameters | 17.4M | 124M | 1.7B (3B total) |
@@ -38,7 +38,7 @@ may also be vulnerable to path interception if the path has one or more spaces a
 ```
 **Assessment:** ❌ Wrong technique ID (T1027 instead of T1059). Format is correct but content is mismatched. Memorized wrong associations during SFT.
 
-### SecGPT-Prod (GPT-2 Small, 124M)
+### SecGPTv3 (GPT-2 Small, 124M)
 ```
 ::: T1059 is a technique used a remote to remote the user. to perform remote a a
 and execute
@@ -56,7 +56,7 @@ Question Write detection:condition selectionselectionselectionselection
 ```
 **Assessment:** ❌ Broken English, falls into repetition loops. Recognizes "T1059" and "technique" but cannot form coherent sentences. Model collapsed during DPO.
 
-### SecGPTv3 (Qwen2.5-3B + QLoRA, 1.7B)
+### SecGPT-Prod (Qwen2.5-3B + QLoRA, 1.7B)
 ```
 ID: T1059
 
@@ -87,7 +87,7 @@ as as early as 2023(Citation: FireEye Fortgium-7.4-0xSky)
 ```
 **Assessment:** ❌ Completely wrong content. Generates detection rule fragments instead of technique explanation. Repetitive citations.
 
-### SecGPT-Prod
+### SecGPTv3
 ```
 ::: T1055 is a command injection. T is for and used primarily for ( (,),,,,) and
 may also used to (,.,. and..) of,., a,,., and..
@@ -97,7 +97,7 @@ Question Tell about Use of Susp:R
 ```
 **Assessment:** ❌ Garbage. Recognizes "T1055" and "injection" but produces nonsensical tokens. Complete failure.
 
-### SecGPTv3
+### SecGPT-Prod
 ```
 ID: T1055
 
@@ -127,7 +127,7 @@ potential spring and other services related command execution commands
 ```
 **Assessment:** ❌ Irrelevant content. Generates detection rule fragments unrelated to Log4Shell.
 
-### SecGPT-Prod
+### SecGPTv3
 ```
 ::::  V-exe :
 : : : :\exeexe
@@ -137,7 +137,7 @@ potential spring and other services related command execution commands
 ```
 **Assessment:** ❌ Complete garbage. Repetitive token loops. No recognizable content.
 
-### SecGPTv3
+### SecGPT-Prod
 ```
 Vendor: Apache
 Product: Log4j
@@ -174,7 +174,7 @@ in order to hook some names of potential processes as a path by path launching
 ```
 **Assessment:** ⚠️ Correct format (Status, Level, Author, Description) but content is garbled. "path travelt" is not a real detection. Incomplete.
 
-### SecGPT-Prod
+### SecGPTv3
 ```
 ::::S:s_cmd_
 Question Write detection:condition:_
@@ -188,7 +188,7 @@ Question Write detection: Command execution:
 ```
 **Assessment:** ❌ Garbage. Cannot produce any recognizable rule structure.
 
-### SecGPTv3
+### SecGPT-Prod
 ```
 Level: high
 Author: Ali Almatsir
@@ -230,7 +230,7 @@ Question What the security-- mitations are
 ```
 **Assessment:** ❌ Garbage. Recognizes "util.exe" fragment but cannot produce coherent content.
 
-### SecGPT-Prod
+### SecGPTv3
 ```
 ::::::
 :util.exe
@@ -246,7 +246,7 @@ Question What the security-- mitations are
 ```
 **Assessment:** ❌ Identical garbage to v2 (both models failed on this prompt type).
 
-### SecGPTv3
+### SecGPT-Prod
 ```
 certutil.exe is a Windows command-line utility that can be abused in several ways:
 
@@ -276,14 +276,14 @@ somper argent oftection essubication on the beacuted ave toke syourcesss meid.
 ```
 **Assessment:** ❌ Gibberish. No recognizable words or structure.
 
-### SecGPT-Prod
+### SecGPTv3
 ```
 :::::  Windows Pref: : :  : :  Pref: :  :  Pref:  : : :  Pref: : : : :  : :
 Pref: : :: : :  Pref: : : : : :  : :  Pref: : :: : : : : : :  Pref: ::: : ::
 ```
 **Assessment:** ❌ Repetitive token loops. No meaningful content.
 
-### SecGPTv3
+### SecGPT-Prod
 ```
 A red team engagement and a penetration test differ in scope, objectives, and methodology:
 
@@ -315,7 +315,7 @@ Red Team:
 ```
 **Assessment:** ⚠️ Echoes the input back. Cannot classify or explain. (v2 was trained on NSL-KDD as generation, not classification.)
 
-### SecGPT-Prod
+### SecGPTv3
 ```
 :::::
 :
@@ -324,7 +324,7 @@ Red Team:
 ```
 **Assessment:** ❌ No output. Complete failure.
 
-### SecGPTv3
+### SecGPT-Prod
 ```
 This is NORMAL traffic (label: normal, class 21).
 
@@ -346,7 +346,7 @@ Verdict: Legitimate HTTP session. No attack indicators present.
 
 ## Summary Scorecard
 
-| Prompt Category | SecGPTv2 (17.4M) | SecGPT-Prod (124M) | SecGPTv3 (1.7B) |
+| Prompt Category | SecGPTv2 (17.4M) | SecGPTv3 (124M) | SecGPT-Prod (1.7B) |
 |---|---|---|---|
 | MITRE technique (T1059) | ❌ Wrong ID, right format | ❌ Garbage | ✅ Accurate |
 | Process Injection (T1055) | ❌ Wrong content | ❌ Garbage | ✅ Accurate + API details |
@@ -363,7 +363,7 @@ Verdict: Legitimate HTTP session. No attack indicators present.
 
 1. **Model size alone isn't enough.** GPT-2 Small (124M) with 600 SFT pairs produced garbage. You need BOTH a capable base AND sufficient training data.
 
-2. **Data quality and quantity matter most.** SecGPTv3's 31K pairs vs SecGPT-Prod's 600 pairs is the primary differentiator — same pipeline, 50× more data.
+2. **Data quality and quantity matter most.** SecGPT-Prod's 31K pairs vs SecGPTv3's 600 pairs is the primary differentiator — same pipeline, 50× more data.
 
 3. **Pretrained knowledge is essential.** SecGPTv2 (from scratch) learned domain patterns but never achieved English fluency. Starting from a pretrained base (Qwen2.5) preserved language while adding domain knowledge.
 
@@ -380,6 +380,6 @@ Full set of 80 test prompts (10 per category) available in:
 ../test_prompts.json   (repo root)
 ```
 
-Note: prompts use the v2-style `<|tag|>` prefix format (native to SecGPTv2/Prod). SecGPTv3 takes plain questions via the Qwen chat template — strip the tag when benchmarking v3.
+Note: prompts use the v2-style `<|tag|>` prefix format (native to SecGPTv2 and SecGPTv3). SecGPT-Prod takes plain questions via the Qwen chat template — strip the tag when benchmarking Prod.
 
 Categories: ttp, rule, ref, kb, spam, ham, net, malware

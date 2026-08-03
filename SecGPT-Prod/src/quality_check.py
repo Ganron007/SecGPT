@@ -1,5 +1,5 @@
 """
-quality_check.py — SecGPTv3: Generate from trained QLoRA model and evaluate quality.
+quality_check.py — SecGPT-Prod: Generate from trained QLoRA model and evaluate quality.
 """
 import io
 import json
@@ -56,7 +56,7 @@ prompts = [
 ]
 
 print("\n" + "=" * 70)
-print("SecGPTv3 Quality Check — Qwen2.5-3B + QLoRA (31K security Q&A)")
+print("SecGPT-Prod Quality Check — Qwen2.5-3B + QLoRA (31K security Q&A)")
 print("=" * 70)
 
 results = []

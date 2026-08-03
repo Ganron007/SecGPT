@@ -1,5 +1,5 @@
 """
-build_sft_32k.py — SecGPTv3: Generate ~32K Q&A pairs from full corpus.
+build_sft_32k.py — SecGPT-Prod: Generate ~32K Q&A pairs from full corpus.
 
 Extracts from:
   - DFIR-Nexus structured sources (15K pairs)
@@ -447,7 +447,7 @@ def gen_kdd(rng, max_pairs=3000):
 def main():
     rng = random.Random(SEED)
     print("=" * 60)
-    print("SecGPTv3 — Generating ~32K SFT Dataset")
+    print("SecGPT-Prod — Generating ~32K SFT Dataset")
     print("=" * 60)
 
     generators = [

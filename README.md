@@ -23,7 +23,7 @@
 - [The Three Models](#the-three-models)
 - [Key Findings](#key-findings)
 - [Repository Structure](#repository-structure)
-- [Quick Start (SecGPTv3)](#quick-start-secgptv3)
+- [Quick Start (SecGPT-Prod)](#quick-start-secgpt-prod)
 - [Data Availability & Reproducing](#data-availability--reproducing)
 - [Benchmark Sample](#benchmark-sample)
 - [Hardware Requirements](#hardware-requirements)
@@ -38,7 +38,7 @@
 
 ## The Three Models
 
-| | SecGPTv2 | SecGPT-Prod | SecGPTv3 |
+| | SecGPTv2 | SecGPTv3 | SecGPT-Prod |
 |---|---|---|---|
 | **Approach** | Built from scratch | Pretrained GPT-2 + SFT | Pretrained Qwen2.5-3B + QLoRA |
 | **Params** | 17.4M | 124M | 1.7B |
@@ -67,7 +67,7 @@ SecGPT/
 ├── DATA.md                ← data availability + reproduction pipelines
 ├── assets/logo.svg        ← project logo
 ├── test_prompts.json      ← 80 benchmark prompts (10 per category)
-│                            (v2-style <|tag|> prefixes; strip tags for v3 chat prompts)
+│                            (v2-style <|tag|> prefixes; strip tags for Prod chat prompts)
 │
 ├── SecGPTv2/              ← From-scratch model (learning exercise)
 │   ├── llm_build.md       ← Full build log covering all 8 pre-training steps
@@ -77,12 +77,12 @@ SecGPT/
 │   ├── stage2_sft/        ← SFT documentation + results
 │   └── stage3_alignment/  ← DPO documentation + results
 │
-├── SecGPT-Prod/           ← GPT-2 attempt (documented failure + lessons)
+├── SecGPTv3/           ← GPT-2 attempt (documented failure + lessons)
 │   ├── doc.md             ← Honest analysis of what went wrong
 │   ├── requirements.txt
 │   └── src/               ← Pipeline scripts
 │
-└── SecGPTv3/              ← Final working model (Qwen2.5-3B + QLoRA)
+└── SecGPT-Prod/              ← Final working model (Qwen2.5-3B + QLoRA)
     ├── doc.md             ← Build documentation (metrics, architecture, locations)
     ├── BENCHMARK.md       ← 7-prompt comparison across all 3 models
     ├── USAGE.md           ← How to run and use the model
@@ -91,15 +91,15 @@ SecGPT/
     └── stage1_sft/        ← Trained LoRA checkpoint (weights gitignored, see below)
 ```
 
-## Quick Start (SecGPTv3)
+## Quick Start (SecGPT-Prod)
 
 ```bash
-pip install -r SecGPTv3/requirements.txt
-cd SecGPTv3
+pip install -r SecGPT-Prod/requirements.txt
+cd SecGPT-Prod
 python src/quality_check.py   # needs the trained LoRA adapter — see DATA.md
 ```
 
-See [SecGPTv3/USAGE.md](SecGPTv3/USAGE.md) for full instructions.
+See [SecGPT-Prod/USAGE.md](SecGPT-Prod/USAGE.md) for full instructions.
 
 ## Data Availability & Reproducing
 
@@ -111,11 +111,11 @@ See [DATA.md](DATA.md) for the annotated folder map and full reproduction pipeli
 
 **Prompt:** *"Write a Sigma detection rule for suspicious PowerShell encoded command execution."*
 
-| SecGPTv2 (17.4M) | SecGPT-Prod (124M) | SecGPTv3 (1.7B) |
+| SecGPTv2 (17.4M) | SecGPTv3 (124M) | SecGPT-Prod (1.7B) |
 |---|---|---|
 | Format correct, content garbled | Repetitive garbage | ✅ Valid Sigma rule with proper detection logic |
 
-See [SecGPTv3/BENCHMARK.md](SecGPTv3/BENCHMARK.md) for full 7-prompt comparison.
+See [SecGPT-Prod/BENCHMARK.md](SecGPT-Prod/BENCHMARK.md) for full 7-prompt comparison.
 
 ## Hardware Requirements
 
@@ -136,7 +136,7 @@ See [SecGPTv3/BENCHMARK.md](SecGPTv3/BENCHMARK.md) for full 7-prompt comparison.
 
 ## What's Next
 
-- [ ] DPO alignment on SecGPTv3 (prefer structured over verbose)
+- [ ] DPO alignment on SecGPT-Prod (prefer structured over verbose)
 - [ ] RAG integration (retrieval over full corpus for factual grounding)
 - [ ] Scale to Qwen2.5-7B for better reasoning
 - [ ] Multi-turn conversation support

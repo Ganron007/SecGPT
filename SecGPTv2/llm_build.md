@@ -17,7 +17,7 @@
 | **Phase 1** | Stage 1: Pretraining | `stage1_pre-training/` | ✅ Complete | Learn security text patterns (next-token prediction) |
 | **Phase A** | Stage 2: SFT | `stage2_sft/` | ✅ Complete | Follow instructions, answer security questions |
 | **Phase A** | Stage 3: Alignment | `stage3_alignment/` | ✅ Complete | Prefer accurate/safe outputs (DPO) |
-| **Phase B** | Full pipeline on pretrained base | `../SecGPT-Prod/` (future) | ☐ Planned | Take GPT-2 Small → domain-adapt → SFT → align |
+| **Phase B** | Full pipeline on pretrained base | `../SecGPTv3/` (future) | ☐ Planned | Take GPT-2 Small → domain-adapt → SFT → align |
 
 ### Phase 1: Pretraining (what we built)
 

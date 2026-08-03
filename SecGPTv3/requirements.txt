@@ -1,10 +1,4 @@
-# SecGPTv3 — Qwen2.5-3B + QLoRA (final working model)
-# Tested: Python 3.14, torch 2.11.0+cu128, transformers 5.8.1, peft 0.20.0,
-#         trl 1.9.2, datasets 5.0.1
+# SecGPTv3 — GPT-2 Small pipeline (documented failure, kept for reference)
+# Tested: Python 3.14, torch 2.11.0+cu128, transformers 5.8.1
 torch>=2.11
 transformers>=5.0
-peft>=0.20
-bitsandbytes>=0.50
-accelerate>=1.14
-trl>=1.9
-datasets>=5.0
