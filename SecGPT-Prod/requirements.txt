@@ -1,0 +1,4 @@
+# SecGPT-Prod — GPT-2 Small pipeline (documented failure, kept for reference)
+# Tested: Python 3.14, torch 2.11.0+cu128, transformers 5.8.1
+torch>=2.11
+transformers>=5.0

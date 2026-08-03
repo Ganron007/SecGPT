@@ -91,7 +91,7 @@ Taking a pretrained GPT-2 Small (124M params, already fluent in English) and run
 ## How to Reproduce
 
 ```bash
-cd C:\STUDY\HTB-COAE\03_LLM_Build\SecGPT-Prod
+cd SecGPT-Prod
 
 # Direct SFT (the working approach)
 python src/sft_direct.py

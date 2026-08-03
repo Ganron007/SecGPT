@@ -6,20 +6,12 @@ A locally-running cybersecurity assistant. Qwen2.5-3B-Instruct + QLoRA, trained 
 
 ## Requirements
 
-```
-Python 3.14+
-PyTorch 2.11+ (CUDA)
-transformers >= 5.0
-peft >= 0.20
-bitsandbytes >= 0.50
-accelerate >= 1.14
-trl >= 1.9
-datasets >= 5.0
-```
+Tested with: Python 3.14, PyTorch 2.11.0+cu128, transformers 5.8.1, peft 0.20.0, trl 1.9.2, datasets 5.0.1. Older versions within each major release should work but are untested (Python 3.11+ recommended).
 
 Install:
 ```powershell
-pip install torch transformers peft bitsandbytes accelerate trl datasets
+pip install -r requirements.txt
+# or: pip install torch transformers peft bitsandbytes accelerate trl datasets
 ```
 
 GPU: NVIDIA with 6+ GB VRAM (tested on RTX 4060 Laptop, 8 GB)
@@ -29,7 +21,7 @@ GPU: NVIDIA with 6+ GB VRAM (tested on RTX 4060 Laptop, 8 GB)
 ## Quick Start
 
 ```powershell
-cd C:\STUDY\HTB-COAE\03_LLM_Build\SecGPTv3
+cd SecGPTv3
 python src/quality_check.py
 ```
 
@@ -59,7 +51,7 @@ model = AutoModelForCausalLM.from_pretrained(
 )
 
 # 2. Load security LoRA adapters
-LORA_PATH = r"C:\STUDY\HTB-COAE\03_LLM_Build\SecGPTv3\stage1_sft\output\phi3_qlora\checkpoint-500"
+LORA_PATH = "stage1_sft/output/qwen_qlora/checkpoint-500"  # run from SecGPTv3/
 model = PeftModel.from_pretrained(model, LORA_PATH)
 model.eval()
 
@@ -164,8 +156,8 @@ ask("Classify this network connection: 0,tcp,http,SF,29,45135,0,0,0,0,0,1,0,0,0,
 | Component | Path | Size |
 |---|---|---|
 | Base model (Qwen2.5-3B) | `~/.cache/huggingface/hub/models--Qwen--Qwen2.5-3B-Instruct/` | 5.76 GB |
-| LoRA adapters (security) | `stage1_sft/output/phi3_qlora/checkpoint-500/adapter_model.safetensors` | 57 MB |
-| Tokenizer | `stage1_sft/output/phi3_qlora/checkpoint-500/tokenizer.json` | 11 MB |
+| LoRA adapters (security) | `stage1_sft/output/qwen_qlora/checkpoint-500/adapter_model.safetensors` | 57 MB |
+| Tokenizer | `stage1_sft/output/qwen_qlora/checkpoint-500/tokenizer.json` | 11 MB |
 | Training dataset | `data/sft_32k.jsonl` | 15.8 MB |
 
 **Note:** The base model downloads automatically from HuggingFace on first use (~5.76 GB). Subsequent loads use the local cache.
@@ -200,7 +192,7 @@ Headroom: 3 GB free. Can increase `max_new_tokens` to 512+ without OOM.
 ## Retraining / Fine-Tuning
 
 ```powershell
-cd C:\STUDY\HTB-COAE\03_LLM_Build\SecGPTv3
+cd SecGPTv3
 
 # Regenerate dataset (if corpus changed)
 python src/build_sft_32k.py

@@ -377,7 +377,9 @@ Verdict: Legitimate HTTP session. No attack indicators present.
 
 Full set of 80 test prompts (10 per category) available in:
 ```
-C:\STUDY\HTB-COAE\03_LLM_Build\test_prompts.json
+../test_prompts.json   (repo root)
 ```
+
+Note: prompts use the v2-style `<|tag|>` prefix format (native to SecGPTv2/Prod). SecGPTv3 takes plain questions via the Qwen chat template — strip the tag when benchmarking v3.
 
 Categories: ttp, rule, ref, kb, spam, ham, net, malware

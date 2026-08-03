@@ -9,13 +9,20 @@
 *.gguf
 
 # Model outputs (regenerable)
-stage1_sft/output/phi3_qlora/
+stage1_sft/output/qwen_qlora/
 stage1_domain-adapt/output/model/
 stage2_sft/output/model/
 stage2_sft/output/model_direct/
 stage3_alignment/output/model/
 SecGPTv2/stage1_pre-training/step5_training/output/
 SecGPTv2/stage1_pre-training/step0_corpus/output/corpus.txt
+
+# Large raw datasets (see README "Data Availability")
+SecGPTv2/data/KDD+.txt
+
+# Large tokenizer files (identical to base model's; regenerable)
+SecGPTv3/stage1_sft/output/qwen_qlora/checkpoint-500/tokenizer.json
+SecGPT-Prod/*/output/model*/tokenizer.json
 
 # Python
 __pycache__/

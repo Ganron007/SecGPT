@@ -30,13 +30,13 @@ if __name__ == "__main__":
 
 ROOT = Path(__file__).resolve().parent.parent
 DATA = ROOT / "data"
-DATASETS = ROOT.parent / "04_Datasets"
 
 CADRE_KB = DATA / "cadre_kb.jsonl"
 DFIR_DIR = DATA / "dfir_nexus_sources"
-SMS_ZIP = DATASETS / "spam" / "sms+spam+collection.zip"
-KDD_FILE = DATASETS / "network" / "KDD+.txt"
-MALIMG_DIR = DATASETS / "malware" / "malimg_paper_dataset_imgs"
+SMS_ZIP = DATA / "sms+spam+collection.zip"
+KDD_FILE = DATA / "KDD+.txt"
+MALIMG_ZIP = DATA / "malimg.zip"
+MALIMG_DIR = DATA / "malimg_paper_dataset_imgs"
 
 CORPUS_OUT = ROOT / "stage1_pre-training" / "step0_corpus" / "output" / "corpus.txt"
 
@@ -219,6 +219,10 @@ def ingest_kdd():
 
 def ingest_malimg():
     records = []
+    if not MALIMG_DIR.exists() and MALIMG_ZIP.exists():
+        print(f"  Extracting {MALIMG_ZIP} ...")
+        with zipfile.ZipFile(MALIMG_ZIP) as z:
+            z.extractall(DATA)
     if not MALIMG_DIR.exists():
         print(f"  [SKIP] {MALIMG_DIR} not found")
         return records

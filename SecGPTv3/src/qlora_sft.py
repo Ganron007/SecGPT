@@ -1,5 +1,5 @@
 """
-qlora_sft.py — SecGPTv3: QLoRA SFT on Phi-3 Mini (3.8B) with 31K security Q&A pairs.
+qlora_sft.py — SecGPTv3: QLoRA SFT on Qwen2.5-3B-Instruct with 31K security Q&A pairs.
 
 4-bit quantized base + LoRA adapters. Fits in ~5 GB VRAM.
 
@@ -31,7 +31,7 @@ if __name__ == "__main__":
 
 ROOT = Path(__file__).resolve().parent.parent
 DATA_PATH = ROOT / "data" / "sft_32k.jsonl"
-OUTPUT_DIR = ROOT / "stage1_sft" / "output" / "phi3_qlora"
+OUTPUT_DIR = ROOT / "stage1_sft" / "output" / "qwen_qlora"
 
 MODEL_NAME = "Qwen/Qwen2.5-3B-Instruct"
 MAX_SEQ_LEN = 512
@@ -53,7 +53,7 @@ def main():
     args = parser.parse_args()
 
     print("=" * 60)
-    print("SecGPTv3 — Phi-3 Mini QLoRA SFT")
+    print("SecGPTv3 — Qwen2.5-3B QLoRA SFT")
     print("=" * 60)
 
     print(f"\n  Loading dataset: {DATA_PATH}")
@@ -166,7 +166,7 @@ def main():
         json.dump(log, f, indent=2)
 
     print(f"\n{'=' * 60}")
-    print(f"  DONE — Phi-3 Mini + LoRA trained on {len(dataset):,} security Q&A pairs")
+    print(f"  DONE — Qwen2.5-3B + LoRA trained on {len(dataset):,} security Q&A pairs")
     print(f"  Test: python src/quality_check.py")
     print(f"{'=' * 60}")
 

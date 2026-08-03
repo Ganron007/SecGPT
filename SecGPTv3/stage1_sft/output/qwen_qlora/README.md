@@ -1,7 +1,7 @@
 ---
 base_model: Qwen/Qwen2.5-3B-Instruct
 library_name: transformers
-model_name: phi3_qlora
+model_name: qwen_qlora
 tags:
 - generated_from_trainer
 - trl
@@ -9,7 +9,7 @@ tags:
 licence: license
 ---
 
-# Model Card for phi3_qlora
+# Model Card for qwen_qlora
 
 This model is a fine-tuned version of [Qwen/Qwen2.5-3B-Instruct](https://huggingface.co/Qwen/Qwen2.5-3B-Instruct).
 It has been trained using [TRL](https://github.com/huggingface/trl).

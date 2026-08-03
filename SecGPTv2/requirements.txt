@@ -1,0 +1,4 @@
+# SecGPTv2 — from-scratch GPT (custom PyTorch, no HF transformers)
+# Tested: Python 3.14, torch 2.11.0+cu128, tokenizers 0.22.2
+torch>=2.11
+tokenizers>=0.22

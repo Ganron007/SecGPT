@@ -4,7 +4,7 @@
 > Built from scratch to learn the full LLM pipeline end-to-end.
 > Goal: coherent security text generation → then SFT + alignment for question-answering.
 
-**Workspace:** `C:\STUDY\HTB-COAE\03_LLM_Build\SecGPTv2\`
+**Workspace:** `SecGPTv2/` (this repo)
 **Started:** 2026-08-01
 **Hardware:** RTX 4060 Laptop, 8 GB VRAM, Python 3.14, PyTorch 2.11.0+cu128
 

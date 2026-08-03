@@ -152,7 +152,7 @@ selection:
 ## How to Reproduce
 
 ```bash
-cd C:\STUDY\HTB-COAE\03_LLM_Build\SecGPTv2
+cd SecGPTv2
 
 # Build SFT dataset
 python src/build_sft_data.py

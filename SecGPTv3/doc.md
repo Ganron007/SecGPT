@@ -14,10 +14,10 @@ SecGPTv3 is a **locally-running cybersecurity assistant** built by fine-tuning Q
 | LoRA config | r=16, alpha=32, target: q/k/v/o/gate/up/down_proj |
 | Trainable params | 29,933,568 (1.76% of total) |
 | Dataset | 31,111 security Q&A pairs (15.8 MB) |
-| Training | 950 steps, loss 1.34 → 1.13, 75.5% token accuracy |
+| Training | 500 steps (of 1500 planned), loss 2.00 → 1.18, 74.4% token accuracy |
 | VRAM used | ~5 GB (fits comfortably in 8 GB) |
 | Training time | ~2 hours |
-| Checkpoint | `stage1_sft/output/phi3_qlora/checkpoint-500/` |
+| Checkpoint | `stage1_sft/output/qwen_qlora/checkpoint-500/` |
 | Inference speed | ~20-30 seconds per response (300 tokens) |
 
 ---
@@ -36,7 +36,7 @@ What:     The pretrained language model. Knows English, general knowledge, reaso
 ### LoRA Adapters (the security training)
 
 ```
-Location: C:\STUDY\HTB-COAE\03_LLM_Build\SecGPTv3\stage1_sft\output\phi3_qlora\checkpoint-500\
+Location: SecGPTv3/stage1_sft/output/qwen_qlora/checkpoint-500/  (this repo, weights gitignored)
 Files:
   adapter_model.safetensors   57.16 MB  ← THE TRAINED WEIGHTS (this IS the "security knowledge")
   adapter_config.json          0.01 MB  ← LoRA configuration
@@ -101,15 +101,13 @@ SFTConfig(max_steps=1500, learning_rate=2e-4, batch_size=4, gradient_accumulatio
 
 | Step | Loss | Token Accuracy | LR |
 |---|---|---|---|
-| 0 | ~2.5 | ~50% | 2e-4 |
+| 100 | 1.999 | 62.1% | 1.98e-4 |
 | 200 | 1.339 | 71.7% | 1.98e-4 |
+| 300 | 1.235 | 73.6% | 1.90e-4 |
 | 400 | 1.195 | 74.4% | 1.78e-4 |
 | 500 | 1.176 | 74.4% | 1.63e-4 |
-| 600 | 1.148 | 75.1% | 1.44e-4 |
-| 800 | 1.130 | 75.5% | 1.00e-4 |
-| 900 | 1.132 | 75.4% | 7.8e-5 |
 
-Loss plateaued at ~1.13 by step 800. Checkpoint saved at step 500 (loss 1.176 — within 4% of final).
+Training was stopped at step 500 of the planned 1500 (loss 1.176, still decreasing slowly). `checkpoint-500` is the final artifact; figures above are from its `trainer_state.json`.
 
 ---
 
@@ -118,7 +116,7 @@ Loss plateaued at ~1.13 by step 800. Checkpoint saved at step 500 (loss 1.176 �
 ### Quick Start (Interactive)
 
 ```powershell
-cd C:\STUDY\HTB-COAE\03_LLM_Build\SecGPTv3
+cd SecGPTv3
 python src/quality_check.py
 ```
 
@@ -136,7 +134,7 @@ model = AutoModelForCausalLM.from_pretrained("Qwen/Qwen2.5-3B-Instruct",
     quantization_config=bnb, device_map="auto", torch_dtype=torch.bfloat16)
 
 # Load security LoRA adapters
-model = PeftModel.from_pretrained(model, r"C:\STUDY\HTB-COAE\03_LLM_Build\SecGPTv3\stage1_sft\output\phi3_qlora\checkpoint-500")
+model = PeftModel.from_pretrained(model, "stage1_sft/output/qwen_qlora/checkpoint-500")  # run from SecGPTv3/
 model.eval()
 tokenizer = AutoTokenizer.from_pretrained("Qwen/Qwen2.5-3B-Instruct")
 
@@ -157,7 +155,7 @@ print(ask("How can certutil.exe be abused?"))
 ### Command-Line Generation
 
 ```powershell
-cd C:\STUDY\HTB-COAE\03_LLM_Build\SecGPTv3
+cd SecGPTv3
 python src/quality_check.py
 ```
 
@@ -261,7 +259,7 @@ python src/quality_check.py
 ## File Structure
 
 ```
-03_LLM_Build/SecGPTv3/
+SecGPTv3/
 ├── doc.md                          ← this file
 ├── src/
 │   ├── build_sft_32k.py           ← dataset generation script
@@ -271,7 +269,7 @@ python src/quality_check.py
 │   └── sft_32k.jsonl              ← 31,111 Q&A pairs (15.8 MB, gitignored)
 └── stage1_sft/
     └── output/
-        └── phi3_qlora/
+        └── qwen_qlora/
             └── checkpoint-500/
                 ├── adapter_model.safetensors  ← LoRA weights (57 MB)
                 ├── adapter_config.json        ← LoRA config
@@ -289,7 +287,7 @@ External (HuggingFace cache):
 
 ```powershell
 # Full pipeline from scratch:
-cd C:\STUDY\HTB-COAE\03_LLM_Build\SecGPTv3
+cd SecGPTv3
 
 # 1. Generate dataset (~2 min)
 python src/build_sft_32k.py

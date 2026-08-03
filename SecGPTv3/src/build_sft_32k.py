@@ -383,7 +383,7 @@ def gen_kb(rng, max_pairs=12000):
 def gen_sms(rng, max_pairs=2000):
     import zipfile
     pairs = []
-    sms_zip = ROOT.parent.parent / "04_Datasets" / "spam" / "sms+spam+collection.zip"
+    sms_zip = DATA / "sms+spam+collection.zip"
     if not sms_zip.exists():
         return pairs
     with zipfile.ZipFile(sms_zip) as z:
@@ -409,7 +409,7 @@ def gen_sms(rng, max_pairs=2000):
 
 def gen_kdd(rng, max_pairs=3000):
     pairs = []
-    kdd_file = ROOT.parent.parent / "04_Datasets" / "network" / "KDD+.txt"
+    kdd_file = DATA / "KDD+.txt"
     if not kdd_file.exists():
         return pairs
     lines = kdd_file.read_text(encoding="utf-8", errors="replace").splitlines()
@@ -510,7 +510,7 @@ def main():
     size_mb = out_path.stat().st_size / 1024 / 1024
     print(f"\n  Written: {out_path} ({size_mb:.1f} MB)")
     print(f"\n{'=' * 60}")
-    print(f"  DONE — {len(all_pairs):,} SFT pairs ready for Phi-3 Mini QLoRA")
+    print(f"  DONE — {len(all_pairs):,} SFT pairs ready for Qwen2.5-3B QLoRA")
     print(f"{'=' * 60}")
 
 

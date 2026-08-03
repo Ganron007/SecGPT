@@ -1,0 +1,36 @@
+SecGPT — Educational / Research Use License
+
+Copyright (c) 2026 SecGPT author(s)
+
+Permission is granted to use, copy, and modify the code and documentation in
+this repository for educational and research purposes only, provided this
+notice is retained. Commercial use is not permitted without prior written
+permission from the author.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+
+Third-party components and content
+----------------------------------
+This repository builds on, and its documentation references, third-party
+material that remains subject to its own licenses and terms:
+
+- Qwen2.5-3B-Instruct — Qwen License
+  (https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/blob/main/LICENSE)
+- GPT-2 — OpenAI Modified MIT License
+- NSL-KDD, UCI SMS Spam Collection, Malimg — public research datasets,
+  subject to their original terms of use
+- Training corpora referenced in the documentation (DFIR-Nexus exports,
+  CADRE KB chunks derived from commercial courses such as SANS, HTB
+  Academy, Offensive Security, etc.) are NOT included in this repository
+  and may NOT be redistributed. They were used locally for personal
+  educational purposes only. Obtain your own licenses/copies from the
+  respective providers.
+
+Responsible use
+---------------
+The models and benchmark prompts in this project include offensive-security
+content (red team study). They are provided for authorized security research
+and education only. Do not use them against systems you do not own or lack
+explicit permission to test.

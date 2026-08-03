@@ -12,7 +12,7 @@ from peft import PeftModel
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace", line_buffering=True)
 
 ROOT = Path(__file__).resolve().parent.parent
-LORA_PATH = ROOT / "stage1_sft" / "output" / "phi3_qlora" / "checkpoint-500"
+LORA_PATH = ROOT / "stage1_sft" / "output" / "qwen_qlora" / "checkpoint-500"
 BASE_MODEL = "Qwen/Qwen2.5-3B-Instruct"
 DEVICE = "cuda"
 

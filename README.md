@@ -1,6 +1,36 @@
-# SecGPT: Building a Cybersecurity LLM from Scratch to Production
+<div align="center">
+  <img src="assets/logo.svg" alt="SecGPT logo" width="720"/>
 
-A comparative study of three approaches to building a domain-specific security language model on consumer hardware (RTX 4060 Laptop, 8 GB VRAM).
+  # SecGPT
+
+  **Building a Cybersecurity LLM from Scratch to Production**
+
+  [![Python](https://img.shields.io/badge/python-3.11%2B-blue)]()
+  [![PyTorch](https://img.shields.io/badge/PyTorch-2.11-ee4c2c)]()
+  [![Base Model](https://img.shields.io/badge/base-Qwen2.5--3B-7b61ff)]()
+  [![Benchmarks](https://img.shields.io/badge/benchmarks-7%2F7-brightgreen)]()
+  [![License](https://img.shields.io/badge/license-educational%2Fresearch-lightgrey)](LICENSE)
+
+  A comparative study of three approaches to building a domain-specific security
+  language model on consumer hardware (RTX 4060 Laptop, 8 GB VRAM).
+</div>
+
+---
+
+## Table of Contents
+
+- [The Question](#the-question)
+- [The Three Models](#the-three-models)
+- [Key Findings](#key-findings)
+- [Repository Structure](#repository-structure)
+- [Quick Start (SecGPTv3)](#quick-start-secgptv3)
+- [Data Availability & Reproducing](#data-availability--reproducing)
+- [Benchmark Sample](#benchmark-sample)
+- [Hardware Requirements](#hardware-requirements)
+- [Datasets Used](#datasets-used)
+- [What's Next](#whats-next)
+- [License](#license)
+- [Author](#author)
 
 ## The Question
 
@@ -31,38 +61,70 @@ A comparative study of three approaches to building a domain-specific security l
 ## Repository Structure
 
 ```
-03_LLM_Build/
+SecGPT/
 ├── README.md              ← this file
+├── LICENSE                ← educational/research use terms
+├── assets/logo.svg        ← project logo
 ├── test_prompts.json      ← 80 benchmark prompts (10 per category)
+│                            (v2-style <|tag|> prefixes; strip tags for v3 chat prompts)
 │
 ├── SecGPTv2/              ← From-scratch model (learning exercise)
-│   ├── llm_build.md       ← Full build log with all 3 stages
+│   ├── llm_build.md       ← Full build log covering all 8 pre-training steps
+│   ├── requirements.txt
 │   ├── src/               ← Training scripts (custom GPT, tokenizer, SFT, DPO)
-│   └── stage1_pre-training/  ← 8-step pipeline with per-step docs
-│   └── stage2_sft/        ← SFT documentation + results
+│   ├── stage1_pre-training/  ← 8-step pipeline (input/output dirs per step)
+│   ├── stage2_sft/        ← SFT documentation + results
 │   └── stage3_alignment/  ← DPO documentation + results
 │
 ├── SecGPT-Prod/           ← GPT-2 attempt (documented failure + lessons)
 │   ├── doc.md             ← Honest analysis of what went wrong
+│   ├── requirements.txt
 │   └── src/               ← Pipeline scripts
 │
 └── SecGPTv3/              ← Final working model (Qwen2.5-3B + QLoRA)
     ├── doc.md             ← Build documentation (metrics, architecture, locations)
     ├── BENCHMARK.md       ← 7-prompt comparison across all 3 models
     ├── USAGE.md           ← How to run and use the model
+    ├── requirements.txt
     ├── src/               ← Dataset generation, QLoRA training, quality check
-    └── stage1_sft/        ← Trained LoRA checkpoint
+    └── stage1_sft/        ← Trained LoRA checkpoint (weights gitignored, see below)
 ```
 
 ## Quick Start (SecGPTv3)
 
 ```bash
-pip install torch transformers peft bitsandbytes accelerate trl datasets
+pip install -r SecGPTv3/requirements.txt
 cd SecGPTv3
-python src/quality_check.py
+python src/quality_check.py   # needs the trained LoRA adapter — see below
 ```
 
 See [SecGPTv3/USAGE.md](SecGPTv3/USAGE.md) for full instructions.
+
+## Data Availability & Reproducing
+
+Model weights and generated datasets are **gitignored** (too large / regenerable). A fresh clone contains only code, configs, and docs. Missing pieces and how to restore them:
+
+| Missing (gitignored) | Needed by | How to restore |
+|---|---|---|
+| `SecGPTv3/stage1_sft/output/qwen_qlora/checkpoint-500/adapter_model.safetensors` (57 MB) — the trained LoRA | v3 inference | Retrain: steps below (~2 h on RTX 4060) |
+| `SecGPTv3/data/sft_32k.jsonl` (31,111 pairs) | v3 training | `python src/build_sft_32k.py` (reads `SecGPTv2/data/`) |
+| `SecGPTv2/data/cadre_kb.jsonl` (1.75 GB, 483K chunks) | v2 + v3 dataset builders | CADRE KB — proprietary corpus, not redistributable |
+| `SecGPTv2/data/dfir_nexus_sources/*.jsonl` (23 files) | v2 + v3 dataset builders | DFIR-Nexus exports (MITRE, Sigma, LOLBAS, GTFOBins, etc.) |
+| `SecGPTv2/data/KDD+.txt` (20 MB) | v2 corpus + v3 builder | NSL-KDD dataset (public) |
+| `SecGPTv2/data/sms+spam+collection.zip` | v2 corpus + v3 builder | UCI SMS Spam Collection (public) |
+| `SecGPTv2/data/malimg.zip` | v2 corpus | Malimg dataset (public; auto-extracted by `build_corpus.py`) |
+| `SecGPTv2/stage1_pre-training/**` checkpoints, `SecGPT-Prod/**/model.safetensors` | v2/Prod inference | Retrain per `llm_build.md` / `SecGPT-Prod/doc.md` |
+
+Without the proprietary CADRE KB and DFIR-Nexus exports the datasets cannot be regenerated at full size; the public sources (NSL-KDD, UCI SMS, Malimg) restore the classification portions.
+
+### Full v3 reproduction (given the data above)
+
+```bash
+cd SecGPTv3
+python src/build_sft_32k.py        # 1. dataset (~2 min)  → data/sft_32k.jsonl
+python src/qlora_sft.py            # 2. QLoRA training (~2 h) → stage1_sft/output/qwen_qlora/
+python src/quality_check.py        # 3. benchmark 14 prompts
+```
 
 ## Benchmark Sample
 
@@ -101,7 +163,7 @@ See [SecGPTv3/BENCHMARK.md](SecGPTv3/BENCHMARK.md) for full 7-prompt comparison.
 
 ## License
 
-Educational/research use. Base models subject to their respective licenses:
+Educational/research use — see [LICENSE](LICENSE). Base models subject to their respective licenses:
 - Qwen2.5-3B-Instruct: [Qwen License](https://huggingface.co/Qwen/Qwen2.5-3B-Instruct/blob/main/LICENSE)
 - GPT-2: OpenAI Modified MIT License
 

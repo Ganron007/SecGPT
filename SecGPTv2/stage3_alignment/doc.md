@@ -148,7 +148,7 @@ These limitations are inherent to a 17.4M param model with 77 MB of training dat
 ## How to Reproduce
 
 ```bash
-cd C:\STUDY\HTB-COAE\03_LLM_Build\SecGPTv2
+cd SecGPTv2
 
 # Build preference pairs
 python src/build_dpo_data.py
