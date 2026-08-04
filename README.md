@@ -15,6 +15,9 @@
   language model on consumer hardware (RTX 4060 Laptop, 8 GB VRAM).
 </div>
 
+> [!NOTE]
+> **Feature testing in progress.** SecGPT-Prod (Qwen2.5-3B + QLoRA) is far enough along for research demos and the 291-prompt benchmark, but training recipes, eval harness, and “from scratch → production” paths are still being validated. Expect data layouts, checkpoints, and docs to keep evolving.
+
 ---
 
 ## Table of Contents
