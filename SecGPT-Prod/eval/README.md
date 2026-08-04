@@ -59,8 +59,33 @@ Standard ritual: **every model is benchmarked after every training stage**
 
 | Stage | Checkpoint | Overall | Held-out | Recall | TTP halluc. | Result file |
 |---|---|---|---|---|---|---|
+| **Base (control)** | none (raw Qwen2.5-3B-Instruct) | 44.7% | 58.5% | 36.8% | **20.0%** | `qwenbase_20260804_0550.json` |
 | SFT-500 | `qwen_qlora/checkpoint-500` | 62.2% | 79.2% | 52.4% | 87.5% | `sft500_20260803_2311.json` |
 | SFT + DPO | `qwen_dpo/final` | 60.1% | 79.2% | 49.2% | 83.3% | `dpo_20260804_0248.json` |
+
+### Base vs SFT — the control experiment (2026-08-04)
+
+**SFT taught behavior but corrupted factual grounding.**
+
+| Category | Base | SFT | Δ | Interpretation |
+|---|---|---|---|---|
+| classification | 44.0% | 82.0% | **+38** | SFT taught the task |
+| rule | 24.0% | 72.0% | **+48** | SFT taught the format |
+| rule_from_scenario | 20.0% | 100% | **+80** | biggest real gain |
+| ttp_extract | 30.0% | 60.0% | **+30** | real gain |
+| ref (LOLBAS/tools) | 44.0% | 34.0% | **−10** | SFT made it WORSE |
+| **TTP hallucination** | **20.0%** | **87.5%** | **+67.5** | **SFT taught overconfident ID-citing** |
+| kb / consistency / soc_triage / ttp | ≈equal | ≈equal | 0 | pretrained skills |
+
+**The study's clearest finding:** template-generated SFT data (fixed question
+templates + truncated 600-char source excerpts) teaches *task behavior*
+(classify, write rules, extract) but *degrades knowledge* — the model learned
+to answer in "ID + Description" format with confident, often wrong ID
+attributions. Base Qwen is 4.4× more honest about technique IDs.
+
+**Implication:** the next data iteration must be knowledge-anchored (complete,
+correct ID↔description mappings, no mid-context truncation) rather than more
+of the same. DPO slightly recovered honesty (87.5→83.3%).
 
 ### SFT vs DPO verdict (2026-08-04)
 
