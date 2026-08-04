@@ -52,6 +52,7 @@ def main():
     parser.add_argument("--grad-accum", type=int, default=4)
     parser.add_argument("--lora-r", type=int, default=16)
     parser.add_argument("--lora-alpha", type=int, default=32)
+    parser.add_argument("--resume", action="store_true", help="resume from latest checkpoint in output dir")
     args = parser.parse_args()
     data_path = Path(args.data)
     output_dir = Path(args.output_dir)
@@ -116,7 +117,7 @@ def main():
         lr_scheduler_type="cosine",
         warmup_steps=100,
         logging_steps=100,
-        save_steps=500,
+        save_steps=100,
         save_total_limit=2,
         bf16=True,
         optim="paged_adamw_8bit",
@@ -143,8 +144,18 @@ def main():
     print(f"    Optimizer: paged_adamw_8bit")
     print(f"\n  Starting training...")
 
+    resume_from = None
+    if args.resume:
+        checkpoints = sorted(output_dir.glob("checkpoint-*"),
+                             key=lambda p: int(p.name.split("-")[1]))
+        if checkpoints:
+            resume_from = str(checkpoints[-1])
+            print(f"  Resuming from {resume_from}")
+        else:
+            print("  --resume set but no checkpoint found; starting fresh")
+
     t0 = time.time()
-    trainer.train()
+    trainer.train(resume_from_checkpoint=resume_from)
     total = time.time() - t0
 
     print(f"\n  Training complete in {total:.0f}s ({total/60:.1f} min)")
