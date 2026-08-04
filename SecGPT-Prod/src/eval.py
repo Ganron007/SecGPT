@@ -318,31 +318,27 @@ def print_report(name, metrics):
         print(f"  {cat:15s} {e['n']:>4d} {e['pass_rate']:>7.1%} {extra:>30s}")
 
 
-def compare(path_a, path_b):
-    a = json.loads(Path(path_a).read_text(encoding="utf-8"))
-    b = json.loads(Path(path_b).read_text(encoding="utf-8"))
-    print(f"\n{'=' * 64}")
-    print(f"  COMPARE: {a['name']}  vs  {b['name']}")
-    print(f"{'=' * 64}")
-    cats = sorted(set(a["metrics"]["per_category"]) | set(b["metrics"]["per_category"]))
-    print(f"\n  {'Category':15s} {a['name'][:14]:>14s} {b['name'][:14]:>14s} {'delta':>8s}")
+def compare(paths):
+    results = [json.loads(Path(p).read_text(encoding="utf-8")) for p in paths]
+    names = [r["name"] for r in results]
+    width = max(12, max(len(n) for n in names) + 2)
+    print(f"\n{'=' * (24 + width * len(results))}")
+    print(f"  COMPARE: {'  vs  '.join(names)}")
+    print(f"{'=' * (24 + width * len(results))}")
+
+    def row(label, values):
+        cells = "".join(f"{v:>{width}.1%}" if v is not None else f"{'—':>{width}}" for v in values)
+        print(f"  {label:20s}{cells}")
+
+    cats = sorted({c for r in results for c in r["metrics"]["per_category"]})
+    print(f"\n  {'':20s}" + "".join(f"{n:>{width}s}" for n in names))
     for cat in cats:
-        ra = a["metrics"]["per_category"].get(cat, {}).get("pass_rate")
-        rb = b["metrics"]["per_category"].get(cat, {}).get("pass_rate")
-        if ra is None or rb is None:
-            continue
-        print(f"  {cat:15s} {ra:>14.1%} {rb:>14.1%} {rb - ra:>+8.1%}")
-    oa = a["metrics"]["overall"]["pass_rate"]
-    ob = b["metrics"]["overall"]["pass_rate"]
-    ha = a["metrics"]["overall"]["held_out"]["pass_rate"]
-    hb = b["metrics"]["overall"]["held_out"]["pass_rate"]
-    print(f"\n  {'OVERALL':15s} {oa:>14.1%} {ob:>14.1%} {ob - oa:>+8.1%}")
-    print(f"  {'HELD-OUT':15s} {ha:>14.1%} {hb:>14.1%} {hb - ha:>+8.1%}")
-    for key in ("hallucination_rate",):
-        ta = a["metrics"]["per_category"].get("ttp", {}).get(key)
-        tb = b["metrics"]["per_category"].get("ttp", {}).get(key)
-        if ta is not None and tb is not None:
-            print(f"  {'TTP halluc.':15s} {ta:>14.1%} {tb:>14.1%} {tb - ta:>+8.1%}")
+        row(cat, [r["metrics"]["per_category"].get(cat, {}).get("pass_rate") for r in results])
+    print()
+    row("OVERALL", [r["metrics"]["overall"]["pass_rate"] for r in results])
+    row("HELD-OUT", [r["metrics"]["overall"]["held_out"]["pass_rate"] for r in results])
+    row("RECALL", [r["metrics"]["overall"]["recall"]["pass_rate"] for r in results])
+    row("TTP halluc.", [r["metrics"]["per_category"].get("ttp", {}).get("hallucination_rate") for r in results])
 
 
 def main():
@@ -353,12 +349,12 @@ def main():
     parser.add_argument("--name", default=None)
     parser.add_argument("--limit", type=int, default=None)
     parser.add_argument("--batch", type=int, default=8)
-    parser.add_argument("--compare", nargs=2, metavar=("A", "B"))
+    parser.add_argument("--compare", nargs="+", metavar="RESULT", help="compare 2+ result JSONs")
     parser.add_argument("--set", choices=["eval", "practical", "all"], default="all")
     args = parser.parse_args()
 
     if args.compare:
-        compare(args.compare[0], args.compare[1])
+        compare(args.compare)
         return
 
     lora = None if args.no_lora else args.lora

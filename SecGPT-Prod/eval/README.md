@@ -55,7 +55,8 @@ project's progress history). Eval sets are gitignored (`*.jsonl`).
 ## Stage history — SecGPT-Prod (Qwen2.5-3B)
 
 Standard ritual: **every model is benchmarked after every training stage**
-(SFT, DPO, scale, multi-turn). Results in `eval/results/`, comparisons here.
+(base control, SFT, DPO, scale, multi-turn). Results in `eval/results/`;
+N-way comparisons via `python src/eval.py --compare a.json b.json c.json ...`.
 
 | Stage | Checkpoint | Overall | Held-out | Recall | TTP halluc. | Result file |
 |---|---|---|---|---|---|---|
@@ -63,46 +64,38 @@ Standard ritual: **every model is benchmarked after every training stage**
 | SFT-500 | `qwen_qlora/checkpoint-500` | 62.2% | 79.2% | 52.4% | 87.5% | `sft500_20260803_2311.json` |
 | SFT + DPO | `qwen_dpo/final` | 60.1% | 79.2% | 49.2% | 83.3% | `dpo_20260804_0248.json` |
 
-### Base vs SFT — the control experiment (2026-08-04)
+### Full 3-way comparison
 
-**SFT taught behavior but corrupted factual grounding.**
+```
+                        qwenbase      sft500         dpo
+classification             44.0%       82.0%       82.0%
+consistency                50.0%       50.0%       50.0%
+forensic_interp            40.0%       50.0%       40.0%
+kb                         85.0%       85.0%       85.0%
+ref                        44.0%       34.0%       28.0%
+rule                       24.0%       72.0%       70.0%
+rule_from_scenario         20.0%      100.0%       90.0%
+soc_triage                100.0%      100.0%      100.0%
+ttp                        26.0%       28.0%       28.0%
+ttp_extract                30.0%       60.0%       60.0%
 
-| Category | Base | SFT | Δ | Interpretation |
-|---|---|---|---|---|
-| classification | 44.0% | 82.0% | **+38** | SFT taught the task |
-| rule | 24.0% | 72.0% | **+48** | SFT taught the format |
-| rule_from_scenario | 20.0% | 100% | **+80** | biggest real gain |
-| ttp_extract | 30.0% | 60.0% | **+30** | real gain |
-| ref (LOLBAS/tools) | 44.0% | 34.0% | **−10** | SFT made it WORSE |
-| **TTP hallucination** | **20.0%** | **87.5%** | **+67.5** | **SFT taught overconfident ID-citing** |
-| kb / consistency / soc_triage / ttp | ≈equal | ≈equal | 0 | pretrained skills |
+OVERALL                    44.7%       62.2%       60.1%
+HELD-OUT                   58.5%       79.2%       79.2%
+RECALL                     36.8%       52.4%       49.2%
+TTP halluc.                20.0%       87.5%       83.3%
+```
 
-**The study's clearest finding:** template-generated SFT data (fixed question
-templates + truncated 600-char source excerpts) teaches *task behavior*
-(classify, write rules, extract) but *degrades knowledge* — the model learned
-to answer in "ID + Description" format with confident, often wrong ID
-attributions. Base Qwen is 4.4× more honest about technique IDs.
+### Findings
 
-**Implication:** the next data iteration must be knowledge-anchored (complete,
-correct ID↔description mappings, no mid-context truncation) rather than more
-of the same. DPO slightly recovered honesty (87.5→83.3%).
-
-### SFT vs DPO verdict (2026-08-04)
-
-**Accuracy-neutral, slight hallucination improvement, pipeline healthy.**
-
-- DPO training was clean: 99.3% reward accuracy, margin 3.12, no collapse
-  (β=0.3, 1 epoch, 3,818 pairs, 147 min)
-- Benchmark delta: −2.1 pts overall (within noise: largest single-category
-  drops are 1–3 items), held-out identical at 79.2%
-- TTP hallucination improved 87.5% → 83.3% (−4.2 pts) but remains the
-  dominant weakness
-- **Lesson:** DPO learned the *style* preference (structured > verbose) it was
-  trained on, but the benchmark measures *accuracy* — and hallucination is a
-  knowledge problem, not a preference problem. Fixing it needs better/more
-  data (or 7B capacity), not more alignment.
-- Decision: keep `qwen_dpo/final` as the Prod reference checkpoint (equal
-  accuracy, marginally less hallucination, trained style preference).
+1. **SFT taught behavior** (real gains): rule +48, rule_from_scenario +80,
+   classification +38, ttp_extract +30 over base.
+2. **SFT corrupted factual grounding** (the corpus flaw): TTP hallucination
+   20% → 87.5%; ref knowledge −10 vs base. Template pairs with truncated
+   600-char answers taught confident, wrong ID↔description mappings.
+3. **DPO was accuracy-neutral** (within noise) but slightly recovered honesty
+   (87.5 → 83.3%). Style alignment can't fix a knowledge problem.
+4. **Conclusion:** next iteration is data *quality* (complete, verified,
+   anchored answers + hard negatives), not more scale or alignment.
 
 ## Baseline: SFT checkpoint-500 (Qwen2.5-3B + LoRA, 31K pairs)
 
