@@ -44,6 +44,8 @@ def format_example(example):
 
 def main():
     parser = argparse.ArgumentParser()
+    parser.add_argument("--data", default=str(DATA_PATH))
+    parser.add_argument("--output-dir", default=str(OUTPUT_DIR))
     parser.add_argument("--steps", type=int, default=1500)
     parser.add_argument("--lr", type=float, default=2e-4)
     parser.add_argument("--batch-size", type=int, default=4)
@@ -51,14 +53,16 @@ def main():
     parser.add_argument("--lora-r", type=int, default=16)
     parser.add_argument("--lora-alpha", type=int, default=32)
     args = parser.parse_args()
+    data_path = Path(args.data)
+    output_dir = Path(args.output_dir)
 
     print("=" * 60)
     print("SecGPT-Prod — Qwen2.5-3B QLoRA SFT")
     print("=" * 60)
 
-    print(f"\n  Loading dataset: {DATA_PATH}")
+    print(f"\n  Loading dataset: {data_path}")
     pairs = []
-    with open(DATA_PATH, "r", encoding="utf-8") as f:
+    with open(data_path, "r", encoding="utf-8") as f:
         for line in f:
             if line.strip():
                 pairs.append(json.loads(line))
@@ -101,10 +105,10 @@ def main():
     trainable = sum(p.numel() for p in model.parameters() if p.requires_grad)
     print(f"  LoRA adapters: {trainable:,} trainable params ({trainable/params*100:.2f}% of total)")
 
-    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    output_dir.mkdir(parents=True, exist_ok=True)
 
     training_args = SFTConfig(
-        output_dir=str(OUTPUT_DIR),
+        output_dir=str(output_dir),
         max_steps=args.steps,
         per_device_train_batch_size=args.batch_size,
         gradient_accumulation_steps=args.grad_accum,
@@ -145,9 +149,9 @@ def main():
 
     print(f"\n  Training complete in {total:.0f}s ({total/60:.1f} min)")
 
-    model.save_pretrained(OUTPUT_DIR / "final")
-    tokenizer.save_pretrained(OUTPUT_DIR / "final")
-    print(f"  Saved: {OUTPUT_DIR / 'final'}")
+    model.save_pretrained(output_dir / "final")
+    tokenizer.save_pretrained(output_dir / "final")
+    print(f"  Saved: {output_dir / 'final'}")
 
     log = {
         "model": MODEL_NAME,
@@ -162,7 +166,7 @@ def main():
         "total_time_s": round(total, 1),
         "max_seq_len": MAX_SEQ_LEN,
     }
-    with open(OUTPUT_DIR / "train_log.json", "w") as f:
+    with open(output_dir / "train_log.json", "w") as f:
         json.dump(log, f, indent=2)
 
     print(f"\n{'=' * 60}")
