@@ -61,28 +61,60 @@ N-way comparisons via `python src/eval.py --compare a.json b.json c.json ...`.
 | Stage | Checkpoint | Overall | Held-out | Recall | TTP halluc. | Result file |
 |---|---|---|---|---|---|---|
 | **Base (control)** | none (raw Qwen2.5-3B-Instruct) | 44.7% | 58.5% | 36.8% | **20.0%** | `qwenbase_20260804_0550.json` |
-| SFT-500 | `qwen_qlora/checkpoint-500` | 62.2% | 79.2% | 52.4% | 87.5% | `sft500_20260803_2311.json` |
-| SFT + DPO | `qwen_dpo/final` | 60.1% | 79.2% | 49.2% | 83.3% | `dpo_20260804_0248.json` |
+| SFT-500 (v1 data) | `qwen_qlora/checkpoint-500` | 62.2% | 79.2% | 52.4% | 87.5% | `sft500_20260803_2311.json` |
+| SFT-500 + DPO | `qwen_dpo/final` | 60.1% | 79.2% | 49.2% | 83.3% | `dpo_20260804_0248.json` |
+| SFT-500 (v2 data) | `qwen_qlora_v2/checkpoint-500` | 52.2% | 76.4% | 38.4% | 95.8% | `sftv2_20260804_2108.json` |
+| SFT-500 (v2.1 data) | `qwen_qlora_v2_1/checkpoint-500` | 58.4% | 75.5% | 48.6% | **76.2%** | `sftv2_1_20260805_0300.json` |
 
-### Full 3-way comparison
+### The v2 → v2.1 experiments (2026-08-04/05)
+
+**v2 scored worse (52.2%)** — root-caused to two builder defects: (1) all rule
+sources unified under "Write a Sigma rule" templates, so the model answered
+Sigma requests with Elastic EQL/Splunk SPL bodies; (2) the 1,072-record MITRE
+pool was sampled ~4.3× each, teaching over-confident ID assertion
+(hallucination 95.8%).
+
+**v2.1 fixes worked partially:** per-source templates restored rule to 72%
+(from 28%), disjoint MITRE slices + capped verification dropped hallucination
+to **76.2% — best SFT run** (vs 87.5% v1). forensic_interp hit 70% (best ever).
+But applied-task scores dipped: rule_from_scenario 40% (v1: 100%), soc_triage
+86.7% (v1: 100%), ttp_extract 50% (v1: 60%).
+
+**Interpretation:** v1's perfect practical scores benefited from near-identical
+train/test formats (leakage-adjacent advantage); v2.1's longer, per-source
+answers trade applied-format fluency for factual grounding. Data changes move
+metrics in *different directions per category* — there is no free lunch, only
+chosen trade-offs. Cumulative picture:
+
+| Metric | v1 | v2 | v2.1 |
+|---|---|---|---|
+| Overall | 62.2% | 52.2% | 58.4% |
+| TTP hallucination | 87.5% | 95.8% | **76.2%** |
+| rule | 72% | 28% | 72% |
+| forensic_interp | 50% | 40% | **70%** |
+
+**Meta-lesson:** the benchmark caught in 35 minutes what eyeballing the data
+did not. This is why the harness exists.
+
+### Full comparison (current line)
 
 ```
-                        qwenbase      sft500         dpo
-classification             44.0%       82.0%       82.0%
-consistency                50.0%       50.0%       50.0%
-forensic_interp            40.0%       50.0%       40.0%
-kb                         85.0%       85.0%       85.0%
-ref                        44.0%       34.0%       28.0%
-rule                       24.0%       72.0%       70.0%
-rule_from_scenario         20.0%      100.0%       90.0%
-soc_triage                100.0%      100.0%      100.0%
-ttp                        26.0%       28.0%       28.0%
-ttp_extract                30.0%       60.0%       60.0%
+                        qwenbase      sft500         dpo       sftv2     sftv2_1
+classification             44.0%       82.0%       82.0%       84.0%       80.0%
+consistency                50.0%       50.0%       50.0%       50.0%       50.0%
+forensic_interp            40.0%       50.0%       40.0%       40.0%       70.0%
+kb                         85.0%       85.0%       85.0%       80.0%       80.0%
+ref                        44.0%       34.0%       28.0%       38.0%       34.0%
+rule                       24.0%       72.0%       70.0%       28.0%       72.0%
+rule_from_scenario         20.0%      100.0%       90.0%       50.0%       40.0%
+soc_triage                100.0%      100.0%      100.0%       93.3%       86.7%
+ttp                        26.0%       28.0%       28.0%       30.0%       26.0%
+ttp_extract                30.0%       60.0%       60.0%       40.0%       50.0%
 
-OVERALL                    44.7%       62.2%       60.1%
-HELD-OUT                   58.5%       79.2%       79.2%
-RECALL                     36.8%       52.4%       49.2%
-TTP halluc.                20.0%       87.5%       83.3%
+OVERALL                    44.7%       62.2%       60.1%       52.2%       58.4%
+HELD-OUT                   58.5%       79.2%       79.2%       76.4%       75.5%
+RECALL                     36.8%       52.4%       49.2%       38.4%       48.6%
+TTP halluc.                20.0%       87.5%       83.3%       95.8%       76.2%
 ```
 
 ### Findings

@@ -16,6 +16,7 @@ Usage:
   python src/build_sft_v2.py
 """
 
+import argparse
 import io
 import json
 import random
@@ -46,12 +47,23 @@ TEMPLATES_TTP = [
     "What does the ATT&CK technique {title} involve?",
     "How is {title} used in real-world attacks?",
 ]
-TEMPLATES_RULE = [
+TEMPLATES_SIGMA = [
     "Write a Sigma detection rule for: {title}",
-    "How would you detect {title}?",
-    "Create a detection rule for the following activity: {title}",
-    "Write a detection rule that catches: {title}",
+    "How would you detect {title} with a Sigma rule?",
+    "Create a Sigma rule for the following activity: {title}",
     "Draft a Sigma rule covering: {title}",
+]
+TEMPLATES_ELASTIC = [
+    "Write an Elastic detection rule for: {title}",
+    "Create an Elastic EQL rule for: {title}",
+]
+TEMPLATES_SPLUNK = [
+    "Write a Splunk detection for: {title}",
+    "Write a Splunk SPL search to detect: {title}",
+]
+TEMPLATES_RULE_GENERIC = [
+    "How would you detect {title}?",
+    "Write a detection rule for: {title}",
 ]
 TEMPLATES_REF = [
     "How can {title} be abused?",
@@ -136,7 +148,13 @@ def short_desc(body, limit=250):
 
 
 def main():
-    rng = random.Random(SEED)
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--out", default=str(ROOT / "data" / "sft_v2.jsonl"))
+    ap.add_argument("--seed", type=int, default=SEED)
+    args = ap.parse_args()
+    out_path = Path(args.out)
+
+    rng = random.Random(args.seed)
     print("=" * 60)
     print("SecGPT-Prod — Build SFT v2 (knowledge-anchored)")
     print("=" * 60)
@@ -160,20 +178,20 @@ def main():
         if len(body) >= 80 and ids and title:
             mitre.append({"title": title, "body": body, "id": ids[0]})
     rng.shuffle(mitre)
+    split = int(len(mitre) * 0.6)
     n_anchored = 0
-    for it in mitre[:2500]:
+    for it in mitre[:split]:
         q = rng.choice(TEMPLATES_TTP).format(title=it["title"])
         add(q, f"ID: {it['id']}\n\nDescription: {clean_body(it['body'])}", "ttp")
         n_anchored += 1
     n_byid = 0
-    for it in mitre[:1500]:
+    for it in mitre[split:]:
         add(f"Explain MITRE ATT&CK technique {it['id']}.",
             f"ID: {it['id']}\n\nDescription: {clean_body(it['body'])}", "ttp", kind="by_id")
         n_byid += 1
     n_neg = 0
-    for it in mitre:
-        if n_neg >= 1500:
-            break
+    while n_neg < 800:
+        it = rng.choice(mitre)
         wrong = rng.choice(mitre)
         if wrong["id"] == it["id"]:
             continue
@@ -214,13 +232,13 @@ def main():
     seen = set()
     n_rule = 0
     rule_pools = [
-        ("sigma.jsonl", "Sigma Detection Rule:", "Sigma"),
-        ("elastic.jsonl", "Elastic Detection Rule:", "Elastic"),
-        ("splunk_security.jsonl", "Splunk Detection:", "Splunk"),
-        ("hayabusa.jsonl", "Hayabusa Detection Rule:", "Hayabusa"),
-        ("chainsaw.jsonl", "Chainsaw MFT Detection Rule:", "Chainsaw"),
+        ("sigma.jsonl", "Sigma Detection Rule:", TEMPLATES_SIGMA),
+        ("elastic.jsonl", "Elastic Detection Rule:", TEMPLATES_ELASTIC),
+        ("splunk_security.jsonl", "Splunk Detection:", TEMPLATES_SPLUNK),
+        ("hayabusa.jsonl", "Hayabusa Detection Rule:", TEMPLATES_RULE_GENERIC),
+        ("chainsaw.jsonl", "Chainsaw MFT Detection Rule:", TEMPLATES_RULE_GENERIC),
     ]
-    for src, marker, kind in rule_pools:
+    for src, marker, templates in rule_pools:
         pool = parse_titled(src, marker, min_body=60)
         rng.shuffle(pool)
         kept = 0
@@ -229,7 +247,7 @@ def main():
             if key in seen or len(key) < 6:
                 continue
             seen.add(key)
-            q = rng.choice(TEMPLATES_RULE).format(title=it["title"])
+            q = rng.choice(templates).format(title=it["title"])
             add(q, it["body"], "rule")
             kept += 1
             n_rule += 1
@@ -335,14 +353,14 @@ def main():
     print(f"      classification total: {sum(1 for p in pairs if p['category'] == 'classification')}")
 
     rng.shuffle(pairs)
-    with open(OUT, "w", encoding="utf-8") as f:
+    with open(out_path, "w", encoding="utf-8") as f:
         for p in pairs:
             f.write(json.dumps(p, ensure_ascii=False) + "\n")
 
     counts = Counter(p["category"] for p in pairs)
     kinds = Counter(p.get("kind", "qa") for p in pairs)
     print(f"\n{'=' * 60}")
-    print(f"  SFT v2: {len(pairs):,} pairs -> {OUT}")
+    print(f"  SFT v2: {len(pairs):,} pairs -> {out_path}")
     for cat, c in sorted(counts.items()):
         print(f"    {cat:15s} {c:,}")
     print("  kinds:")
