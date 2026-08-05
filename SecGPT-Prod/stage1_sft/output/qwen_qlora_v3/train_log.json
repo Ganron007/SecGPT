@@ -1,0 +1,13 @@
+{
+  "model": "Qwen/Qwen2.5-3B-Instruct",
+  "params_total": 1698672640,
+  "params_trainable": 29933568,
+  "lora_r": 16,
+  "lora_alpha": 32,
+  "steps": 500,
+  "lr": 0.0002,
+  "batch_effective": 16,
+  "dataset_size": 23746,
+  "total_time_s": 5151.5,
+  "max_seq_len": 512
+}

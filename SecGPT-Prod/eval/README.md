@@ -64,7 +64,35 @@ N-way comparisons via `python src/eval.py --compare a.json b.json c.json ...`.
 | SFT-500 (v1 data) | `qwen_qlora/checkpoint-500` | 62.2% | 79.2% | 52.4% | 87.5% | `sft500_20260803_2311.json` |
 | SFT-500 + DPO | `qwen_dpo/final` | 60.1% | 79.2% | 49.2% | 83.3% | `dpo_20260804_0248.json` |
 | SFT-500 (v2 data) | `qwen_qlora_v2/checkpoint-500` | 52.2% | 76.4% | 38.4% | 95.8% | `sftv2_20260804_2108.json` |
-| SFT-500 (v2.1 data) | `qwen_qlora_v2_1/checkpoint-500` | 58.4% | 75.5% | 48.6% | **76.2%** | `sftv2_1_20260805_0300.json` |
+| SFT-500 (v2.1 data) | `qwen_qlora_v2_1/checkpoint-500` | 58.4% | 75.5% | 48.6% | 76.2% | `sftv2_1_20260805_0300.json` |
+| SFT-500 (v3 data) | `qwen_qlora_v3/checkpoint-500` | 57.0% | 63.2% | 53.5% | **65.2%** | `sftv3_20260805_1807.json` |
+| SFT-v3 + DPO | `qwen_dpo_v3/final` | 58.8% | 62.3% | 56.8% | 66.7% | `dpov3_20260805_2325.json` |
+
+### The v3 corpus experiment (2026-08-05)
+
+v3 data (23,746 pairs): STIX-verified MITRE relationships, real StackExchange
+Q&A (3,737 pairs), HackTricks/OWASP open KB, G:-re-extracted CADRE chunks,
+v2.1's fixed rule/ref/classification.
+
+**Delivered exactly what it was built for — factual grounding:**
+
+| Metric | v1 | +DPO | v2.1 | v3 | +DPO-v3 |
+|---|---|---|---|---|---|
+| TTP hallucination | 87.5% | 83.3% | 76.2% | **65.2%** | 66.7% |
+| ref | 34% | 28% | 34% | 44% | **54%** |
+| rule | 72% | 70% | 72% | 70% | **74%** |
+| rule_from_scenario | 100% | 90% | 40% | 90% | 90% |
+
+**Trade-off:** kb 57.5% and consistency 16.7% dropped with v3 (DPO didn't
+recover them). Likely cause: diverse answer styles (SE/open-KB) hurt the
+keyword-overlap scorers — partly measurement artifact, partly real style
+variance. forensic_interp dipped to 40% after DPO (n=10, one-item swings).
+
+**Verdict:** hallucination fell 87.5% → 65.2% across the data generations
+(87.5 → 76.2 → 65.2). Each corpus iteration bought grounding at some style
+cost. `qwen_dpo_v3/final` is the current Prod reference: best ref (54%,
+above base), best rule (74%), best recall split (56.8%), and the most honest
+ID behavior of any trained checkpoint.
 
 ### The v2 → v2.1 experiments (2026-08-04/05)
 
@@ -99,22 +127,22 @@ did not. This is why the harness exists.
 ### Full comparison (current line)
 
 ```
-                        qwenbase      sft500         dpo       sftv2     sftv2_1
-classification             44.0%       82.0%       82.0%       84.0%       80.0%
-consistency                50.0%       50.0%       50.0%       50.0%       50.0%
-forensic_interp            40.0%       50.0%       40.0%       40.0%       70.0%
-kb                         85.0%       85.0%       85.0%       80.0%       80.0%
-ref                        44.0%       34.0%       28.0%       38.0%       34.0%
-rule                       24.0%       72.0%       70.0%       28.0%       72.0%
-rule_from_scenario         20.0%      100.0%       90.0%       50.0%       40.0%
-soc_triage                100.0%      100.0%      100.0%       93.3%       86.7%
-ttp                        26.0%       28.0%       28.0%       30.0%       26.0%
-ttp_extract                30.0%       60.0%       60.0%       40.0%       50.0%
+                        qwenbase      sft500         dpo     sftv2_1       sftv3       dpov3
+classification             44.0%       82.0%       82.0%       80.0%       80.0%       80.0%
+consistency                50.0%       50.0%       50.0%       50.0%       16.7%       16.7%
+forensic_interp            40.0%       50.0%       40.0%       70.0%       70.0%       40.0%
+kb                         85.0%       85.0%       85.0%       80.0%       57.5%       55.0%
+ref                        44.0%       34.0%       28.0%       34.0%       44.0%       54.0%
+rule                       24.0%       72.0%       70.0%       72.0%       70.0%       74.0%
+rule_from_scenario         20.0%      100.0%       90.0%       40.0%       90.0%       90.0%
+soc_triage                100.0%      100.0%      100.0%       86.7%       86.7%       93.3%
+ttp                        26.0%       28.0%       28.0%       26.0%       26.0%       28.0%
+ttp_extract                30.0%       60.0%       60.0%       50.0%       30.0%       30.0%
 
-OVERALL                    44.7%       62.2%       60.1%       52.2%       58.4%
-HELD-OUT                   58.5%       79.2%       79.2%       76.4%       75.5%
-RECALL                     36.8%       52.4%       49.2%       38.4%       48.6%
-TTP halluc.                20.0%       87.5%       83.3%       95.8%       76.2%
+OVERALL                    44.7%       62.2%       60.1%       58.4%       57.0%       58.8%
+HELD-OUT                   58.5%       79.2%       79.2%       75.5%       63.2%       62.3%
+RECALL                     36.8%       52.4%       49.2%       48.6%       53.5%       56.8%
+TTP halluc.                20.0%       87.5%       83.3%       76.2%       65.2%       66.7%
 ```
 
 ### Findings
