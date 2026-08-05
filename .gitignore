@@ -38,3 +38,8 @@ Thumbs.db
 
 # HuggingFace cache
 .cache/
+
+# v3 raw inputs (downloaded/cloned)
+SecGPT-Prod/data/v3/stackexchange/
+SecGPT-Prod/data/v3/open_src/
+SecGPT-Prod/data/v3/enterprise-attack.json
