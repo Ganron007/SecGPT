@@ -69,7 +69,11 @@ DEGRADERS = [degrade_truncate, degrade_shuffle, degrade_destructure, degrade_hed
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--pairs", type=int, default=4000)
+    parser.add_argument("--data", default=str(SFT_FILE))
+    parser.add_argument("--out", default=str(OUT_FILE))
     args = parser.parse_args()
+    sft_file = Path(args.data)
+    out_file = Path(args.out)
 
     rng = random.Random(SEED)
     print("=" * 60)
@@ -77,7 +81,7 @@ def main():
     print("=" * 60)
 
     by_cat = {c: [] for c in CATEGORY_QUOTA}
-    with open(SFT_FILE, encoding="utf-8") as f:
+    with open(sft_file, encoding="utf-8") as f:
         for line in f:
             if not line.strip():
                 continue
@@ -107,11 +111,11 @@ def main():
             stats[degrader.__name__] += 1
 
     rng.shuffle(pairs)
-    with open(OUT_FILE, "w", encoding="utf-8") as f:
+    with open(out_file, "w", encoding="utf-8") as f:
         for p in pairs:
             f.write(json.dumps(p, ensure_ascii=False) + "\n")
 
-    print(f"\n  Pairs written: {len(pairs)} -> {OUT_FILE}")
+    print(f"\n  Pairs written: {len(pairs)} -> {out_file}")
     for cat in CATEGORY_QUOTA:
         print(f"    {cat:15s} {stats[cat]}")
     for d in DEGRADERS:

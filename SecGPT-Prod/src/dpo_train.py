@@ -39,6 +39,9 @@ def main():
 
     parser = argparse.ArgumentParser()
     parser.add_argument("--pairs", type=int, default=4000)
+    parser.add_argument("--data", default=str(PAIRS_FILE))
+    parser.add_argument("--sft-lora", default=str(SFT_LORA))
+    parser.add_argument("--output-dir", default=str(OUTPUT_DIR))
     parser.add_argument("--epochs", type=float, default=1.0)
     parser.add_argument("--max-steps", type=int, default=-1)
     parser.add_argument("--beta", type=float, default=0.3)
@@ -51,9 +54,13 @@ def main():
     print("SecGPT-Prod — DPO Alignment (structured > verbose)")
     print("=" * 60)
 
-    print(f"\n  Loading pairs: {PAIRS_FILE}")
+    pairs_file = Path(args.data)
+    sft_lora = Path(args.sft_lora)
+    output_dir = Path(args.output_dir)
+
+    print(f"\n  Loading pairs: {pairs_file}")
     pairs = []
-    with open(PAIRS_FILE, encoding="utf-8") as f:
+    with open(pairs_file, encoding="utf-8") as f:
         for line in f:
             if line.strip():
                 o = json.loads(line)
@@ -70,12 +77,12 @@ def main():
     print(f"\n  Loading policy model: {MODEL_NAME} + SFT adapter (trainable)")
     policy = AutoModelForCausalLM.from_pretrained(
         MODEL_NAME, quantization_config=bnb, device_map="auto", torch_dtype=torch.bfloat16)
-    policy = PeftModel.from_pretrained(policy, str(SFT_LORA), is_trainable=True)
+    policy = PeftModel.from_pretrained(policy, str(sft_lora), is_trainable=True)
 
     print("  Loading reference model: same weights, frozen")
     reference = AutoModelForCausalLM.from_pretrained(
         MODEL_NAME, quantization_config=bnb, device_map="auto", torch_dtype=torch.bfloat16)
-    reference = PeftModel.from_pretrained(reference, str(SFT_LORA))
+    reference = PeftModel.from_pretrained(reference, str(sft_lora))
     reference.eval()
     for p in reference.parameters():
         p.requires_grad_(False)
@@ -83,9 +90,9 @@ def main():
     tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
     tokenizer.pad_token = tokenizer.eos_token
 
-    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    output_dir.mkdir(parents=True, exist_ok=True)
     config = DPOConfig(
-        output_dir=str(OUTPUT_DIR),
+        output_dir=str(output_dir),
         beta=args.beta,
         num_train_epochs=args.epochs,
         max_steps=args.max_steps,
@@ -97,7 +104,9 @@ def main():
         max_length=512,
         bf16=True,
         logging_steps=10,
-        save_strategy="no",
+        save_strategy="steps",
+        save_steps=100,
+        save_total_limit=2,
         report_to="none",
         gradient_checkpointing=True,
         gradient_checkpointing_kwargs={"use_reentrant": False},
@@ -117,18 +126,18 @@ def main():
     total = time.time() - t0
     print(f"\n  Training complete in {total / 60:.1f} min")
 
-    policy.save_pretrained(OUTPUT_DIR / "final")
-    tokenizer.save_pretrained(OUTPUT_DIR / "final")
-    log = {"model": MODEL_NAME, "sft_lora": str(SFT_LORA), "pairs": len(dataset),
+    policy.save_pretrained(output_dir / "final")
+    tokenizer.save_pretrained(output_dir / "final")
+    log = {"model": MODEL_NAME, "sft_lora": str(sft_lora), "pairs": len(dataset),
            "beta": args.beta, "lr": args.lr, "epochs": args.epochs,
            "effective_batch": args.batch * args.accum,
            "train_time_min": round(total / 60, 1)}
-    with open(OUTPUT_DIR / "train_log.json", "w") as f:
+    with open(output_dir / "train_log.json", "w") as f:
         json.dump(log, f, indent=2)
-    print(f"  Saved: {OUTPUT_DIR / 'final'}")
+    print(f"  Saved: {output_dir / 'final'}")
     print(f"\n{'=' * 60}")
     print("  DONE — benchmark with:")
-    print(f"  python src/eval.py --lora {OUTPUT_DIR / 'final'} --name dpo")
+    print(f"  python src/eval.py --lora {output_dir / 'final'} --name dpo")
     print(f"{'=' * 60}")
 
 
