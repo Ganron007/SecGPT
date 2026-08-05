@@ -70,8 +70,9 @@ def valid_id_set():
     ids = set()
     for obj in load_jsonl(DFIR_DIR / "mitre_attack.jsonl"):
         ids.update(TECH_ID_RE.findall(obj.get("text", "")))
-    if STIX.exists():
-        bundle = json.loads((V3 / "enterprise-attack.json").read_text(encoding="utf-8"))
+    stix_cache = V3 / "enterprise-attack.json"
+    if stix_cache.exists():
+        bundle = json.loads(stix_cache.read_text(encoding="utf-8"))
         for o in bundle["objects"]:
             for ref in o.get("external_references", []):
                 if ref.get("external_id", "").startswith("T"):
@@ -136,6 +137,9 @@ def main():
     for c in kb:
         if n >= KB_CADRE_CAP_TOTAL:
             break
+        if not isinstance(c, dict):
+            print(f"      [DEBUG] non-dict item at kb idx: {type(c)} -> {repr(c)[:120]}")
+            continue
         if per_coll[c["collection"]] >= KB_CADRE_CAP_PER_COLLECTION:
             continue
         title = clean_title(c["title"])[:100]
@@ -187,7 +191,8 @@ def main():
             continue
         clean.append(p)
     print(f"      dedup/length: {len(pairs):,} -> {len(clean):,}")
-    print(f"      invalid ATT&CK IDs found in responses: {bad_ids} (kept only in non-assertive context)")
+    print(f"      invalid ATT&CK ID occurrences in responses: {bad_ids} "
+          f"(informational; rules/other sources legitimately cite IDs)")
 
     rng.shuffle(clean)
     with open(OUT_FULL, "w", encoding="utf-8") as f:

@@ -36,6 +36,9 @@ REPOS = {
 
 FRONTMATTER_RE = re.compile(r"^---\s*\n.*?\n---\s*\n", re.DOTALL)
 HEADER_RE = re.compile(r"^(#{1,4})\s+(.+?)\s*$", re.MULTILINE)
+JINJA_RE = re.compile(r"\{%.*?%\}")
+HTML_COMMENT_RE = re.compile(r"<!--.*?-->", re.DOTALL)
+DETAILS_RE = re.compile(r"</?(details|summary|div|span|img|figure|kbd)[^>]*>", re.IGNORECASE)
 MIN_CHUNK, MAX_CHUNK = 400, 1800
 
 
@@ -55,6 +58,9 @@ def clone_repos():
 
 def chunk_md(text):
     text = FRONTMATTER_RE.sub("", text, count=1)
+    text = JINJA_RE.sub(" ", text)
+    text = HTML_COMMENT_RE.sub(" ", text)
+    text = DETAILS_RE.sub(" ", text)
     matches = list(HEADER_RE.finditer(text))
     if not matches:
         return []
