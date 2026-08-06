@@ -211,16 +211,18 @@ def load_sets(which, limit=None):
     return items
 
 
-def run_generation(items, model_name, lora_path, batch_size):
+def run_generation(items, model_name, lora_path, batch_size, prompt_format="chat", no_quant=False):
     import torch
-    from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
+    from transformers import AutoModelForCausalLM, AutoTokenizer
 
     t0 = time.time()
-    bnb = BitsAndBytesConfig(load_in_4bit=True, bnb_4bit_quant_type="nf4",
-                             bnb_4bit_compute_dtype=torch.bfloat16,
-                             bnb_4bit_use_double_quant=True)
-    model = AutoModelForCausalLM.from_pretrained(
-        model_name, quantization_config=bnb, device_map="auto", torch_dtype=torch.bfloat16)
+    load_kwargs = dict(device_map="auto", torch_dtype=torch.bfloat16)
+    if not no_quant:
+        from transformers import BitsAndBytesConfig
+        load_kwargs["quantization_config"] = BitsAndBytesConfig(
+            load_in_4bit=True, bnb_4bit_quant_type="nf4",
+            bnb_4bit_compute_dtype=torch.bfloat16, bnb_4bit_use_double_quant=True)
+    model = AutoModelForCausalLM.from_pretrained(model_name, **load_kwargs)
     if lora_path:
         from peft import PeftModel
         print(f"  Loading LoRA: {lora_path}")
@@ -230,6 +232,18 @@ def run_generation(items, model_name, lora_path, batch_size):
     tokenizer.pad_token = tokenizer.eos_token
     tokenizer.padding_side = "left"
     load_s = time.time() - t0
+
+    eos_ids = [tokenizer.eos_token_id]
+    if prompt_format == "qa":
+        nl2 = tokenizer.encode("\n\n", add_special_tokens=False)
+        if nl2:
+            eos_ids.append(nl2[0])
+
+    def make_prompt(text):
+        if prompt_format == "qa":
+            return f"Question: {text}\nAnswer:"
+        return tokenizer.apply_chat_template(
+            [{"role": "user", "content": text}], tokenize=False, add_generation_prompt=True)
 
     responses = {}
     total_new_tokens = 0
@@ -248,13 +262,12 @@ def run_generation(items, model_name, lora_path, batch_size):
                 tasks.append((b["id"], 0, b["instruction"]))
         for i in range(0, len(tasks), batch_size):
             batch = tasks[i:i + batch_size]
-            texts = [tokenizer.apply_chat_template(
-                [{"role": "user", "content": t[2]}],
-                tokenize=False, add_generation_prompt=True) for t in batch]
+            texts = [make_prompt(t[2]) for t in batch]
             inputs = tokenizer(texts, return_tensors="pt", padding=True).to("cuda")
             with torch.no_grad():
                 out = model.generate(**inputs, max_new_tokens=max_new, do_sample=False,
-                                     pad_token_id=tokenizer.eos_token_id)
+                                     pad_token_id=tokenizer.eos_token_id,
+                                     eos_token_id=eos_ids)
             for j, (item_id, idx, _) in enumerate(batch):
                 new_ids = out[j][inputs["input_ids"].shape[1]:]
                 total_new_tokens += len(new_ids)
@@ -351,6 +364,8 @@ def main():
     parser.add_argument("--batch", type=int, default=8)
     parser.add_argument("--compare", nargs="+", metavar="RESULT", help="compare 2+ result JSONs")
     parser.add_argument("--set", choices=["eval", "practical", "all"], default="all")
+    parser.add_argument("--prompt-format", choices=["chat", "qa"], default="chat")
+    parser.add_argument("--no-quant", action="store_true", help="load without 4-bit (small models)")
     args = parser.parse_args()
 
     if args.compare:
@@ -366,7 +381,8 @@ def main():
     items = load_sets(args.set, args.limit)
     print(f"\n  Eval set: {len(items)} prompts (model={args.model}, lora={lora})")
 
-    responses, perf = run_generation(items, args.model, lora, args.batch)
+    responses, perf = run_generation(items, args.model, lora, args.batch,
+                                     args.prompt_format, args.no_quant)
 
     scored = []
     for it in items:

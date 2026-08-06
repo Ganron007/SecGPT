@@ -71,6 +71,7 @@ def main():
     parser.add_argument("--pairs", type=int, default=4000)
     parser.add_argument("--data", default=str(SFT_FILE))
     parser.add_argument("--out", default=str(OUT_FILE))
+    parser.add_argument("--prompt-format", choices=["chat", "qa"], default="chat")
     args = parser.parse_args()
     sft_file = Path(args.data)
     out_file = Path(args.out)
@@ -100,10 +101,15 @@ def main():
             rejected = degrader(o["response"], rng)
             if len(rejected) < 20 or rejected == o["response"]:
                 continue
+            if args.prompt_format == "qa":
+                prompt = f"Question: {o['instruction']}\nAnswer: "
+            else:
+                prompt = f"<|user|>\n{o['instruction']}<|end|>\n<|assistant|>\n"
+            suffix = "" if args.prompt_format == "qa" else "<|end|>"
             pairs.append({
-                "prompt": f"<|user|>\n{o['instruction']}<|end|>\n<|assistant|>\n",
-                "chosen": o["response"] + "<|end|>",
-                "rejected": rejected + "<|end|>",
+                "prompt": prompt,
+                "chosen": o["response"] + suffix,
+                "rejected": rejected + suffix,
                 "category": cat,
                 "strategy": degrader.__name__.replace("degrade_", ""),
             })
