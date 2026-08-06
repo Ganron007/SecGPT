@@ -81,10 +81,9 @@ def main():
             print(f"  Resumed from {latest} (step {start_step})")
 
     def get_batch(split_data, bs=BATCH_SIZE):
-        ix = torch.randint(len(split_data) - BLOCK_SIZE, (bs,))
+        ix = torch.randint(len(split_data) - BLOCK_SIZE - 1, (bs,))
         x = torch.stack([split_data[i:i + BLOCK_SIZE] for i in ix]).to(DEVICE)
-        y = torch.stack([split_data[i + 1:i + BLOCK_SIZE + 1] for i in ix]).to(DEVICE)
-        return x, y
+        return x
 
     model.train()
     print(f"  Training: {args.steps} steps, lr={args.lr}, effective batch {BATCH_SIZE * ACCUM}")
@@ -96,10 +95,10 @@ def main():
             with torch.no_grad():
                 tl, vl = [], []
                 for _ in range(8):
-                    x, y = get_batch(train_data)
-                    tl.append(model(input_ids=x, labels=y).loss.item())
-                    x, y = get_batch(val_data)
-                    vl.append(model(input_ids=x, labels=y).loss.item())
+                    x = get_batch(train_data)
+                    tl.append(model(input_ids=x, labels=x).loss.item())
+                    x = get_batch(val_data)
+                    vl.append(model(input_ids=x, labels=x).loss.item())
             print(f"  step {step:>4} | train {sum(tl)/8:.4f} | val {sum(vl)/8:.4f} | "
                   f"{time.time()-t0:.0f}s", flush=True)
             model.train()
@@ -118,8 +117,8 @@ def main():
             break
 
         for _ in range(ACCUM):
-            x, y = get_batch(train_data)
-            loss = model(input_ids=x, labels=y).loss / ACCUM
+            x = get_batch(train_data)
+            loss = model(input_ids=x, labels=x).loss / ACCUM
             loss.backward()
         torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
         optimizer.step()

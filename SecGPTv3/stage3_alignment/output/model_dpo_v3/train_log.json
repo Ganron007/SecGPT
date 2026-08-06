@@ -1,0 +1,8 @@
+{
+  "model": "gpt2-sft-v3",
+  "pairs": 3797,
+  "beta": 0.3,
+  "lr": 5e-06,
+  "effective_batch": 16,
+  "train_time_min": 4.8
+}

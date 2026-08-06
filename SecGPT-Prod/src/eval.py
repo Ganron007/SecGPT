@@ -216,7 +216,8 @@ def run_generation(items, model_name, lora_path, batch_size, prompt_format="chat
     from transformers import AutoModelForCausalLM, AutoTokenizer
 
     t0 = time.time()
-    load_kwargs = dict(device_map="auto", torch_dtype=torch.bfloat16)
+    load_kwargs = dict(device_map="auto",
+                       torch_dtype=torch.float32 if no_quant else torch.bfloat16)
     if not no_quant:
         from transformers import BitsAndBytesConfig
         load_kwargs["quantization_config"] = BitsAndBytesConfig(

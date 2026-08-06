@@ -1,0 +1,538 @@
+{
+  "name": "gpt2smoke",
+  "model": "C:\\STUDY\\Github\\SecGPT\\SecGPTv3\\stage2_sft\\output\\model_v3",
+  "lora": null,
+  "timestamp": "20260806_1958",
+  "perf": {
+    "load_s": 0.9,
+    "gen_s": 29.0,
+    "new_tokens": 7400,
+    "tok_per_s": 254.8,
+    "peak_vram_gb": 0.66
+  },
+  "metrics": {
+    "overall": {
+      "n": 20,
+      "pass_rate": 0.05,
+      "held_out": {
+        "n": 8,
+        "pass_rate": 0.125
+      },
+      "recall": {
+        "n": 12,
+        "pass_rate": 0.0
+      }
+    },
+    "per_category": {
+      "ttp": {
+        "n": 2,
+        "pass_rate": 0.0,
+        "hallucination_rate": 0.0
+      },
+      "rule": {
+        "n": 2,
+        "pass_rate": 0.0,
+        "yaml_valid_rate": 0.5,
+        "schema_ok_rate": 0.0
+      },
+      "ref": {
+        "n": 2,
+        "pass_rate": 0.0
+      },
+      "kb": {
+        "n": 2,
+        "pass_rate": 0.0
+      },
+      "classification": {
+        "n": 2,
+        "pass_rate": 0.5
+      },
+      "soc_triage": {
+        "n": 2,
+        "pass_rate": 0.0
+      },
+      "ttp_extract": {
+        "n": 2,
+        "pass_rate": 0.0
+      },
+      "forensic_interp": {
+        "n": 2,
+        "pass_rate": 0.0
+      },
+      "rule_from_scenario": {
+        "n": 2,
+        "pass_rate": 0.0
+      },
+      "consistency": {
+        "n": 2,
+        "pass_rate": 0.0
+      }
+    }
+  },
+  "items": [
+    {
+      "id": 0,
+      "category": "ttp",
+      "instruction": "How can defenders mitigate Query Registry Mitigation?",
+      "meta": {
+        "title": "Mitigation: Query Registry Mitigation",
+        "ids": [
+          "T1012"
+        ],
+        "keywords": [
+          "citation",
+          "applocker",
+          "software",
+          "t1012",
+          "identify",
+          "unnecessary",
+          "system",
+          "utilities"
+        ],
+        "leaked": true
+      },
+      "response": ":::::::",
+      "pass": false,
+      "detail": {
+        "kw": 0.0,
+        "ids_found": [],
+        "correct": [],
+        "hallucinated": []
+      }
+    },
+    {
+      "id": 1,
+      "category": "ttp",
+      "instruction": "How can defenders mitigate Dylib Hijacking Mitigation?",
+      "meta": {
+        "title": "Mitigation: Dylib Hijacking Mitigation",
+        "ids": [
+          "T1157"
+        ],
+        "keywords": [
+          "users",
+          "write",
+          "search",
+          "applications",
+          "folders",
+          "t1157",
+          "prevent",
+          "being"
+        ],
+        "leaked": true
+      },
+      "response": ":::::::.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.::.:.:.::.:.::.::.::.::.:::.::::::::::::::::::::::::::::::::::::::::::::::::::::::::::",
+      "pass": false,
+      "detail": {
+        "kw": 0.0,
+        "ids_found": [],
+        "correct": [],
+        "hallucinated": []
+      }
+    },
+    {
+      "id": 50,
+      "category": "rule",
+      "instruction": "Write a Sigma detection rule for: Suspicious Double Extension Files",
+      "meta": {
+        "title": "Suspicious Double Extension Files",
+        "kind": "yaml",
+        "keywords": [
+          "targetfilename",
+          "extensions",
+          "default",
+          "endswith",
+          "attack",
+          "test",
+          "high",
+          "nasreddine"
+        ],
+        "leaked": true
+      },
+      "response": "::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::",
+      "pass": false,
+      "detail": {
+        "kw": 0.0,
+        "yaml_valid": true,
+        "schema_ok": false,
+        "flat_ok": false
+      }
+    },
+    {
+      "id": 51,
+      "category": "rule",
+      "instruction": "Write a Sigma detection rule for: Potential Privilege Escalation Attempt Via .Exe.Local Technique",
+      "meta": {
+        "title": "Potential Privilege Escalation Attempt Via .Exe.Local Technique",
+        "kind": "yaml",
+        "keywords": [
+          "local",
+          "system32",
+          "windows",
+          "attack",
+          "comctl32",
+          "selection",
+          "targetfilename",
+          "test"
+        ],
+        "leaked": true
+      },
+      "response": ":::::.:.:.......................................................................................................................................................................................................................................................................................................................................................................................................",
+      "pass": false,
+      "detail": {
+        "kw": 0.0,
+        "yaml_valid": false,
+        "schema_ok": false,
+        "flat_ok": false
+      }
+    },
+    {
+      "id": 100,
+      "category": "ref",
+      "instruction": "How can wbadmin.exe be abused in a living-off-the-land attack?",
+      "meta": {
+        "title": "wbadmin.exe",
+        "keywords": [
+          "ntds",
+          "windows",
+          "wbadmin",
+          "system",
+          "backup",
+          "system32",
+          "file",
+          "version"
+        ],
+        "leaked": true
+      },
+      "response": "::::::.:.:....:....:...:.:.:.:.:.:.:.:.:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::",
+      "pass": false,
+      "detail": {
+        "kw": 0.0,
+        "mentioned": false
+      }
+    },
+    {
+      "id": 101,
+      "category": "ref",
+      "instruction": "How can Pcalua.exe be abused in a living-off-the-land attack?",
+      "meta": {
+        "title": "Pcalua.exe",
+        "keywords": [
+          "program",
+          "assistant",
+          "pcalua",
+          "compatibility",
+          "category",
+          "execute",
+          "open",
+          "target"
+        ],
+        "leaked": true
+      },
+      "response": ":::.:.:.....................................................................................................................................................................................................................................................................................................",
+      "pass": false,
+      "detail": {
+        "kw": 0.0,
+        "mentioned": false
+      }
+    },
+    {
+      "id": 150,
+      "category": "kb",
+      "instruction": "What is Dark Peep #2: War and a Piece of Hilarity and why is it important in cybersecurity?",
+      "meta": {
+        "title": "Dark Peep #2: War and a Piece of Hilarity",
+        "keywords": [
+          "socradar",
+          "dark",
+          "peep",
+          "piece",
+          "hilarity",
+          "organization",
+          "dark-peep-2-war-and-a-piece-of-hilarity",
+          "language"
+        ],
+        "leaked": false
+      },
+      "response": ":: is a of:\n:\n:\n:\n:\n:\nQuestion What a about:. is the of?Answer It is:. is:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:",
+      "pass": false,
+      "detail": {
+        "kw": 0.0
+      }
+    },
+    {
+      "id": 151,
+      "category": "kb",
+      "instruction": "What is Over the Horizon: Innovating to confront evolving cyber threats and why is it important in cybersecurity?",
+      "meta": {
+        "title": "Over the Horizon: Innovating to confront evolving cyber threats",
+        "keywords": [
+          "youtube",
+          "horizon",
+          "innovating",
+          "confront",
+          "evolving",
+          "cyber",
+          "threats",
+          "ryan"
+        ],
+        "leaked": false
+      },
+      "response": "::::::::.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:",
+      "pass": false,
+      "detail": {
+        "kw": 0.0
+      }
+    },
+    {
+      "id": 190,
+      "category": "classification",
+      "instruction": "Classify this SMS message as spam or ham. Explain why.\nMessage: Do you like Italian food?",
+      "meta": {
+        "label": "ham",
+        "leaked": false
+      },
+      "response": "is ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham",
+      "pass": true,
+      "detail": {
+        "label": "ham"
+      }
+    },
+    {
+      "id": 191,
+      "category": "classification",
+      "instruction": "Classify this SMS message as spam or ham. Explain why.\nMessage: Reply with your name and address and YOU WILL RECEIVE BY POST a weeks completely free accommodation at various global locations www.phb1.com ph:08700435505150p",
+      "meta": {
+        "label": "spam",
+        "leaked": false
+      },
+      "response": "is ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham ham",
+      "pass": false,
+      "detail": {
+        "label": "spam"
+      }
+    },
+    {
+      "id": 10000,
+      "category": "soc_triage",
+      "instruction": "You are a SOC analyst. Triage this alert: give a verdict, a severity, and recommended actions.\nAlert: AWS IAM AdministratorAccess Policy Attached to Role\nDetails: Type: eql\nSeverity: medium\nRisk Score: 47\n\nDescription: An adversary with access to a set of compromised credentials may attempt to persist or escalate privileges by attaching\nadditional permissions to compromised IAM roles. This rule looks for use of the IAM AttachRolePolicy API operation to\nattach the highly permissive AdministratorAccess AWS managed policy to an existing IAM role.\n\n\nQuery:\niam ",
+      "meta": {
+        "title": "AWS IAM AdministratorAccess Policy Attached to Role",
+        "leaked": true
+      },
+      "response": "is",
+      "pass": false,
+      "detail": {
+        "severity": false,
+        "verdict": false,
+        "action": false,
+        "hits": 0
+      }
+    },
+    {
+      "id": 10001,
+      "category": "soc_triage",
+      "instruction": "You are a SOC analyst. Triage this alert: give a verdict, a severity, and recommended actions.\nAlert: Sensitive Files Compression Inside A Container\nDetails: Type: eql\nSeverity: high\nRisk Score: 73\n\nDescription: Identifies the use of a compression utility to collect known files containing sensitive information, such as credentials\nand system configurations inside a container.\n\n\nQuery:\nprocess where host.os.type == \"linux\" and event.type == \"start\" and event.action == \"exec\" and\nprocess.entry_leader.entry_meta.type == \"container\" and process.name in (\"z",
+      "meta": {
+        "title": "Sensitive Files Compression Inside A Container",
+        "leaked": true
+      },
+      "response": "::: is............................................................................................................................................................................................................................................................................................................................................................................................................",
+      "pass": false,
+      "detail": {
+        "severity": false,
+        "verdict": false,
+        "action": false,
+        "hits": 0
+      }
+    },
+    {
+      "id": 10015,
+      "category": "ttp_extract",
+      "instruction": "List every MITRE ATT&CK technique ID mentioned in this text, with one line per technique.\nText: MITRE ATT&CK Technique: DHCP Spoofing\n\nID: T1557.003\n\nDescription: Adversaries may redirect network traffic to adversary-owned systems by spoofing Dynamic Host Configuration Protocol (DHCP) traffic and acting as a malicious DHCP server on the victim network. By achieving the adversary-in-the-middle (AiTM) position, adversaries may collect network communications, including passed credentials, especially those sent over insecure, unencrypted protocols. This may also enable follow-on behaviors such",
+      "meta": {
+        "ids": [
+          "T1557.003",
+          "T1040",
+          "T1565",
+          "T1499"
+        ],
+        "leaked": false
+      },
+      "response": ":: is to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to",
+      "pass": false,
+      "detail": {
+        "recall": 0.0,
+        "found": [],
+        "extra": []
+      }
+    },
+    {
+      "id": 10016,
+      "category": "ttp_extract",
+      "instruction": "List every MITRE ATT&CK technique ID mentioned in this text, with one line per technique.\nText: MITRE ATT&CK Technique: Browser Session Hijacking\n\nID: T1185\n\nDescription: Adversaries may take advantage of security vulnerabilities and inherent functionality in browser software to change content, modify user-behaviors, and intercept information as part of various browser session hijacking techniques.(Citation: Wikipedia Man in the Browser)\n\nA specific example is when an adversary injects software into a browser that allows them to inherit cookies, HTTP sessions, and SSL client certificates o",
+      "meta": {
+        "ids": [
+          "T1185",
+          "T1213"
+        ],
+        "leaked": false
+      },
+      "response": ": is to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to",
+      "pass": false,
+      "detail": {
+        "recall": 0.0,
+        "found": [],
+        "extra": []
+      }
+    },
+    {
+      "id": 10025,
+      "category": "forensic_interp",
+      "instruction": "During an investigation you found this artifact. Explain what it proves and how you would use it.\nArtifact: WindowsUpdateBuildRevision",
+      "meta": {
+        "title": "WindowsUpdateBuildRevision",
+        "keywords": [
+          "windows",
+          "kernel",
+          "update",
+          "build",
+          "revision",
+          "registry",
+          "value",
+          "contains"
+        ],
+        "leaked": true
+      },
+      "response": "::: is of WindowsBuildVersion\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:",
+      "pass": false,
+      "detail": {
+        "kw": 0.25
+      }
+    },
+    {
+      "id": 10026,
+      "category": "forensic_interp",
+      "instruction": "During an investigation you found this artifact. Explain what it proves and how you would use it.\nArtifact: SafariHistorySQLiteDatabaseFile",
+      "meta": {
+        "title": "SafariHistorySQLiteDatabaseFile",
+        "keywords": [
+          "safari",
+          "history",
+          "file",
+          "users",
+          "homedir",
+          "library",
+          "browser",
+          "sqlite"
+        ],
+        "leaked": true
+      },
+      "response": "::::::.:.:..................................................................................................................................................................................................................................................................................................",
+      "pass": false,
+      "detail": {
+        "kw": 0.0
+      }
+    },
+    {
+      "id": 10035,
+      "category": "rule_from_scenario",
+      "instruction": "An adversary was observed performing the following behavior. Write a detection rule to catch it.\nObserved behavior: MITRE Technique: T1553.005 - Subvert Trust Controls: Mark-of-the-Web Bypass\nPlatform: windows\n\nDescription: Executes LNK file document.lnk from AllTheThings.iso. Link file executes cmd.exe and rundll32 to in order to load and execute AllTheThingsx64.dll from the ISO which spawns calc.exe.\n\n\nExecutor: powershell\nCommand:\nMount-DiskImage -ImagePath \"#{path_of_iso}\" -StorageType ISO -Access ReadOnly\n",
+      "meta": {
+        "title": "Execute LNK file from ISO",
+        "kind": "prose",
+        "keywords": [
+          "driveletter",
+          "document",
+          "executes",
+          "file",
+          "allthethings",
+          "imagepath",
+          "path_of_iso",
+          "keep"
+        ],
+        "leaked": true
+      },
+      "response": ":: is to the of the of the of the of ISO\nQuestion What a rule the of the of ISO the of ISO\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:",
+      "pass": false,
+      "detail": {
+        "kw": 0.0,
+        "yaml_valid": false,
+        "schema_ok": false,
+        "flat_ok": false
+      }
+    },
+    {
+      "id": 10036,
+      "category": "rule_from_scenario",
+      "instruction": "An adversary was observed performing the following behavior. Write a detection rule to catch it.\nObserved behavior: MITRE Technique: T1562.004 - Impair Defenses: Disable or Modify System Firewall\nPlatform: windows\n\nDescription: An adversary tries to modify the windows firewall registry.\n\n\nExecutor: powershell\nCommand:\nNew-ItemProperty \"HKLM:\\SOFTWARE\\Policies\\Microsoft\\WindowsFirewall\\DomainProfile\" -Name EnableFirewall -PropertyType DWORD -Value 0 -Force\nNew-ItemProperty \"HKLM:\\SOFTWARE\\Policies\\Microsoft\\Wind",
+      "meta": {
+        "title": "LockBit Black - Unusual Windows firewall registry modification -Powershell",
+        "kind": "prose",
+        "keywords": [
+          "hklm",
+          "software",
+          "policies",
+          "microsoft",
+          "windowsfirewall",
+          "name",
+          "enablefirewall",
+          "force"
+        ],
+        "leaked": true
+      },
+      "response": ":: is to the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of the of",
+      "pass": false,
+      "detail": {
+        "kw": 0.0,
+        "yaml_valid": false,
+        "schema_ok": false,
+        "flat_ok": false
+      }
+    },
+    {
+      "id": 10045,
+      "category": "consistency",
+      "instruction": "indicatorsofcompromise",
+      "meta": {
+        "phrasings": [
+          "What is indicatorsofcompromise?",
+          "Explain indicatorsofcompromise in simple terms.",
+          "Give me a detailed overview of indicatorsofcompromise."
+        ],
+        "leaked": false
+      },
+      "response": [
+        "is a of the of the of the of the of the of the of the of the\nQuestion What is indicatorsofcompromise\n: is of\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:\n:",
+        ":: is to the to the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the the",
+        "::.:.:.:...................................................................................................................................................................................................................................................................................................."
+      ],
+      "pass": false,
+      "detail": {
+        "agreement": 0.0
+      }
+    },
+    {
+      "id": 10046,
+      "category": "consistency",
+      "instruction": "Registry-Analysis-Guide-USB-Analysis-Windows-10_11",
+      "meta": {
+        "phrasings": [
+          "What is Registry-Analysis-Guide-USB-Analysis-Windows-10_11?",
+          "Explain Registry-Analysis-Guide-USB-Analysis-Windows-10_11 in simple terms.",
+          "Give me a detailed overview of Registry-Analysis-Guide-USB-Analysis-Windows-10_11."
+        ],
+        "leaked": false
+      },
+      "response": [
+        "::-:-:-:-:-:-:-:-:-:-:-:-:-:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::",
+        "::::::",
+        "::::::"
+      ],
+      "pass": false,
+      "detail": {
+        "agreement": 0.0
+      }
+    }
+  ]
+}

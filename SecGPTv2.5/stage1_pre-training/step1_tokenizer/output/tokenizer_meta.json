@@ -1,0 +1,19 @@
+{
+  "vocab_size": 16384,
+  "total_tokens": 108688552,
+  "train_tokens": 97819696,
+  "val_tokens": 10868856,
+  "corpus_chars": 317687663,
+  "compression": 2.92,
+  "random_guess_loss": 9.7041,
+  "special_tokens": [
+    "<|kb|>",
+    "<|rule|>",
+    "<|ttp|>",
+    "<|ref|>",
+    "<|spam|>",
+    "<|ham|>",
+    "<|net|>",
+    "<|pad|>"
+  ]
+}

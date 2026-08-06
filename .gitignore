@@ -16,6 +16,12 @@ stage2_sft/output/model_direct/
 stage3_alignment/output/model/
 SecGPTv2/stage1_pre-training/step5_training/output/
 SecGPTv2/stage1_pre-training/step0_corpus/output/corpus.txt
+SecGPTv2.5/stage1_pre-training/step0_corpus/output/corpus.txt
+SecGPTv2.5/stage1_pre-training/step5_training/output/
+SecGPTv2.5/stage2_sft/output/sft_corpus.txt
+SecGPTv2.5/stage2_sft/output/checkpoint_sft.pt
+SecGPTv2.5/stage3_alignment/output/dpo_data.jsonl
+SecGPTv2.5/stage3_alignment/output/checkpoint_dpo.pt
 
 # Large raw datasets (see DATA.md)
 SecGPTv2/data/KDD+.txt
