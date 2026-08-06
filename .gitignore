@@ -28,7 +28,7 @@ SecGPTv2/data/KDD+.txt
 
 # Large tokenizer files (identical to base model's; regenerable)
 SecGPT-Prod/stage*/output/**/tokenizer.json
-SecGPTv3/*/output/model*/tokenizer.json
+SecGPTv3/*/output/**/tokenizer.json
 
 # Run logs
 *.log
