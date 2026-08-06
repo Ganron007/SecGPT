@@ -3,8 +3,8 @@ library_name: transformers
 model_name: model_dpo_v3
 tags:
 - generated_from_trainer
-- dpo
 - trl
+- dpo
 licence: license
 ---
 
