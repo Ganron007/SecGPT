@@ -1,10 +1,10 @@
 # SecGPT — Master Plan
 
-> **Purpose:** a learning study, not a competition. Four models, one benchmark,
+> **Purpose:** a learning study, not a competition. Three models, one benchmark,
 > every decision documented. We do our best and share the results — including
 > (especially) the failures.
 
-## The Four Models
+## The Three Models
 
 | Model | Origin | Params | Meaning in the study |
 |---|---|---|---|
@@ -100,7 +100,7 @@ JSON results, `--compare A B` stage-to-stage diff tables.
 4. SecGPTv3 SFT-31K + DPO (~1.5 h GPU)
 5. SecGPT-Prod DPO (~3 h GPU)
 6. v2.5 SFT + DPO
-7. All 4 models through the benchmark → final 4-model `BENCHMARK.md`
+7. All 4 models through the benchmark → final 3-model `BENCHMARK.md`
 
 ## Documentation standard
 

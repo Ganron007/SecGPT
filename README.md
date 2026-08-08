@@ -11,12 +11,12 @@
 [![Benchmark](https://img.shields.io/badge/benchmark-291_prompts-blue)](SecGPT-Prod/eval/)
 [![License](https://img.shields.io/badge/license-educational%2Fresearch-lightgrey)](LICENSE)
 
-A comparative study of four approaches to building a domain-specific security
+A comparative study of three approaches to building a domain-specific security
 language model on consumer hardware (RTX 4060 Laptop, 8 GB VRAM).
 </div>
 
 > [!NOTE]
-> **Study complete (2026-08-08).** All four model lines were trained through
+> **Study complete (2026-08-08).** All three model lines were trained through
 > SFT and DPO on the identical v3 dataset and scored on the same 291-prompt
 > harness. Results and analysis: [Docs/FINAL_VERDICT.md](Docs/FINAL_VERDICT.md).
 > Model weights remain local-only (see [DATA.md](DATA.md)); code, configs,
@@ -27,7 +27,7 @@ language model on consumer hardware (RTX 4060 Laptop, 8 GB VRAM).
 ## Table of Contents
 
 - [The Question](#the-question)
-- [The Four Models](#the-four-models)
+- [The Three Models](#the-four-models)
 - [Key Findings](#key-findings)
 - [Repository Structure](#repository-structure)
 - [Quick Start (SecGPT-Prod)](#quick-start-secgpt-prod)
@@ -44,7 +44,7 @@ language model on consumer hardware (RTX 4060 Laptop, 8 GB VRAM).
 
 > Can you build a useful cybersecurity assistant locally, and what does the journey from "random weights" to "accurate answers" actually look like?
 
-## The Four Models
+## The Three Models
 
 | | SecGPTv2 | SecGPTv2.5 | SecGPTv3 | SecGPT-Prod |
 |---|---|---|---|---|
@@ -95,9 +95,9 @@ SecGPT/
 ├── LICENSE                     ← educational/research use terms
 ├── DATA.md                     ← data availability + reproduction pipelines
 ├── Docs/
-│   ├── PLAN.md                 ← master plan: 4-model study, status, sequence
+│   ├── PLAN.md                 ← master plan: 3-model study, status, sequence
 │   ├── V3_DATA_SPEC.md         ← v3 data iteration spec (STIX, StackExchange, open corpus)
-│   └── FINAL_VERDICT.md        ← final 4-model × 2-stage verdict
+│   └── FINAL_VERDICT.md        ← final 3-model × 2-stage verdict
 ├── assets/logo.svg             ← project logo
 ├── test_prompts.json           ← 80 legacy demo prompts (superseded by SecGPT-Prod/eval/)
 │
@@ -192,7 +192,7 @@ Current stage history (291-prompt harness, full tables in `SecGPT-Prod/eval/`):
 
 ## Study Status
 
-The core study is complete. All four model lines were trained through SFT and
+The core study is complete. All three model lines were trained through SFT and
 DPO on the identical v3 dataset and scored on the same 291-prompt harness.
 
 | Milestone | Outcome |
