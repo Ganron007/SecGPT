@@ -83,6 +83,13 @@ All four model lines completed SFT + DPO on the identical v3 dataset
 | SecGPTv3 (GPT-2) | 124M | OpenAI pretrained | 37.8% | 33.7% | **rule 94% (global best)** |
 | SecGPT-Prod (Qwen) | 3B | Alibaba pretrained | 57.0% | **58.8%** | ref 54%, rule 74% |
 
+> In 2019, OpenAI withheld GPT-2 from the public, stating: *"Due to our
+> concerns about malicious applications of the technology, we are not
+> releasing the trained model."* In 2026, we fine-tuned it on offensive
+> security data, taught it MITRE ATT&CK techniques, exploit references, and
+> detection rule authoring — and it can hallucinate a technique ID 62.5% of
+> the time. Sleep easy, everyone.
+
 ### The v3 corpus experiment (2026-08-05)
 
 v3 data (23,746 pairs): STIX-verified MITRE relationships, real StackExchange
