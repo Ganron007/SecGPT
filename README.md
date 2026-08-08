@@ -11,7 +11,7 @@
   [![Benchmark](https://img.shields.io/badge/benchmark-291_prompts-blue)](SecGPT-Prod/eval/)
   [![License](https://img.shields.io/badge/license-educational%2Fresearch-lightgrey)](LICENSE)
 
-  A comparative study of three approaches to building a domain-specific security
+  A comparative study of four approaches to building a domain-specific security
   language model on consumer hardware (RTX 4060 Laptop, 8 GB VRAM).
 </div>
 
@@ -23,7 +23,7 @@
 ## Table of Contents
 
 - [The Question](#the-question)
-- [The Three Models](#the-three-models)
+- [The Four Models](#the-four-models)
 - [Key Findings](#key-findings)
 - [Repository Structure](#repository-structure)
 - [Quick Start (SecGPT-Prod)](#quick-start-secgpt-prod)
@@ -39,18 +39,21 @@
 
 > Can you build a useful cybersecurity assistant locally, and what does the journey from "random weights" to "accurate answers" actually look like?
 
-## The Three Models
+## The Four Models
 
-| | SecGPTv2 | SecGPTv3 | SecGPT-Prod |
-|---|---|---|---|
-| **Approach** | Built from scratch | Pretrained GPT-2 + SFT | Pretrained Qwen2.5-3B + QLoRA |
-| **Params** | 17.4M | 124M | 1.7B |
-| **Training data** | 77.8 MB corpus | 600 Q&A pairs | 31,111 Q&A pairs |
-| **Pipeline** | Pretrain → SFT → DPO | Domain-adapt → SFT → DPO | QLoRA SFT → DPO |
-| **Result** | Readable fragments | Broken (collapsed) | ✅ Working security assistant |
-| **Old 7-prompt demo** | 0/7 | 0/7 | 7/7 |
-| **291-prompt benchmark** | not yet run | not yet run | **62.2% SFT** (base 44.7%, +DPO 60.1%) |
-| **Train time** | 51 min | 27 min | 2 h SFT + 2.5 h DPO |
+| | SecGPTv2 | SecGPTv2.5 | SecGPTv3 | SecGPT-Prod |
+|---|---|---|---|---|
+| **Approach** | From scratch | From scratch (max effort) | Pretrained GPT-2 | Pretrained Qwen2.5-3B + QLoRA |
+| **Params** | 17.4M | 98M | 124M | 1.7B active (3B total) |
+| **Pretrain corpus** | 77.8 MB (25M tok) | 333 MB (108.7M tok, 16K BPE) | — (OpenAI) | — (Alibaba) |
+| **SFT data** | 600 pairs (v1 corpus) | 23,746 pairs (v3) | 23,746 pairs (v3) | 23,746 pairs (v3) |
+| **Pipeline** | Pretrain → SFT → DPO | Pretrain ✅ → SFT → DPO | SFT → DPO | SFT → DPO |
+| **291-prompt benchmark** | legacy only | pending (SFT next) | **37.8%** SFT / 33.7% DPO | **58.8%** SFT+DPO (best) |
+| **Headline** | Pipeline mechanics | The honest from-scratch ceiling | Format learned, knowledge can't be held | Working security assistant |
+
+All models train on the **same v3 dataset** (23,746 pairs: STIX-verified MITRE,
+real StackExchange Q&A, open KB, dedup'd rules, hard negatives) so the final
+comparison isolates origin (scratch vs pretrained) and scale.
 
 ## Key Findings
 
@@ -66,6 +69,12 @@
 
 6. **DPO is accuracy-neutral.** Style alignment learned cleanly (99.3% reward accuracy) but moved no accuracy metric — hallucination is a knowledge problem, not a preference problem.
 
+7. **Data quality beats data quantity (v1 → v3 iterations).** Template/truncated v1 data: 87.5% TTP hallucination. Mechanics-fixed v2.1: 76.2%. Knowledge-anchored v3 (STIX-verified IDs, real Q&A, hard negatives): **65.2%**. Each corpus generation bought factual grounding.
+
+8. **Fair GPT-2 comparison (same v3 data):** 37.8% overall vs Qwen's 58.8% — but GPT-2 scores **94% on rules**, beating Qwen's 74%. Small pretrained models master format; they can't hold knowledge. (Bonus finding: the original GPT-2 "collapse" was partly a double label-shift bug in our own training code — documented in the repo.)
+
+9. **Implementation is infrastructure.** Naive materialized-mask attention ran the 98M model at 1.3K tok/s; swapping to SDPA gave 24.6K tok/s (19×) — the difference between a 42-hour and a 2-hour pretrain.
+
 ## Repository Structure
 
 ```
@@ -80,7 +89,7 @@ SecGPT/
 ├── test_prompts.json      ← 80 legacy demo prompts (10 per category)
 │                            (v2-style <|tag|> prefixes; superseded by SecGPT-Prod/eval/)
 │
-├── SecGPTv2/              ← From-scratch model (learning exercise)
+├── SecGPTv2/              ← From-scratch 17.4M (learning exercise, frozen)
 │   ├── llm_build.md       ← Full build log covering all 8 pre-training steps
 │   ├── requirements.txt
 │   ├── src/               ← Training scripts (custom GPT, tokenizer, SFT, DPO)
@@ -88,10 +97,16 @@ SecGPT/
 │   ├── stage2_sft/        ← SFT documentation + results
 │   └── stage3_alignment/  ← DPO documentation + results
 │
-├── SecGPTv3/              ← GPT-2 attempt (documented failure + lessons)
-│   ├── doc.md             ← Honest analysis of what went wrong
+├── SecGPTv2.5/            ← From-scratch 98M (max effort on 8 GB VRAM)
+│   ├── src/               ← Corpus/tokenizer/model/train/SFT/DPO/eval scripts
+│   ├── stage1_pre-training/  ← 333 MB corpus, 16K BPE, 24K-step pretrain ✅
+│   ├── stage2_sft/        ← SFT on v3 data (next)
+│   └── stage3_alignment/  ← DPO (pending)
+│
+├── SecGPTv3/              ← GPT-2 124M (fairness run on v3 data)
+│   ├── doc.md             ← Original attempt analysis + lessons
 │   ├── requirements.txt
-│   └── src/               ← Pipeline scripts
+│   └── src/               ← sft_v3.py / dpo_v3.py (37.8% / 33.7% benchmarked)
 │
 └── SecGPT-Prod/           ← Working model (Qwen2.5-3B + QLoRA)
     ├── doc.md             ← Build documentation (metrics, architecture, locations)
@@ -126,13 +141,18 @@ The old 7-prompt demo ([BENCHMARK.md](SecGPT-Prod/BENCHMARK.md)) is superseded b
 291-prompt two-layer harness ([SecGPT-Prod/eval/](SecGPT-Prod/eval/)) with objective
 scorers, leakage splits, hallucination tracking, and N-way stage comparison.
 
-Current stage history (Qwen2.5-3B line):
+Current stage history (291-prompt harness, full tables in `SecGPT-Prod/eval/`):
 
-| Stage | Overall | Held-out | TTP hallucination |
+| Model / stage | Overall | TTP hallucination | Note |
 |---|---|---|---|
-| Base (control) | 44.7% | 58.5% | 20.0% |
-| SFT (31K pairs) | 62.2% | 79.2% | 87.5% |
-| SFT + DPO | 60.1% | 79.2% | 83.3% |
+| Qwen base (control) | 44.7% | 20.0% | pretrained honesty |
+| Qwen SFT v1 data (31K, truncated) | 62.2% | 87.5% | behavior learned, facts corrupted |
+| Qwen SFT v2.1 data | 58.4% | 76.2% | mechanics fixed |
+| Qwen SFT v3 data | 57.0% | 65.2% | knowledge-anchored |
+| **Qwen SFT v3 + DPO** | **58.8%** | 66.7% | **current Prod reference** |
+| GPT-2 SFT v3 data | 37.8% | 0.0% | rule 94% (best of all models) |
+| GPT-2 SFT v3 + DPO | 33.7% | 62.5% | DPO hurts accuracy again |
+| SecGPTv2.5 (98M scratch) | pending | pending | pretrain ✅, SFT next |
 
 **Prompt sample:** *"Write a Sigma detection rule for suspicious PowerShell encoded command execution."*
 
@@ -159,11 +179,13 @@ Current stage history (Qwen2.5-3B line):
 
 ## What's Next
 
-- [x] Security-specific evaluation framework → `SecGPT-Prod/eval/` (291 prompts, 3-way stage history)
+- [x] Security-specific evaluation framework → `SecGPT-Prod/eval/` (291 prompts, N-way stage history)
 - [x] DPO alignment on SecGPT-Prod → accuracy-neutral, hallucination −4.2 pts
-- [ ] **Data-quality iteration (current focus):** SFT v2 pairs built (knowledge-anchored, dedup'd, hard negatives) — awaiting train; v3 spec in [Docs/V3_DATA_SPEC.md](Docs/V3_DATA_SPEC.md) (MITRE STIX, StackExchange, open corpus)
-- [ ] SecGPTv3 fairness run: GPT-2 + SFT on 31K pairs + DPO
-- [ ] SecGPTv2.5: ~100M from scratch (max effort on 8 GB VRAM) — parked
+- [x] Data-quality iterations v2/v2.1/v3 → hallucination 87.5% → 65.2% ([spec](Docs/V3_DATA_SPEC.md))
+- [x] SecGPTv3 fairness run: GPT-2 + SFT/DPO on v3 data (label-shift bug found & fixed)
+- [x] SecGPTv2.5 pretrain: 98M from scratch, 108.7M tokens, val loss 1.73
+- [ ] **SecGPTv2.5 SFT + DPO on v3 data + benchmark (current focus)**
+- [ ] Final 4-model verdict + per-model documentation
 - [ ] Scale to Qwen2.5-7B for better reasoning
 - [ ] Multi-turn conversation support
 - [ ] RAG integration (post-cutoff facts only; corpus already baked into weights)
