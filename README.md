@@ -46,15 +46,17 @@ language model on consumer hardware (RTX 4060 Laptop, 8 GB VRAM).
 
 ## The Three Models
 
-| | SecGPTv2 | SecGPTv2.5 | SecGPTv3 | SecGPT-Prod |
-|---|---|---|---|---|
-| **Approach** | From scratch | From scratch (max effort) | Pretrained GPT-2 | Pretrained Qwen2.5-3B + QLoRA |
-| **Params** | 17.4M | 98M | 124M | 1.7B active (3B total) |
-| **Pretrain corpus** | 77.8 MB (25M tok) | 333 MB (108.7M tok, 16K BPE) | — (OpenAI) | — (Alibaba) |
-| **SFT data** | 600 pairs (v1 corpus) | 23,746 pairs (v3) | 23,746 pairs (v3) | 23,746 pairs (v3) |
-| **Pipeline** | Pretrain → SFT → DPO | Pretrain → SFT → DPO | SFT → DPO | SFT → DPO |
-| **291-prompt benchmark** | legacy only | **18.2%** SFT / 7.6% DPO | **37.8%** SFT / 33.7% DPO | **58.8%** SFT+DPO (best) |
-| **Headline** | Pipeline mechanics | The honest from-scratch ceiling | Format learned, knowledge can't be held | Working security assistant |
+The study compares three model lines on identical data. SecGPTv2 (17.4M, from scratch) is a separate learning exercise that preceded the study — it taught the pipeline but was never benchmarked on the 291-prompt harness.
+
+| | SecGPTv2.5 | SecGPTv3 (GPT-2) | SecGPT-Prod (Qwen) |
+|---|---|---|---|
+| **Approach** | From scratch (max effort) | Pretrained GPT-2 | Pretrained Qwen2.5-3B + QLoRA |
+| **Params** | 98M | 124M | 1.7B active (3B total) |
+| **Pretrain corpus** | 333 MB (108.7M tok, 16K BPE) | — (OpenAI) | — (Alibaba) |
+| **SFT data** | 23,746 pairs (v3) | 23,746 pairs (v3) | 23,746 pairs (v3) |
+| **Pipeline** | Pretrain → SFT → DPO | SFT → DPO | SFT → DPO |
+| **291-prompt benchmark** | **18.2%** SFT / 7.6% DPO | **37.8%** SFT / 33.7% DPO | **58.8%** SFT+DPO (best) |
+| **Headline** | The honest from-scratch ceiling | Format learned, knowledge can't be held | Working security assistant |
 
 All models train on the **same v3 dataset** (23,746 pairs: STIX-verified MITRE,
 real StackExchange Q&A, open KB, dedup'd rules, hard negatives) so the final
