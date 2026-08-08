@@ -93,7 +93,7 @@ Where:
 |---|---|
 | **Stage 1** (pretrained) | `Cononsig file security be stus or movidualded usersion to the extrand a tatttack with your to compunical at can detected` |
 | **Stage 2** (SFT) | `ID: T1027.001\n\nDescription: Adversaries may execute their own malicious payloads by hijacking vulnerable file path references. Adversaries can take advantage of paths that lack surrounding quotations...` |
-| **Stage 3** (DPO) | `Description: Detects usage of the "AllowMultipleTSSessions" utilities used by builtin utilities to perform remote commands execution.\n\nDetection Logic:\ncondition: selection\nselection:\n  TargetFilename\|endswith: \Microsoft\Windows\CurrentVersion\Policies\Explorer` |
+| **Stage 3** (DPO) | `Description: Detects usage of the "AllowMultipleTSSessions" utilities used by builtin utilities to perform remote commands execution.\n\nDetection Logic:\ncondition: selection\nselection:\n TargetFilename\|endswith: \Microsoft\Windows\CurrentVersion\Policies\Explorer` |
 
 ### Prompt: `<|rule|>\nQ: Write a detection rule for PowerShell encoded commands\nA:`
 
@@ -101,7 +101,7 @@ Where:
 |---|---|
 | **Stage 1** | `e PseudoSigner_01_Cpp_Hint_DOS_EP from peid.yar. git.todoparami.net/Xumeiquer/PEiD_to_Yara` |
 | **Stage 2** | `Status: test\nLevel: medium\nAuthor: Florian Roth\nDescription: Detects the creation of a new PowerShell module...\nDetection Logic:\ncondition: selection and not 1 of filter_main_*` |
-| **Stage 3** | `Status: test\nLevel: medium\nAuthor: Florian Roth (Nextron Systems), Nasreddine Bencherchali\nDescription: Detects possible path traversal...\nDetection Logic:\ncondition: selection\nselection:\n  Image\|endswith: \rundll` |
+| **Stage 3** | `Status: test\nLevel: medium\nAuthor: Florian Roth (Nextron Systems), Nasreddine Bencherchali\nDescription: Detects possible path traversal...\nDetection Logic:\ncondition: selection\nselection:\n Image\|endswith: \rundll` |
 
 ### What each stage added
 
@@ -136,10 +136,10 @@ These limitations are inherent to a 17.4M param model with 77 MB of training dat
 
 ```json
 {
-  "prompt": "<|ttp|>\nQ: What is the vulnerability CVE-2025-25181?\nA:",
-  "chosen": "Vendor: Advantive\nProduct: VeraCore\nVulnerability: SQL Injection...",
-  "rejected": "Perhaps incorrectly vendor: advantive\nProduct: VeraCore\nIt could be that vulnera...",
-  "tag": "ttp"
+ "prompt": "<|ttp|>\nQ: What is the vulnerability CVE-2025-25181?\nA:",
+ "chosen": "Vendor: Advantive\nProduct: VeraCore\nVulnerability: SQL Injection...",
+ "rejected": "Perhaps incorrectly vendor: advantive\nProduct: VeraCore\nIt could be that vulnera...",
+ "tag": "ttp"
 }
 ```
 
@@ -162,4 +162,4 @@ python src/generate.py --checkpoint stage3_alignment/output/checkpoint_dpo.pt --
 
 ---
 
-## Status: ✅ Complete (2026-08-02)
+## Status: Complete (2026-08-02)

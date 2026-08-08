@@ -26,19 +26,19 @@ eligible**, and we use 8-12K of those. Raw source is 67 collections
 New extraction (`src/build_kb_v3.py`):
 
 1. **Section-based chunking**: split `.md` on `##`/`###` headers, target
-   800-2,000 chars per chunk (merge small sections, split large at paragraph
-   breaks). Every chunk = one topic.
+ 800-2,000 chars per chunk (merge small sections, split large at paragraph
+ breaks). Every chunk = one topic.
 2. **Per-section titles**: nearest header above the chunk (not the course name).
-   Fallback: `"{course} — {first-words}"`.
+ Fallback: `"{course} — {first-words}"`.
 3. **Junk filters**: TOC/nav pages (`## Contents`, `](#page-` density),
-   index/glossary sections, pages <100 chars, image/asset-only pages.
+ index/glossary sections, pages <100 chars, image/asset-only pages.
 4. **Technique validation**: existing `technique_ids` field has garbage
-   (e.g. `T0000`, `T1111`). Validate every ID against the real ATT&CK STIX ID
-   set; keep only valid ones → enables verified "which technique…" pairs.
+ (e.g. `T0000`, `T1111`). Validate every ID against the real ATT&CK STIX ID
+ set; keep only valid ones → enables verified "which technique…" pairs.
 5. **Domain-stratified sampling**: use `domain:*` tags to balance
-   offensive/defensive/DFIR/cloud/AD across the kb quota.
+ offensive/defensive/DFIR/cloud/AD across the kb quota.
 6. **Cross-collection dedup**: same concept appears in SANS + HTB + CISSP;
-   fuzzy-title + first-200-char hash dedup.
+ fuzzy-title + first-200-char hash dedup.
 
 Expected yield: ~60-80K clean section chunks (vs 107K noisy page chunks),
 of which we sample 10-12K for training. **Licensing unchanged** — still
@@ -56,7 +56,7 @@ New verified pair types (all answers checkable — anti-hallucination):
 - tactic → techniques ("Which techniques belong to Defense Evasion?")
 - group/software → techniques used
 - keep v2's anchored description + by-ID + verify_yes/verify_no pairs,
-  now with STIX-verified IDs (no reliance on regex'd text)
+ now with STIX-verified IDs (no reliance on regex'd text)
 
 Quota: ~6K pairs from STIX + 1.5K verification pairs.
 
@@ -69,7 +69,7 @@ Posts.xml:
 - security-relevant tags filter; strip HTML; Q+top answer ≤ 2,000 chars
 - dedup, drop image/link-only answers
 - Expected: ~10-20K natural Q&A pairs — the only non-synthetic
-  instruction data in the corpus. Category: `kb` (kind=`real_qa`).
+ instruction data in the corpus. Category: `kb` (kind=`real_qa`).
 
 ## Source 4: Open replacements for CADRE KB (publishable corpus path)
 
@@ -86,7 +86,7 @@ reproducibility gap; CADRE-derived pairs stay in a separate local-only file).
 ## Sources kept as-is (already good)
 
 - Rules: Sigma/Elastic/Splunk/Hayabusa/Chainsaw dedup'd (v2) + **full YAML
-  with `attack.tXXXX` tags** → verified rule↔technique pairs
+ with `attack.tXXXX` tags** → verified rule↔technique pairs
 - LOLBAS/GTFOBins/forensics/KAPE/Velociraptor/HijackLibs/LOLDrivers
 - CISA KEV + CAPEC + MBC + D3FEND; add NVD CVE JSON (bulk, free) ~1-2K vuln pairs
 - Classification: UCI SMS + NSL-KDD (unchanged; consider CIC-IDS2017 later)
@@ -95,8 +95,8 @@ reproducibility gap; CADRE-derived pairs stay in a separate local-only file).
 
 ```
 data/
-├── sft_v3.jsonl        ← full training set (~30K, local-only; includes CADRE)
-├── sft_v3_open.jsonl   ← publishable subset (~15-18K, no CADRE/proprietary)
+├── sft_v3.jsonl ← full training set (~30K, local-only; includes CADRE)
+├── sft_v3_open.jsonl ← publishable subset (~15-18K, no CADRE/proprietary)
 ```
 
 Target composition (~30K):
@@ -115,7 +115,7 @@ Target composition (~30K):
 3. Exact + fuzzy dedup (title + first-200-chars hash)
 4. No TOC/nav/boilerplate chunks (regex battery)
 5. Per-category + per-kind counts printed; sample 10 random pairs dumped
-   for eyeball review before training
+ for eyeball review before training
 
 ## Experiment protocol (unchanged variable isolation)
 

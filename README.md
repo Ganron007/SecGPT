@@ -1,22 +1,26 @@
 <div align="center">
-  <img src="assets/logo.svg" alt="SecGPT logo" width="720"/>
+<img src="assets/logo.svg" alt="SecGPT logo" width="720"/>
 
-  # SecGPT
+# SecGPT
 
-  **Building a Cybersecurity LLM from Scratch to Production**
+**Building a Cybersecurity LLM from Scratch to Production**
 
-  [![Python](https://img.shields.io/badge/python-3.11%2B-blue)]()
-  [![PyTorch](https://img.shields.io/badge/PyTorch-2.11-ee4c2c)]()
-  [![Base Model](https://img.shields.io/badge/base-Qwen2.5--3B-7b61ff)]()
-  [![Benchmark](https://img.shields.io/badge/benchmark-291_prompts-blue)](SecGPT-Prod/eval/)
-  [![License](https://img.shields.io/badge/license-educational%2Fresearch-lightgrey)](LICENSE)
+[![Python](https://img.shields.io/badge/python-3.11%2B-blue)]()
+[![PyTorch](https://img.shields.io/badge/PyTorch-2.11-ee4c2c)]()
+[![Base Model](https://img.shields.io/badge/base-Qwen2.5--3B-7b61ff)]()
+[![Benchmark](https://img.shields.io/badge/benchmark-291_prompts-blue)](SecGPT-Prod/eval/)
+[![License](https://img.shields.io/badge/license-educational%2Fresearch-lightgrey)](LICENSE)
 
-  A comparative study of four approaches to building a domain-specific security
-  language model on consumer hardware (RTX 4060 Laptop, 8 GB VRAM).
+A comparative study of four approaches to building a domain-specific security
+language model on consumer hardware (RTX 4060 Laptop, 8 GB VRAM).
 </div>
 
 > [!NOTE]
-> **Feature testing in progress.** SecGPT-Prod (Qwen2.5-3B + QLoRA) is far enough along for research demos and the 291-prompt benchmark, but training recipes, eval harness, and “from scratch → production” paths are still being validated. Expect data layouts, checkpoints, and docs to keep evolving.
+> **Study complete (2026-08-08).** All four model lines were trained through
+> SFT and DPO on the identical v3 dataset and scored on the same 291-prompt
+> harness. Results and analysis: [Docs/FINAL_VERDICT.md](Docs/FINAL_VERDICT.md).
+> Model weights remain local-only (see [DATA.md](DATA.md)); code, configs,
+> benchmark harness, and full documentation are in the repo.
 
 ---
 
@@ -31,7 +35,8 @@
 - [Benchmark](#benchmark)
 - [Hardware Requirements](#hardware-requirements)
 - [Datasets Used](#datasets-used)
-- [What's Next](#whats-next)
+- [Study Status](#study-status)
+- [Roadmap](#roadmap)
 - [License](#license)
 - [Author](#author)
 
@@ -47,7 +52,7 @@
 | **Params** | 17.4M | 98M | 124M | 1.7B active (3B total) |
 | **Pretrain corpus** | 77.8 MB (25M tok) | 333 MB (108.7M tok, 16K BPE) | — (OpenAI) | — (Alibaba) |
 | **SFT data** | 600 pairs (v1 corpus) | 23,746 pairs (v3) | 23,746 pairs (v3) | 23,746 pairs (v3) |
-| **Pipeline** | Pretrain → SFT → DPO | Pretrain ✅ → SFT → DPO | SFT → DPO | SFT → DPO |
+| **Pipeline** | Pretrain → SFT → DPO | Pretrain → SFT → DPO | SFT → DPO | SFT → DPO |
 | **291-prompt benchmark** | legacy only | **18.2%** SFT / 7.6% DPO | **37.8%** SFT / 33.7% DPO | **58.8%** SFT+DPO (best) |
 | **Headline** | Pipeline mechanics | The honest from-scratch ceiling | Format learned, knowledge can't be held | Working security assistant |
 
@@ -79,44 +84,45 @@ comparison isolates origin (scratch vs pretrained) and scale.
 
 ```
 SecGPT/
-├── README.md              ← this file
-├── LICENSE                ← educational/research use terms
-├── DATA.md                ← data availability + reproduction pipelines
+├── README.md                   ← this file
+├── LICENSE                     ← educational/research use terms
+├── DATA.md                     ← data availability + reproduction pipelines
 ├── Docs/
-│   ├── PLAN.md            ← master plan: 4-model study, status, sequence
-│   └── V3_DATA_SPEC.md    ← next data iteration spec (STIX, StackExchange, open corpus)
-├── assets/logo.svg        ← project logo
-├── test_prompts.json      ← 80 legacy demo prompts (10 per category)
-│                            (v2-style <|tag|> prefixes; superseded by SecGPT-Prod/eval/)
+│   ├── PLAN.md                 ← master plan: 4-model study, status, sequence
+│   ├── V3_DATA_SPEC.md         ← v3 data iteration spec (STIX, StackExchange, open corpus)
+│   └── FINAL_VERDICT.md        ← final 4-model × 2-stage verdict
+├── assets/logo.svg             ← project logo
+├── test_prompts.json           ← 80 legacy demo prompts (superseded by SecGPT-Prod/eval/)
 │
-├── SecGPTv2/              ← From-scratch 17.4M (learning exercise, frozen)
-│   ├── llm_build.md       ← Full build log covering all 8 pre-training steps
+├── SecGPTv2/                   ← from-scratch 17.4M (learning exercise, frozen)
+│   ├── llm_build.md            ← full build log covering all 8 pre-training steps
 │   ├── requirements.txt
-│   ├── src/               ← Training scripts (custom GPT, tokenizer, SFT, DPO)
-│   ├── stage1_pre-training/  ← 8-step pipeline (input/output dirs per step)
-│   ├── stage2_sft/        ← SFT documentation + results
-│   └── stage3_alignment/  ← DPO documentation + results
+│   ├── src/                    ← training scripts (custom GPT, tokenizer, SFT, DPO)
+│   ├── stage1_pre-training/    ← 8-step pipeline (input/output dirs per step)
+│   ├── stage2_sft/             ← SFT documentation + results
+│   └── stage3_alignment/       ← DPO documentation + results
 │
-├── SecGPTv2.5/            ← From-scratch 98M (max effort on 8 GB VRAM)
-│   ├── src/               ← Corpus/tokenizer/model/train/SFT/DPO/eval scripts
-│   ├── stage1_pre-training/  ← 333 MB corpus, 16K BPE, 24K-step pretrain ✅
-│   ├── stage2_sft/        ← SFT on v3 data (next)
-│   └── stage3_alignment/  ← DPO (pending)
+├── SecGPTv2.5/                 ← from-scratch 98M (max effort on 8 GB VRAM)
+│   ├── doc.md                  ← build documentation (what/why/how/tradeoffs)
+│   ├── src/                    ← corpus/tokenizer/model/train/SFT/DPO/eval scripts
+│   ├── stage1_pre-training/    ← 333 MB corpus, 16K BPE, 24K-step pretrain
+│   ├── stage2_sft/             ← SFT on v3 data (18.2%)
+│   └── stage3_alignment/       ← DPO (7.6% — destructive at this scale)
 │
-├── SecGPTv3/              ← GPT-2 124M (fairness run on v3 data)
-│   ├── doc.md             ← Original attempt analysis + lessons
+├── SecGPTv3/                   ← GPT-2 124M (fairness run on v3 data)
+│   ├── doc.md                  ← original attempt + fairness-run analysis
 │   ├── requirements.txt
-│   └── src/               ← sft_v3.py / dpo_v3.py (37.8% / 33.7% benchmarked)
+│   └── src/                    ← sft_v3.py / dpo_v3.py (37.8% / 33.7%)
 │
-└── SecGPT-Prod/           ← Working model (Qwen2.5-3B + QLoRA)
-    ├── doc.md             ← Build documentation (metrics, architecture, locations)
-    ├── BENCHMARK.md       ← Legacy 7-prompt 3-model comparison
-    ├── USAGE.md           ← How to run and use the model
-    ├── eval/              ← 291-prompt benchmark harness + stage history
+└── SecGPT-Prod/                ← working model (Qwen2.5-3B + QLoRA)
+    ├── doc.md                  ← build documentation (metrics, architecture, locations)
+    ├── BENCHMARK.md            ← legacy 7-prompt 3-model comparison
+    ├── USAGE.md                ← how to run and use the model
+    ├── eval/                   ← 291-prompt benchmark harness + stage history
     ├── requirements.txt
-    ├── src/               ← Data builders, QLoRA SFT, DPO, benchmark runner
-    ├── stage1_sft/        ← SFT LoRA checkpoints (weights gitignored)
-    └── stage2_alignment/  ← DPO checkpoint (weights gitignored)
+    ├── src/                    ← data builders, QLoRA SFT, DPO, benchmark runner
+    ├── stage1_sft/             ← SFT LoRA checkpoints (weights gitignored)
+    └── stage2_alignment/       ← DPO checkpoint (weights gitignored)
 ```
 
 ## Quick Start (SecGPT-Prod)
@@ -124,7 +130,7 @@ SecGPT/
 ```bash
 pip install -r SecGPT-Prod/requirements.txt
 cd SecGPT-Prod
-python src/quality_check.py   # needs the trained LoRA adapter — see DATA.md
+python src/quality_check.py # needs the trained LoRA adapter — see DATA.md
 ```
 
 See [SecGPT-Prod/USAGE.md](SecGPT-Prod/USAGE.md) for full instructions.
@@ -158,7 +164,7 @@ Current stage history (291-prompt harness, full tables in `SecGPT-Prod/eval/`):
 
 | SecGPTv2 (17.4M) | SecGPTv3 (124M) | SecGPT-Prod (1.7B) |
 |---|---|---|
-| Format correct, content garbled | Repetitive garbage | ✅ Valid detection logic |
+| Format correct, content garbled | Repetitive garbage | Valid detection logic |
 
 ## Hardware Requirements
 
@@ -177,18 +183,27 @@ Current stage history (291-prompt harness, full tables in `SecGPT-Prod/eval/`):
 | UCI SMS Spam Collection | 5,574 | Spam/ham classification |
 | NSL-KDD | 148,517 | Network intrusion detection |
 
-## What's Next
+## Study Status
 
-- [x] Security-specific evaluation framework → `SecGPT-Prod/eval/` (291 prompts, N-way stage history)
-- [x] DPO alignment on SecGPT-Prod → accuracy-neutral, hallucination −4.2 pts
-- [x] Data-quality iterations v2/v2.1/v3 → hallucination 87.5% → 65.2% ([spec](Docs/V3_DATA_SPEC.md))
-- [x] SecGPTv3 fairness run: GPT-2 + SFT/DPO on v3 data (label-shift bug found & fixed)
-- [x] SecGPTv2.5 pretrain: 98M from scratch, 108.7M tokens, val loss 1.73
-- [x] SecGPTv2.5 SFT + DPO on v3 data + benchmark → 18.2% / 7.6% (DPO destructive at 98M)
-- [x] Final 4-model verdict → [Docs/FINAL_VERDICT.md](Docs/FINAL_VERDICT.md)
-- [ ] Scale to Qwen2.5-7B for better reasoning
-- [ ] Multi-turn conversation support
-- [ ] RAG integration (post-cutoff facts only; corpus already baked into weights)
+The core study is complete. All four model lines were trained through SFT and
+DPO on the identical v3 dataset and scored on the same 291-prompt harness.
+
+| Milestone | Outcome |
+|---|---|
+| Evaluation framework | 291-prompt two-layer harness, N-way stage history (SecGPT-Prod/eval/) |
+| Data-quality iterations (v1 to v3) | TTP hallucination 87.5% to 65.2% ([spec](Docs/V3_DATA_SPEC.md)) |
+| SecGPT-Prod alignment (DPO) | Accuracy-neutral; hallucination -4.2 pts |
+| SecGPTv3 fairness run | GPT-2 on identical v3 data; label-shift bug found and fixed |
+| SecGPTv2.5 (98M from scratch) | Pretrain (val 1.73) + SFT 18.2% + DPO 7.6% (destructive at this scale) |
+| Final verdict | [Docs/FINAL_VERDICT.md](Docs/FINAL_VERDICT.md) |
+
+## Roadmap
+
+| Item | Rationale |
+|---|---|
+| Scale to Qwen2.5-7B | Test whether capacity lifts factual grounding further |
+| Multi-turn conversation support | Current models are single-turn by construction |
+| RAG integration | Post-cutoff facts only (corpus is already baked into the weights) |
 
 ## License
 

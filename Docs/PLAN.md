@@ -32,10 +32,10 @@ Pretrain → SFT → DPO (alignment)
 
 | Model | Pretrain | SFT | DPO | Benchmarked | Remaining |
 |---|---|---|---|---|---|
-| SecGPTv2 | ✅ 20K steps | ✅ 1500 (overfit 0.16/2.18) | ✅ 500 (0.69→0.07) | legacy 7-prompt only | — (frozen learning material) |
-| SecGPTv2.5 | ✅ 24K steps, val 1.73 | ✅ 1500 (val 2.05) | ✅ 500 (destructive) | ✅ 17.9% / 7.6% | — complete |
-| SecGPTv3 | ✅ OpenAI | ✅ v3 data, 37.8% | ✅ 33.7% | ✅ both stages | — complete |
-| SecGPT-Prod | ✅ Alibaba | ✅ v3 data, 57.0% | ✅ 58.8% | ✅ full stage history | — complete |
+| SecGPTv2 | 20K steps | 1500 (overfit 0.16/2.18) | 500 (0.69→0.07) | legacy 7-prompt only | — (frozen learning material) |
+| SecGPTv2.5 | 24K steps, val 1.73 | 1500 (val 2.05) | 500 (destructive) | 17.9% / 7.6% | — complete |
+| SecGPTv3 | OpenAI | v3 data, 37.8% | 33.7% | both stages | — complete |
+| SecGPT-Prod | Alibaba | v3 data, 57.0% | 58.8% | full stage history | — complete |
 
 **Study complete (2026-08-08).** Final verdict: [FINAL_VERDICT.md](FINAL_VERDICT.md).
 
@@ -53,12 +53,12 @@ Pretrain → SFT → DPO (alignment)
 itself — our scratch model vs OpenAI's pretrain at the same parameter count.
 
 - **Corpus:** 77.8 MB → **400-500 MB** (~150-200M tokens). Source already on disk:
-  `cadre_kb.jsonl` (1.75 GB, v2 used only 30K of 483K chunks) + DFIR-Nexus + KDD + malimg.
-  Data, not params, is the binding constraint (Chinchilla-optimal for 100M ≈ 2B tokens —
-  unreachable; we document the gap and its effect).
+ `cadre_kb.jsonl` (1.75 GB, v2 used only 30K of 483K chunks) + DFIR-Nexus + KDD + malimg.
+ Data, not params, is the binding constraint (Chinchilla-optimal for 100M ≈ 2B tokens —
+ unreachable; we document the gap and its effect).
 - **Tokenizer:** retrain BPE at 16K vocab (v2's 8K under-compresses).
 - **Architecture:** v2's custom GPT scaled: ~12 layers × 12 heads × 768d, context 512,
-  weight tying, pre-norm. (Alternatives — RoPE/SwiGLU — documented at build time.)
+ weight tying, pre-norm. (Alternatives — RoPE/SwiGLU — documented at build time.)
 - **Training:** fp16 AMP, cosine LR, ~8-16 h on the 4060 (overnight runs).
 - **Then:** SFT (31K pairs) → DPO, same as every model.
 
@@ -77,8 +77,8 @@ Location: `SecGPT-Prod/eval/` (sets gitignored, results tracked).
 - Held-out, leakage-checked: any source record present in `sft_32k.jsonl` is excluded
 - Categories: ttp 50 / rule 50 / ref 50 / kb 40 / classification 50
 - Objective scorers, no LLM judge: Sigma YAML validity, MITRE ID existence +
-  description-ID match (**hallucination rate**), entity/keyword coverage,
-  classification accuracy
+ description-ID match (**hallucination rate**), entity/keyword coverage,
+ classification accuracy
 
 **Layer 2 — practical utility** (`practical_set.jsonl`, built by `src/build_practical_set.py`):
 scenario tasks, not Q&A — SOC alert triage, Sigma rule from prose scenario,
@@ -92,9 +92,9 @@ JSON results, `--compare A B` stage-to-stage diff tables.
 
 ## Execution sequence
 
-1. **Benchmark harness** ✅ done — `SecGPT-Prod/eval/` (240 accuracy + 51 practical,
-   objective scorers, leakage splits, `--compare`). Baseline `sft500`: 62.2% overall,
-   79.2% held-out, **87.5% TTP hallucination** — findings in `SecGPT-Prod/eval/README.md`
+1. **Benchmark harness** Done — `SecGPT-Prod/eval/` (240 accuracy + 51 practical,
+ objective scorers, leakage splits, `--compare`). Baseline `sft500`: 62.2% overall,
+ 79.2% held-out, **87.5% TTP hallucination** — findings in `SecGPT-Prod/eval/README.md`
 2. v2.5 corpus + tokenizer (CPU)
 3. v2.5 pretrain (~8-16 h GPU, overnight)
 4. SecGPTv3 SFT-31K + DPO (~1.5 h GPU)

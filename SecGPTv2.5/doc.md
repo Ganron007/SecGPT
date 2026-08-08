@@ -21,7 +21,7 @@ the 8 GB needed for SFT/DPO/benchmark on the same card. RoPE/SwiGLU —
 rejected for comparability with v2's architecture family; the study isolates
 scale and data, not architectural tricks.
 
-## Stage 1 — Pretraining ✅
+## Stage 1 — Pretraining 
 
 **What:** 24,000 steps × batch 16 × 512 = ~197M token-passes over a 108.7M-token corpus (~1.8 epochs). LR 4e-4 → 4e-5 cosine, 500 warmup, grad-clip 1.0.
 
@@ -46,7 +46,7 @@ naive attention (materialized 512×512 causal mask per head per layer):
 5.96 GB → same run in ~2h**. GPU was never the bottleneck; the kernel choice
 was. (`src/speed_test.py` reproduces the measurement.)
 
-## Stage 2 — SFT ✅
+## Stage 2 — SFT 
 
 **What:** 1,500 steps on the shared v3 dataset (23,746 pairs, tag-formatted
 `<|tag|>\nQ: …\nA: …`), LR 5e-5, batch 8 × 512, best-val checkpoint tracking.
@@ -57,7 +57,7 @@ lower LR, plus val-tracked saving instead of last-step saving.
 **Results:** 6.6 min. Best val **2.05** (higher than pretrain val 1.73 is
 expected — Q&A format is a new task). Benchmark: **18.2% overall**.
 
-## Stage 3 — DPO ✅
+## Stage 3 — DPO 
 
 **What:** 500 steps, β=0.3, batch 4 pairs/step, LR 1e-5, on 2,829 degraded
 pairs (truncate/shuffle/de-structure/hedge — same strategies as every line).
@@ -84,15 +84,15 @@ grounding is not. Full analysis: [Docs/FINAL_VERDICT.md](../Docs/FINAL_VERDICT.m
 
 ```powershell
 cd SecGPTv2.5
-python src/build_corpus.py          # 333 MB corpus (needs SecGPT-Prod/data/v3/kb_v3.jsonl)
-python src/tokenizer.py             # 16K BPE, encodes + splits
-python src/model.py                 # validate: 98.1M params
-python src/train.py --steps 24000   # pretrain (~2h with SDPA; --resume supported)
-python src/build_sft_corpus.py      # v3 pairs -> tag format
+python src/build_corpus.py # 333 MB corpus (needs SecGPT-Prod/data/v3/kb_v3.jsonl)
+python src/tokenizer.py # 16K BPE, encodes + splits
+python src/model.py # validate: 98.1M params
+python src/train.py --steps 24000 # pretrain (~2h with SDPA; --resume supported)
+python src/build_sft_corpus.py # v3 pairs -> tag format
 python src/sft_train.py --steps 1500
 python src/build_dpo_corpus.py
 python src/dpo_train.py --steps 500
 python src/eval_v25.py --checkpoint stage2_sft/output/checkpoint_sft.pt --name v25sft
 ```
 
-Status: ✅ complete (2026-08-08).
+Status: Complete (2026-08-08).

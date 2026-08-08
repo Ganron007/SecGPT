@@ -28,21 +28,21 @@ SecGPT-Prod is a **locally-running cybersecurity assistant** built by fine-tunin
 
 ```
 Location: C:\Users\Ganro\.cache\huggingface\hub\models--Qwen--Qwen2.5-3B-Instruct\
-Size:     5.76 GB (full precision weights, loaded in 4-bit at runtime)
-What:     The pretrained language model. Knows English, general knowledge, reasoning.
-          Does NOT know security-specific content until LoRA is applied.
+Size: 5.76 GB (full precision weights, loaded in 4-bit at runtime)
+What: The pretrained language model. Knows English, general knowledge, reasoning.
+ Does NOT know security-specific content until LoRA is applied.
 ```
 
 ### LoRA Adapters (the security training)
 
 ```
-Location: SecGPT-Prod/stage1_sft/output/qwen_qlora/checkpoint-500/  (this repo, weights gitignored)
+Location: SecGPT-Prod/stage1_sft/output/qwen_qlora/checkpoint-500/ (this repo, weights gitignored)
 Files:
-  adapter_model.safetensors   57.16 MB  ← THE TRAINED WEIGHTS (this IS the "security knowledge")
-  adapter_config.json          0.01 MB  ← LoRA configuration
-  tokenizer.json              10.89 MB  ← Tokenizer (same as base)
-  optimizer.pt                58.56 MB  ← Optimizer state (only needed to resume training)
-  trainer_state.json           0.01 MB  ← Training log
+ adapter_model.safetensors 57.16 MB ← THE TRAINED WEIGHTS (this IS the "security knowledge")
+ adapter_config.json 0.01 MB ← LoRA configuration
+ tokenizer.json 10.89 MB ← Tokenizer (same as base)
+ optimizer.pt 58.56 MB ← Optimizer state (only needed to resume training)
+ trainer_state.json 0.01 MB ← Training log
 ```
 
 ### The Critical Distinction
@@ -50,11 +50,11 @@ Files:
 | | Base Model | LoRA Adapters | Combined |
 |---|---|---|---|
 | What it is | General-purpose LLM | Security-specific adjustments | SecGPT-Prod |
-| Knows English? | ✅ Yes | N/A | ✅ Yes |
-| Knows security? | ❌ No (general only) | ✅ Yes (this is the training) | ✅ Yes |
+| Knows English? | Yes | N/A | Yes |
+| Knows security? | No (general only) | Yes (this is the training) | Yes |
 | Size | 5.76 GB | 57 MB | ~5 GB VRAM at runtime |
 | Can answer "What is T1059?" | Generic answer | N/A | Specific MITRE description |
-| Can write Sigma rules? | ❌ No | ✅ Yes | ✅ Yes |
+| Can write Sigma rules? | No | Yes | Yes |
 
 **The "trained model" = base model + LoRA adapters loaded together.** Neither alone is the final product. The base provides language/reasoning; the LoRA provides security domain knowledge.
 
@@ -129,23 +129,23 @@ from peft import PeftModel
 
 # Load base model (4-bit)
 bnb = BitsAndBytesConfig(load_in_4bit=True, bnb_4bit_quant_type="nf4",
-                         bnb_4bit_compute_dtype=torch.bfloat16, bnb_4bit_use_double_quant=True)
+ bnb_4bit_compute_dtype=torch.bfloat16, bnb_4bit_use_double_quant=True)
 model = AutoModelForCausalLM.from_pretrained("Qwen/Qwen2.5-3B-Instruct",
-    quantization_config=bnb, device_map="auto", torch_dtype=torch.bfloat16)
+ quantization_config=bnb, device_map="auto", torch_dtype=torch.bfloat16)
 
 # Load security LoRA adapters
-model = PeftModel.from_pretrained(model, "stage1_sft/output/qwen_qlora/checkpoint-500")  # run from SecGPT-Prod/
+model = PeftModel.from_pretrained(model, "stage1_sft/output/qwen_qlora/checkpoint-500") # run from SecGPT-Prod/
 model.eval()
 tokenizer = AutoTokenizer.from_pretrained("Qwen/Qwen2.5-3B-Instruct")
 
 # Ask a question
 def ask(question):
-    messages = [{"role": "user", "content": question}]
-    text = tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
-    inputs = tokenizer(text, return_tensors="pt").to("cuda")
-    with torch.no_grad():
-        out = model.generate(**inputs, max_new_tokens=300, temperature=0.7, do_sample=True, top_p=0.9)
-    return tokenizer.decode(out[0][inputs["input_ids"].shape[1]:], skip_special_tokens=True)
+ messages = [{"role": "user", "content": question}]
+ text = tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
+ inputs = tokenizer(text, return_tensors="pt").to("cuda")
+ with torch.no_grad():
+ out = model.generate(**inputs, max_new_tokens=300, temperature=0.7, do_sample=True, top_p=0.9)
+ return tokenizer.decode(out[0][inputs["input_ids"].shape[1]:], skip_special_tokens=True)
 
 print(ask("What is MITRE technique T1059?"))
 print(ask("Write a Sigma rule for PowerShell encoded commands"))
@@ -167,40 +167,40 @@ python src/quality_check.py
 
 | Prompt | Output Quality | Sample |
 |---|---|---|
-| What is MITRE technique T1059? | ✅ Excellent | "ID: T1059. Description: Adversaries may attempt to execute code in order to maintain access. Techniques used to maintain access may vary widely depending on the platform..." |
-| Explain T1055 Process Injection | ✅ Excellent | "ID: T1055. Description: Adversaries may inject themselves into processes on the host to achieve persistence, evade detection, or execute arbitrary code. The Windows API provides CreateRemoteThread..." |
-| What is CVE-2021-44228 (Log4Shell)? | ✅ Excellent | "Vendor: Apache. Product: Log4j. Vulnerability: Apache Log4j Remote Code Execution. Required Action: Apply mitigations per vendor instructions. Date Added: 2022-02-25" |
+| What is MITRE technique T1059? | Excellent | "ID: T1059. Description: Adversaries may attempt to execute code in order to maintain access. Techniques used to maintain access may vary widely depending on the platform..." |
+| Explain T1055 Process Injection | Excellent | "ID: T1055. Description: Adversaries may inject themselves into processes on the host to achieve persistence, evade detection, or execute arbitrary code. The Windows API provides CreateRemoteThread..." |
+| What is CVE-2021-44228 (Log4Shell)? | Excellent | "Vendor: Apache. Product: Log4j. Vulnerability: Apache Log4j Remote Code Execution. Required Action: Apply mitigations per vendor instructions. Date Added: 2022-02-25" |
 
 ### Detection Rules
 
 | Prompt | Output Quality | Sample |
 |---|---|---|
-| Write Sigma rule for PowerShell encoded commands | ✅ Excellent | "Level: high. Author: Ali Almatsir. Description: Detects use of Invoke-Expression with base64. Detection Logic: condition: selection / CommandLine\|contains\|windash: 'Invoke-Expression'" |
-| Write detection rule for WMI lateral movement | ✅ Good | Generates structured rule with proper fields |
-| Write Sigma rule for LSASS access | ✅ Good | Generates detection with proper YAML structure |
+| Write Sigma rule for PowerShell encoded commands | Excellent | "Level: high. Author: Ali Almatsir. Description: Detects use of Invoke-Expression with base64. Detection Logic: condition: selection / CommandLine\|contains\|windash: 'Invoke-Expression'" |
+| Write detection rule for WMI lateral movement | Good | Generates structured rule with proper fields |
+| Write Sigma rule for LSASS access | Good | Generates detection with proper YAML structure |
 
 ### Tool Reference (LOLBAS/GTFOBins)
 
 | Prompt | Output Quality | Sample |
 |---|---|---|
-| How can certutil.exe be abused? | ✅ Good | Describes download, encode/decode, certificate abuse |
-| How can mshta.exe execute malicious code? | ✅ Good | Describes HTA execution, remote payload loading |
-| What is Windows Prefetch artifact? | ✅ Good | Describes forensic value, location, what it proves |
+| How can certutil.exe be abused? | Good | Describes download, encode/decode, certificate abuse |
+| How can mshta.exe execute malicious code? | Good | Describes HTA execution, remote payload loading |
+| What is Windows Prefetch artifact? | Good | Describes forensic value, location, what it proves |
 
 ### Knowledge Base
 
 | Prompt | Output Quality | Sample |
 |---|---|---|
-| Red team vs penetration test? | ✅ Good | Structured comparison |
-| Defense in depth? | ✅ Good | Layered security explanation |
-| Threat hunting vs IR? | ✅ Good | Proactive vs reactive distinction |
+| Red team vs penetration test? | Good | Structured comparison |
+| Defense in depth? | Good | Layered security explanation |
+| Threat hunting vs IR? | Good | Proactive vs reactive distinction |
 
 ### Classification
 
 | Prompt | Output Quality | Sample |
 |---|---|---|
-| Classify SMS as spam/ham | ✅ Good | Correct classification with reasoning |
-| Classify network connection | ✅ Good | Identifies normal vs attack traffic |
+| Classify SMS as spam/ham | Good | Correct classification with reasoning |
+| Classify network connection | Good | Identifies normal vs attack traffic |
 
 ### Quality Summary
 
@@ -260,25 +260,25 @@ python src/quality_check.py
 
 ```
 SecGPT-Prod/
-├── doc.md                          ← this file
+├── doc.md ← this file
 ├── src/
-│   ├── build_sft_32k.py           ← dataset generation script
-│   ├── qlora_sft.py               ← QLoRA training script
-│   └── quality_check.py           ← inference + benchmark script
+│ ├── build_sft_32k.py ← dataset generation script
+│ ├── qlora_sft.py ← QLoRA training script
+│ └── quality_check.py ← inference + benchmark script
 ├── data/
-│   └── sft_32k.jsonl              ← 31,111 Q&A pairs (15.8 MB, gitignored)
+│ └── sft_32k.jsonl ← 31,111 Q&A pairs (15.8 MB, gitignored)
 └── stage1_sft/
-    └── output/
-        └── qwen_qlora/
-            └── checkpoint-500/
-                ├── adapter_model.safetensors  ← LoRA weights (57 MB)
-                ├── adapter_config.json        ← LoRA config
-                ├── tokenizer.json             ← tokenizer
-                ├── optimizer.pt               ← optimizer state (for resume)
-                └── trainer_state.json         ← training log
+ └── output/
+ └── qwen_qlora/
+ └── checkpoint-500/
+ ├── adapter_model.safetensors ← LoRA weights (57 MB)
+ ├── adapter_config.json ← LoRA config
+ ├── tokenizer.json ← tokenizer
+ ├── optimizer.pt ← optimizer state (for resume)
+ └── trainer_state.json ← training log
 
 External (HuggingFace cache):
-  C:\Users\Ganro\.cache\huggingface\hub\models--Qwen--Qwen2.5-3B-Instruct\  ← base model (5.76 GB)
+ C:\Users\Ganro\.cache\huggingface\hub\models--Qwen--Qwen2.5-3B-Instruct\ ← base model (5.76 GB)
 ```
 
 ---
@@ -301,4 +301,4 @@ python src/quality_check.py
 
 ---
 
-## Status: ✅ Complete (2026-08-03)
+## Status: Complete (2026-08-03)

@@ -141,36 +141,34 @@ did not. This is why the harness exists.
 
 ### Full comparison (current line)
 
-```
-                        qwenbase      sft500         dpo     sftv2_1       sftv3       dpov3
-classification             44.0%       82.0%       82.0%       80.0%       80.0%       80.0%
-consistency                50.0%       50.0%       50.0%       50.0%       16.7%       16.7%
-forensic_interp            40.0%       50.0%       40.0%       70.0%       70.0%       40.0%
-kb                         85.0%       85.0%       85.0%       80.0%       57.5%       55.0%
-ref                        44.0%       34.0%       28.0%       34.0%       44.0%       54.0%
-rule                       24.0%       72.0%       70.0%       72.0%       70.0%       74.0%
-rule_from_scenario         20.0%      100.0%       90.0%       40.0%       90.0%       90.0%
-soc_triage                100.0%      100.0%      100.0%       86.7%       86.7%       93.3%
-ttp                        26.0%       28.0%       28.0%       26.0%       26.0%       28.0%
-ttp_extract                30.0%       60.0%       60.0%       50.0%       30.0%       30.0%
-
-OVERALL                    44.7%       62.2%       60.1%       58.4%       57.0%       58.8%
-HELD-OUT                   58.5%       79.2%       79.2%       75.5%       63.2%       62.3%
-RECALL                     36.8%       52.4%       49.2%       48.6%       53.5%       56.8%
-TTP halluc.                20.0%       87.5%       83.3%       76.2%       65.2%       66.7%
-```
+| Category | base | sft500 (v1) | +DPO (v1) | sftv2.1 | sftv3 | +DPO (v3) |
+|---|---|---|---|---|---|---|
+| classification | 44.0% | 82.0% | 82.0% | 80.0% | 80.0% | 80.0% |
+| consistency | 50.0% | 50.0% | 50.0% | 50.0% | 16.7% | 16.7% |
+| forensic_interp | 40.0% | 50.0% | 40.0% | 70.0% | 70.0% | 40.0% |
+| kb | 85.0% | 85.0% | 85.0% | 80.0% | 57.5% | 55.0% |
+| ref | 44.0% | 34.0% | 28.0% | 34.0% | 44.0% | **54.0%** |
+| rule | 24.0% | 72.0% | 70.0% | 72.0% | 70.0% | **74.0%** |
+| rule_from_scenario | 20.0% | 100.0% | 90.0% | 40.0% | 90.0% | 90.0% |
+| soc_triage | 100.0% | 100.0% | 100.0% | 86.7% | 86.7% | 93.3% |
+| ttp | 26.0% | 28.0% | 28.0% | 26.0% | 26.0% | 28.0% |
+| ttp_extract | 30.0% | 60.0% | 60.0% | 50.0% | 30.0% | 30.0% |
+| **Overall** | 44.7% | 62.2% | 60.1% | 58.4% | 57.0% | **58.8%** |
+| Held-out | 58.5% | 79.2% | 79.2% | 75.5% | 63.2% | 62.3% |
+| Recall | 36.8% | 52.4% | 49.2% | 48.6% | 53.5% | 56.8% |
+| TTP hallucination | 20.0% | 87.5% | 83.3% | 76.2% | **65.2%** | 66.7% |
 
 ### Findings
 
 1. **SFT taught behavior** (real gains): rule +48, rule_from_scenario +80,
-   classification +38, ttp_extract +30 over base.
+ classification +38, ttp_extract +30 over base.
 2. **SFT corrupted factual grounding** (the corpus flaw): TTP hallucination
-   20% → 87.5%; ref knowledge −10 vs base. Template pairs with truncated
-   600-char answers taught confident, wrong ID↔description mappings.
+ 20% → 87.5%; ref knowledge −10 vs base. Template pairs with truncated
+ 600-char answers taught confident, wrong ID↔description mappings.
 3. **DPO was accuracy-neutral** (within noise) but slightly recovered honesty
-   (87.5 → 83.3%). Style alignment can't fix a knowledge problem.
+ (87.5 → 83.3%). Style alignment can't fix a knowledge problem.
 4. **Conclusion:** next iteration is data *quality* (complete, verified,
-   anchored answers + hard negatives), not more scale or alignment.
+ anchored answers + hard negatives), not more scale or alignment.
 
 ## Baseline: SFT checkpoint-500 (Qwen2.5-3B + LoRA, 31K pairs)
 
@@ -195,11 +193,11 @@ Run: `sft500_20260803_2311.json` — 291 prompts, greedy, batch 8, 33.7 tok/s, p
 ### What the old 7/7 demo hid
 
 1. **MITRE ID hallucination is rampant (87.5%).** At 7 prompts the model looked
-   accurate; at 50 it invents or misattributes technique IDs most of the time.
+ accurate; at 50 it invents or misattributes technique IDs most of the time.
 2. **Specific factual recall (ttp/ref) is the weak spot** — generic categories
-   (kb, triage) pass easily; precise IDs and tool details don't.
+ (kb, triage) pass easily; precise IDs and tool details don't.
 3. **Recall split < held-out split** — driven by category composition (the hard
-   ttp/rule/ref categories are all in-training data), and by confident
-   wrong-specific answers on trained topics vs safe generic answers elsewhere.
+ ttp/rule/ref categories are all in-training data), and by confident
+ wrong-specific answers on trained topics vs safe generic answers elsewhere.
 
 These findings define what DPO and the 7B scale-up must improve.

@@ -144,7 +144,7 @@ Description: Detects suspicious WMI execution...
 Detection Logic:
 condition: selection
 selection:
-  Image|endswith: \wmic.exe
+ Image|endswith: \wmic.exe
 ```
 
 ---
@@ -166,4 +166,4 @@ python src/generate.py --checkpoint stage2_sft/output/checkpoint_sft.pt --prompt
 
 ---
 
-## Status: ✅ Complete (2026-08-02)
+## Status: Complete (2026-08-02)

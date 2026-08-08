@@ -12,9 +12,9 @@ Taking a pretrained GPT-2 Small (124M params, already fluent in English) and run
 
 | Stage | Time | Loss | Outcome |
 |---|---|---|---|
-| Stage 1: Domain-adapt | 25 min | 9.4 → 2.6 | ❌ Destroyed English fluency (custom tags confused tokenizer) |
-| Stage 2: SFT (direct, no domain-adapt) | 68s | 9.7 → 4.0 | ⚠️ Learned format, produces fragments, falls into repetition |
-| Stage 3: DPO | 65s | 0.69 → 0.16 | ❌ Collapsed model (repetitive garbage) |
+| Stage 1: Domain-adapt | 25 min | 9.4 → 2.6 | Failed: destroyed English fluency (custom tags confused tokenizer) |
+| Stage 2: SFT (direct, no domain-adapt) | 68s | 9.7 → 4.0 | Learned format, produces fragments, falls into repetition |
+| Stage 3: DPO | 65s | 0.69 → 0.16 | Failed: collapsed model (repetitive garbage) |
 
 **Best checkpoint:** `stage2_sft/output/model_direct/` (direct SFT, no domain-adapt)
 
@@ -144,4 +144,4 @@ the small-model DPO fragility later seen at 98M. Details:
 
 Scripts: `src/sft_v3.py`, `src/dpo_v3.py` (TRL DPOTrainer, fp16, no PEFT).
 
-## Status: ✅ Complete (2026-08-02) — documented as a learning exercise with honest limitations
+## Status: Complete (2026-08-02) — documented as a learning exercise with honest limitations

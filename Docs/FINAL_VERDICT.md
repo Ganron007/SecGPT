@@ -34,33 +34,33 @@ SFT 62.2% (87.5% hallucination — see the data-quality chapter below).
 ## Findings
 
 1. **Pretraining is the moat.** A 98M model built from scratch on 108.7M
-   tokens — a genuine max-effort run on this hardware — scores 18.2%.
-   GPT-2 (124M, same size class) starts from OpenAI's WebText and scores
-   37.8% with identical fine-tuning. Qwen-3B reaches 58.8%. The ordering is
-   exactly origin × scale. Nothing about the fine-tuning recipe rescues a
-   weak foundation.
+ tokens — a genuine max-effort run on this hardware — scores 18.2%.
+ GPT-2 (124M, same size class) starts from OpenAI's WebText and scores
+ 37.8% with identical fine-tuning. Qwen-3B reaches 58.8%. The ordering is
+ exactly origin × scale. Nothing about the fine-tuning recipe rescues a
+ weak foundation.
 
 2. **Scratch models still learn *tasks*.** v2.5's 82% classification matches
-   Qwen — simple input→label mappings are learnable from 108M tokens. What
-   isn't learnable: factual grounding (kb 7.5%, ttp 4%), which requires
-   either far more tokens or a pretrained base.
+ Qwen — simple input→label mappings are learnable from 108M tokens. What
+ isn't learnable: factual grounding (kb 7.5%, ttp 4%), which requires
+ either far more tokens or a pretrained base.
 
 3. **Small models master format, not knowledge.** GPT-2's 94% on rules beats
-   every Qwen checkpoint — Sigma structure is pattern-matching on training
-   formats. But its kb/ttp scores show it can't hold the content behind the
-   format.
+ every Qwen checkpoint — Sigma structure is pattern-matching on training
+ formats. But its kb/ttp scores show it can't hold the content behind the
+ format.
 
 4. **DPO needs capacity.** DPO helped only the 3B model (+1.8). It was
-   neutral-to-harmful at 124M (−4.1) and destructive at 98M (−10.3, recall
-   split 4.3% → 0%). Preference optimization on a model that hasn't learned
-   the underlying distribution just teaches it to abandon what little it had.
-   The original GPT-2 "collapse" mystery is now fully explained: part
-   label-shift bug (ours), part genuine small-model DPO fragility.
+ neutral-to-harmful at 124M (−4.1) and destructive at 98M (−10.3, recall
+ split 4.3% → 0%). Preference optimization on a model that hasn't learned
+ the underlying distribution just teaches it to abandon what little it had.
+ The original GPT-2 "collapse" mystery is now fully explained: part
+ label-shift bug (ours), part genuine small-model DPO fragility.
 
 5. **Data quality was the lever inside a line; pretraining is the lever
-   between lines.** Within Qwen, three corpus generations moved hallucination
-   87.5% → 76.2% → 65.2% (see eval/README.md). Between lines, no data
-   recipe closed more than a few points.
+ between lines.** Within Qwen, three corpus generations moved hallucination
+ 87.5% → 76.2% → 65.2% (see eval/README.md). Between lines, no data
+ recipe closed more than a few points.
 
 ## Study artifacts
 

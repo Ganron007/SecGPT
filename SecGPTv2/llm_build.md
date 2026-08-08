@@ -14,9 +14,9 @@
 
 | Phase | Stage | Folder | Status | Goal |
 |---|---|---|---|---|
-| **Phase 1** | Stage 1: Pretraining | `stage1_pre-training/` | ✅ Complete | Learn security text patterns (next-token prediction) |
-| **Phase A** | Stage 2: SFT | `stage2_sft/` | ✅ Complete | Follow instructions, answer security questions |
-| **Phase A** | Stage 3: Alignment | `stage3_alignment/` | ✅ Complete | Prefer accurate/safe outputs (DPO) |
+| **Phase 1** | Stage 1: Pretraining | `stage1_pre-training/` | Complete | Learn security text patterns (next-token prediction) |
+| **Phase A** | Stage 2: SFT | `stage2_sft/` | Complete | Follow instructions, answer security questions |
+| **Phase A** | Stage 3: Alignment | `stage3_alignment/` | Complete | Prefer accurate/safe outputs (DPO) |
 | **Phase B** | Full pipeline on pretrained base | `../SecGPTv3/` (future) | ☐ Planned | Take GPT-2 Small → domain-adapt → SFT → align |
 
 ### Phase 1: Pretraining (what we built)
@@ -86,12 +86,12 @@ Take an existing pretrained model (GPT-2 Small, 124M, already fluent in English)
 
 ```
 Char-level (v1):
-  "The adversary used PowerShell" → [T,h,e, ,a,d,v,e,r,s,a,r,y, ,u,s,e,d, ,P,o,w,e,r,S,h,e,l,l]
-  = 31 tokens for 6 words. Model must learn that T+h+e = "The" every single time.
+ "The adversary used PowerShell" → [T,h,e, ,a,d,v,e,r,s,a,r,y, ,u,s,e,d, ,P,o,w,e,r,S,h,e,l,l]
+ = 31 tokens for 6 words. Model must learn that T+h+e = "The" every single time.
 
 BPE (v2):
-  "The adversary used PowerShell" → [The, advers, ary, used, Power, Shell]
-  = 6 tokens for 6 words. Each token carries meaning. Model learns relationships between WORDS.
+ "The adversary used PowerShell" → [The, advers, ary, used, Power, Shell]
+ = 6 tokens for 6 words. Each token carries meaning. Model learns relationships between WORDS.
 ```
 
 With 256 BPE tokens of context, the model sees ~500 characters = a full paragraph.
@@ -100,14 +100,14 @@ With 64 chars of context (v1), the model saw ~10 words = barely a sentence fragm
 ### VRAM Budget (RTX 4060, 8 GB)
 
 ```
-Model params:     30M × 4 bytes (fp32)           =  120 MB
-Gradients:        30M × 4 bytes                   =  120 MB
-Adam states:      30M × 4 × 2 (m + v)            =  240 MB
-Activations:      batch=32 × seq=256 × 384d × 8L  = ~600 MB
+Model params: 30M × 4 bytes (fp32) = 120 MB
+Gradients: 30M × 4 bytes = 120 MB
+Adam states: 30M × 4 × 2 (m + v) = 240 MB
+Activations: batch=32 × seq=256 × 384d × 8L = ~600 MB
 ──────────────────────────────────────────────────────────────
-Total:                                             ≈ 1.1 GB
-Available:                                          8.0 GB
-Headroom:                                           6.9 GB (could go bigger)
+Total: ≈ 1.1 GB
+Available: 8.0 GB
+Headroom: 6.9 GB (could go bigger)
 ```
 
 We could push to 50M or even 100M params and still fit. Starting at 30M as a balanced choice.
@@ -118,14 +118,14 @@ We could push to 50M or even 100M params and still fit. Starting at 30M as a bal
 
 | # | Step | Status | Folder | Notes |
 |---|---|---|---|---|
-| 0 | Corpus assembly (77.8 MB, 8-tag) | ✅ done 2026-08-02 | `stage1_pre-training/step0_corpus/` | 75,932 records, 14× v1 |
-| 1 | Tokenize (BPE, 8000 vocab) | ✅ done 2026-08-02 | `stage1_pre-training/step1_tokenizer/` | 33.4M tokens, 2.43 chars/token |
-| 2 | Training pairs (block_size=256) | ✅ done 2026-08-02 | `stage1_pre-training/step2_training_pairs/` | batch=32, 8192 tokens/step |
-| 3 | Architecture (8L×8H×384d, 17.4M) | ✅ done 2026-08-02 | `stage1_pre-training/step3_architecture/` | weight tying, pre-norm |
-| 4 | Loss (cross-entropy) | ✅ done 2026-08-02 | `stage1_pre-training/step4_loss/` | embedded in model.py |
-| 5 | Training loop (20K steps, fp16) | ✅ done 2026-08-02 | `stage1_pre-training/step5_training/` | 48 min, cosine LR, val 1.57 |
-| 6 | Generate (interactive + batch) | ✅ done 2026-08-02 | `stage1_pre-training/step6_generation/` | readable security text |
-| 7 | Scale comparison (v1 vs v2 vs GPT) | ✅ done 2026-08-02 | `stage1_pre-training/step7_scale/` | in this file |
+| 0 | Corpus assembly (77.8 MB, 8-tag) | Done 2026-08-02 | `stage1_pre-training/step0_corpus/` | 75,932 records, 14× v1 |
+| 1 | Tokenize (BPE, 8000 vocab) | Done 2026-08-02 | `stage1_pre-training/step1_tokenizer/` | 33.4M tokens, 2.43 chars/token |
+| 2 | Training pairs (block_size=256) | Done 2026-08-02 | `stage1_pre-training/step2_training_pairs/` | batch=32, 8192 tokens/step |
+| 3 | Architecture (8L×8H×384d, 17.4M) | Done 2026-08-02 | `stage1_pre-training/step3_architecture/` | weight tying, pre-norm |
+| 4 | Loss (cross-entropy) | Done 2026-08-02 | `stage1_pre-training/step4_loss/` | embedded in model.py |
+| 5 | Training loop (20K steps, fp16) | Done 2026-08-02 | `stage1_pre-training/step5_training/` | 48 min, cosine LR, val 1.57 |
+| 6 | Generate (interactive + batch) | Done 2026-08-02 | `stage1_pre-training/step6_generation/` | readable security text |
+| 7 | Scale comparison (v1 vs v2 vs GPT) | Done 2026-08-02 | `stage1_pre-training/step7_scale/` | in this file |
 
 ---
 
@@ -133,29 +133,29 @@ We could push to 50M or even 100M params and still fit. Starting at 30M as a bal
 
 ```
 03_LLM_Build/SecGPTv2/
-├── llm_build.md              ← this file
-├── src/                      ← all code
-├── data/                     ← raw source data (copied from v1)
-│   ├── cadre_kb.jsonl        ← 483K chunks, 1.78 GB
-│   └── dfir_nexus_sources/   ← 23 JSONL files, 18.4 MB
-├── checkpoints/              ← saved model weights
-├── stage1_pre-training/             ← Stage 1 (complete)
-│   ├── step0_corpus/         ← doc.md + input/ + output/ (corpus.txt, 77.8 MB)
-│   ├── step1_tokenizer/      ← doc.md + input/ + output/ (BPE model, tensors)
-│   ├── step2_training_pairs/ ← doc.md + input/ + output/ (split_info.json)
-│   ├── step3_architecture/   ← doc.md + input/ + output/ (param_count.json)
-│   ├── step4_loss/           ← doc.md (loss embedded in model.py)
-│   ├── step5_training/       ← doc.md + input/ + output/ (checkpoints, log)
-│   ├── step6_generation/     ← doc.md + input/ + output/ (samples)
-│   └── step7_scale/          ← doc.md + output/ (scale_comparison.md)
-├── stage2_sft/                      ← Stage 2 (planned)
-│   ├── doc.md
-│   ├── input/
-│   └── output/
-└── stage3_alignment/                ← Stage 3 (planned)
-    ├── doc.md
-    ├── input/
-    └── output/
+├── llm_build.md ← this file
+├── src/ ← all code
+├── data/ ← raw source data (copied from v1)
+│ ├── cadre_kb.jsonl ← 483K chunks, 1.78 GB
+│ └── dfir_nexus_sources/ ← 23 JSONL files, 18.4 MB
+├── checkpoints/ ← saved model weights
+├── stage1_pre-training/ ← Stage 1 (complete)
+│ ├── step0_corpus/ ← doc.md + input/ + output/ (corpus.txt, 77.8 MB)
+│ ├── step1_tokenizer/ ← doc.md + input/ + output/ (BPE model, tensors)
+│ ├── step2_training_pairs/ ← doc.md + input/ + output/ (split_info.json)
+│ ├── step3_architecture/ ← doc.md + input/ + output/ (param_count.json)
+│ ├── step4_loss/ ← doc.md (loss embedded in model.py)
+│ ├── step5_training/ ← doc.md + input/ + output/ (checkpoints, log)
+│ ├── step6_generation/ ← doc.md + input/ + output/ (samples)
+│ └── step7_scale/ ← doc.md + output/ (scale_comparison.md)
+├── stage2_sft/ ← Stage 2 (planned)
+│ ├── doc.md
+│ ├── input/
+│ └── output/
+└── stage3_alignment/ ← Stage 3 (planned)
+ ├── doc.md
+ ├── input/
+ └── output/
 ```
 
 ---
@@ -164,27 +164,27 @@ We could push to 50M or even 100M params and still fit. Starting at 30M as a bal
 
 | Item | Value | Status |
 |---|---|---|
-| Python | 3.14.2 | ✅ |
-| PyTorch | 2.11.0+cu128 | ✅ |
-| GPU | NVIDIA RTX 4060 Laptop, 8 GB VRAM | ✅ |
-| tokenizers (HuggingFace) | 0.22.2 | ✅ (BPE training) |
-| tiktoken | 0.13.0 | ✅ (available, not used) |
-| Mixed precision | fp16 via torch.amp | ✅ |
-| VRAM used during training | ~1.5 GB / 8 GB | ✅ (headroom for scaling) |
+| Python | 3.14.2 | |
+| PyTorch | 2.11.0+cu128 | |
+| GPU | NVIDIA RTX 4060 Laptop, 8 GB VRAM | |
+| tokenizers (HuggingFace) | 0.22.2 | (BPE training) |
+| tiktoken | 0.13.0 | (available, not used) |
+| Mixed precision | fp16 via torch.amp | |
+| VRAM used during training | ~1.5 GB / 8 GB | (headroom for scaling) |
 
 ---
 
-## Step 0 — Corpus Assembly ✅ (2026-08-02)
+## Step 0 — Corpus Assembly (2026-08-02)
 
 **Pipeline:** identical to v1 (`src/build_corpus.py`) with 10× larger sample targets.
 
 **Results:**
 
 ```
-Total ingested:    655,356 records
-After dedup:       565,409 unique (89,947 removed)
-Sampled:            75,932 records
-corpus.txt:         81,564,055 bytes (77.79 MB)
+Total ingested: 655,356 records
+After dedup: 565,409 unique (89,947 removed)
+Sampled: 75,932 records
+corpus.txt: 81,564,055 bytes (77.79 MB)
 ```
 
 | Tag | Records | Chars | % of corpus |
@@ -202,7 +202,7 @@ corpus.txt:         81,564,055 bytes (77.79 MB)
 
 ---
 
-## Step 1 — BPE Tokenizer ✅ (2026-08-02)
+## Step 1 — BPE Tokenizer (2026-08-02)
 
 **Library:** HuggingFace `tokenizers` 0.22.2 — trains BPE from scratch on our corpus.
 
@@ -230,15 +230,15 @@ corpus.txt:         81,564,055 bytes (77.79 MB)
 **Token examples:**
 ```
 "<|kb|>\nThe adversary used PowerShell" →
-  ['<|kb|>', 'Ċ', 'The', 'Ġadversary', 'Ġused', 'ĠPowerShell']  = 6 tokens
+ ['<|kb|>', 'Ċ', 'The', 'Ġadversary', 'Ġused', 'ĠPowerShell'] = 6 tokens
 
 Same text char-level (v1):
-  ['<','|','k','b','|','>','\n','T','h','e',' ','a','d','v','e','r','s','a','r','y'...] = 31 tokens
+ ['<','|','k','b','|','>','\n','T','h','e',' ','a','d','v','e','r','s','a','r','y'...] = 31 tokens
 ```
 
 ---
 
-## Step 2 — Training Pairs ✅ (2026-08-02)
+## Step 2 — Training Pairs (2026-08-02)
 
 | Parameter | v1 | v2 |
 |---|---|---|
@@ -251,7 +251,7 @@ With BPE at 2.43 chars/token, 256 tokens = ~620 characters of context. The model
 
 ---
 
-## Step 3 — Architecture ✅ (2026-08-02)
+## Step 3 — Architecture (2026-08-02)
 
 | Parameter | v1 | v2 | Ratio |
 |---|---|---|---|
@@ -268,7 +268,7 @@ With BPE at 2.43 chars/token, 256 tokens = ~620 characters of context. The model
 
 ---
 
-## Step 5 — Training ✅ (2026-08-02)
+## Step 5 — Training (2026-08-02)
 
 | Parameter | v1 | v2 |
 |---|---|---|
@@ -298,16 +298,16 @@ With BPE at 2.43 chars/token, 256 tokens = ~620 characters of context. The model
 
 ---
 
-## Step 6 — Generation ✅ (2026-08-02)
+## Step 6 — Generation (2026-08-02)
 
 See "v1 vs v2 Side-by-Side Generation Comparison" section below for full samples.
 
 **Usage:**
 ```powershell
-python src/generate.py --interactive          # REPL mode
-python src/generate.py --tag rule             # single tag
-python src/generate.py --prompt "<|rule|>\nrule Emotet"  # custom prompt
-python src/generate.py                        # all 8 tags batch
+python src/generate.py --interactive # REPL mode
+python src/generate.py --tag rule # single tag
+python src/generate.py --prompt "<|rule|>\nrule Emotet" # custom prompt
+python src/generate.py # all 8 tags batch
 ```
 
 ---
@@ -335,12 +335,12 @@ python src/generate.py                        # all 8 tags batch
 ```python
 @dataclass
 class GPTConfig:
-    vocab_size: int = 8000      # BPE subwords (was 265 chars)
-    block_size: int = 256       # context window (was 64)
-    n_layer: int = 8            # transformer blocks (was 4)
-    n_head: int = 8             # attention heads (was 4)
-    n_embd: int = 384           # embedding dim (was 128)
-    dropout: float = 0.1
+ vocab_size: int = 8000 # BPE subwords (was 265 chars)
+ block_size: int = 256 # context window (was 64)
+ n_layer: int = 8 # transformer blocks (was 4)
+ n_head: int = 8 # attention heads (was 4)
+ n_embd: int = 384 # embedding dim (was 128)
+ dropout: float = 0.1
 ```
 
 Expected: ~30M parameters, trains in ~15 minutes on RTX 4060.
@@ -365,11 +365,11 @@ Expected: ~30M parameters, trains in ~15 minutes on RTX 4060.
 
 ## Open Questions (resolved)
 
-- [x] BPE library: **tokenizers (HuggingFace)** — installed, trains custom BPE from scratch
-- [x] Train BPE on our corpus: **yes** — 8000 vocab trained on 77.8 MB security text
-- [x] Mixed precision: **yes** — fp16 via torch.amp.autocast + GradScaler
-- [x] Learning rate schedule: **cosine decay** (6e-4 → 6e-5, 500-step warmup)
-- [x] Model size: **17.4M params** (weight tying reduced from ~30M estimate; still 20× v1)
+- BPE library: **tokenizers (HuggingFace)** — installed, trains custom BPE from scratch
+- Train BPE on our corpus: **yes** — 8000 vocab trained on 77.8 MB security text
+- Mixed precision: **yes** — fp16 via torch.amp.autocast + GradScaler
+- Learning rate schedule: **cosine decay** (6e-4 → 6e-5, 500-step warmup)
+- Model size: **17.4M params** (weight tying reduced from ~30M estimate; still 20× v1)
 
 ---
 
@@ -475,10 +475,10 @@ C:\Windows\WinSxS\Manifests\Cuntration\vers\CurrrentValueServices\Users
 
 **v2:**
 ```
-0x00000000000003e7  Object: Object Server: Security  Object Type: File
+0x00000000000003e7 Object: Object Server: Security Object Type: File
 Object Name: C:\Windows\SysWOW64\WindowsPowerShell\v1.0\Modules\PSDesiredState
 Configuration\DSCResources\MSFT_ServiceResource\en-US\MSFT_ServiceResource.psm1.psd1
-Handle ID: 0x000000000000001c  Process Information: Process ID: 0x00000000000003f8
+Handle ID: 0x000000000000001c Process Information: Process ID: 0x00000000000003f8
 Process Name: C:\Windows\System32\poqexec.exe
 ```
 
