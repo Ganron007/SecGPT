@@ -78,6 +78,13 @@ comparison isolates origin (scratch vs pretrained) and scale.
 
 8. **Fair GPT-2 comparison (same v3 data):** 37.8% overall vs Qwen's 58.8% — but GPT-2 scores **94% on rules**, beating Qwen's 74%. Small pretrained models master format; they can't hold knowledge. (Bonus finding: the original GPT-2 "collapse" was partly a double label-shift bug in our own training code — documented in the repo.)
 
+> In 2019, OpenAI withheld GPT-2 from the public, stating: *"Due to our
+> concerns about malicious applications of the technology, we are not
+> releasing the trained model."* In 2026, we fine-tuned it on offensive
+> security data, taught it MITRE ATT&CK techniques, exploit references, and
+> detection rule authoring — and it can hallucinate a technique ID 62.5% of
+> the time. Sleep easy, everyone.
+
 9. **Implementation is infrastructure.** Naive materialized-mask attention ran the 98M model at 1.3K tok/s; swapping to SDPA gave 24.6K tok/s (19×) — the difference between a 42-hour and a 2-hour pretrain.
 
 ## Repository Structure
