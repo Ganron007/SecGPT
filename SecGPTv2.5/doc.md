@@ -55,7 +55,7 @@ was. (`src/speed_test.py` reproduces the measurement.)
 lower LR, plus val-tracked saving instead of last-step saving.
 
 **Results:** 6.6 min. Best val **2.05** (higher than pretrain val 1.73 is
-expected — Q&A format is a new task). Benchmark: **17.9% overall**.
+expected — Q&A format is a new task). Benchmark: **18.2% overall**.
 
 ## Stage 3 — DPO ✅
 
@@ -73,7 +73,7 @@ distribution. At 98M it teaches the model to abandon what little it learned.
 
 | Stage | Overall | Held-out | Recall | TTP halluc. |
 |---|---|---|---|---|
-| SFT | 17.9% | 41.5% | 4.3% | 0.0% |
+| SFT | 18.2% | 42.5% | 4.3% | 0.0% |
 | SFT + DPO | 7.6% | 20.8% | 0.0% | 0.0% |
 
 Bright spot: **classification 82% at SFT — matches Qwen-3B**. Simple

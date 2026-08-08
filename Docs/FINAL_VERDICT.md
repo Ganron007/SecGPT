@@ -13,7 +13,7 @@ That control is what makes the comparison fair: the only variables left are
 
 | Model line | Params | Origin | SFT | + DPO | Δ DPO |
 |---|---|---|---|---|---|
-| SecGPTv2.5 | 98M | **scratch** (333 MB corpus, 108.7M tokens) | 17.9% | 7.6% | **−10.3 (destructive)** |
+| SecGPTv2.5 | 98M | **scratch** (333 MB corpus, 108.7M tokens) | 18.2% | 7.6% | **−10.6 (destructive)** |
 | SecGPTv3 (GPT-2) | 124M | OpenAI pretrained | 37.8% | 33.7% | −4.1 |
 | SecGPT-Prod (Qwen2.5-3B) | 3B | Alibaba pretrained | 57.0% | **58.8%** | **+1.8 (only winner)** |
 
@@ -34,7 +34,7 @@ SFT 62.2% (87.5% hallucination — see the data-quality chapter below).
 ## Findings
 
 1. **Pretraining is the moat.** A 98M model built from scratch on 108.7M
-   tokens — a genuine max-effort run on this hardware — scores 17.9%.
+   tokens — a genuine max-effort run on this hardware — scores 18.2%.
    GPT-2 (124M, same size class) starts from OpenAI's WebText and scores
    37.8% with identical fine-tuning. Qwen-3B reaches 58.8%. The ordering is
    exactly origin × scale. Nothing about the fine-tuning recipe rescues a

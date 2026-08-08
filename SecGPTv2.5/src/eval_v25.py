@@ -118,8 +118,7 @@ def run_one(model, tokenizer, instruction, tag, max_new, nl_id, block_size, devi
     ids = tokenizer.encode(prompt).ids
     idx = torch.tensor([ids], dtype=torch.long, device=device)
     out = generate_greedy(model, idx, max_new, {nl_id}, block_size)
-    text = tokenizer.decode(out[0].tolist())
-    ans = text[len(prompt):]
+    ans = tokenizer.decode(out[0, len(ids):].tolist())
     for stop in ("\n\nQ:", "\n\n<|", "\nQ:"):
         if stop in ans:
             ans = ans[:ans.index(stop)]
