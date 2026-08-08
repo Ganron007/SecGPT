@@ -116,4 +116,32 @@ python src/pipeline.py --stage 3
 
 ---
 
+## Fairness Run (2026-08-06) — same v3 data as Qwen
+
+The original run above used 600 pairs vs Qwen's 31K — an unfair comparison.
+The fairness run re-trains GPT-2 on the **identical v3 dataset** (23,746
+pairs) with the same recipe (500 steps, effective batch 16, block 512).
+
+**Bug found:** the original scripts (and the first fairness attempt) passed
+pre-shifted labels to HF GPT-2, which shifts labels *again* internally — a
+double shift that trained the model on a corrupted 2-step objective (start
+loss 9.5 where a healthy GPT-2 shows ~3.9; generation collapsed into
+punctuation loops). The original "collapse" was therefore partly our bug.
+Fixed in `src/sft_v3.py` (`labels=x`, model handles the shift).
+
+| Stage | Overall | Held-out | Recall | TTP halluc. |
+|---|---|---|---|---|
+| SFT on v3 data | **37.8%** | 32.1% | 41.1% | 0.0% |
+| SFT + DPO (β=0.3) | 33.7% | 26.4% | 37.8% | 62.5% |
+
+**Findings:** with fair data GPT-2 produces real answers (no collapse).
+**Rule 94% — the best rule score of any model in the study** (format is
+pattern-matching, and GPT-2 memorizes it perfectly). But kb 17.5% / ttp 10%:
+124M pretrained params can hold format, not this much knowledge — 21 points
+below Qwen-3B on identical data. DPO again failed to help (−4.1), confirming
+the small-model DPO fragility later seen at 98M. Details:
+[Docs/FINAL_VERDICT.md](../Docs/FINAL_VERDICT.md).
+
+Scripts: `src/sft_v3.py`, `src/dpo_v3.py` (TRL DPOTrainer, fp16, no PEFT).
+
 ## Status: ✅ Complete (2026-08-02) — documented as a learning exercise with honest limitations

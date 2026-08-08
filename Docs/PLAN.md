@@ -32,10 +32,12 @@ Pretrain → SFT → DPO (alignment)
 
 | Model | Pretrain | SFT | DPO | Benchmarked | Remaining |
 |---|---|---|---|---|---|
-| SecGPTv2 | ✅ 20K steps | ✅ 1500 (overfit 0.16/2.18) | ✅ 500 (0.69→0.07) | ⬜ | benchmark run + results chapter |
-| SecGPTv2.5 | ⬜ | ⬜ | ⬜ | ⬜ | **everything** |
-| SecGPTv3 | ✅ OpenAI | 🟨 600 pairs (unfair) | 🟨 collapsed | ⬜ | SFT-31K → DPO fairness run |
-| SecGPT-Prod | ✅ Alibaba | ✅ 500/1500 steps | ✅ accuracy-neutral | ✅ SFT+DPO | — pipeline complete |
+| SecGPTv2 | ✅ 20K steps | ✅ 1500 (overfit 0.16/2.18) | ✅ 500 (0.69→0.07) | legacy 7-prompt only | — (frozen learning material) |
+| SecGPTv2.5 | ✅ 24K steps, val 1.73 | ✅ 1500 (val 2.05) | ✅ 500 (destructive) | ✅ 17.9% / 7.6% | — complete |
+| SecGPTv3 | ✅ OpenAI | ✅ v3 data, 37.8% | ✅ 33.7% | ✅ both stages | — complete |
+| SecGPT-Prod | ✅ Alibaba | ✅ v3 data, 57.0% | ✅ 58.8% | ✅ full stage history | — complete |
+
+**Study complete (2026-08-08).** Final verdict: [FINAL_VERDICT.md](FINAL_VERDICT.md).
 
 ## SecGPTv2.5 design (from scratch, max effort on RTX 4060 8 GB)
 

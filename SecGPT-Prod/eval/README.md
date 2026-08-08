@@ -67,6 +67,21 @@ N-way comparisons via `python src/eval.py --compare a.json b.json c.json ...`.
 | SFT-500 (v2.1 data) | `qwen_qlora_v2_1/checkpoint-500` | 58.4% | 75.5% | 48.6% | 76.2% | `sftv2_1_20260805_0300.json` |
 | SFT-500 (v3 data) | `qwen_qlora_v3/checkpoint-500` | 57.0% | 63.2% | 53.5% | **65.2%** | `sftv3_20260805_1807.json` |
 | SFT-v3 + DPO | `qwen_dpo_v3/final` | 58.8% | 62.3% | 56.8% | 66.7% | `dpov3_20260805_2325.json` |
+| GPT-2 SFT-v3 | `SecGPTv3/stage2_sft/output/model_v3` | 37.8% | 32.1% | 41.1% | 0.0% | `gpt2sftv3b_20260806_2051.json` |
+| GPT-2 SFT-v3 + DPO | `SecGPTv3/stage3_alignment/output/model_dpo_v3/final` | 33.7% | 26.4% | 37.8% | 62.5% | `gpt2dpov3b_20260806_2104.json` |
+| SecGPTv2.5 SFT (98M scratch) | `SecGPTv2.5/stage2_sft/output/checkpoint_sft.pt` | 17.9% | 41.5% | 4.3% | 0.0% | `v25sft_20260808_0909.json` |
+| SecGPTv2.5 SFT + DPO | `SecGPTv2.5/stage3_alignment/output/checkpoint_dpo.pt` | 7.6% | 20.8% | 0.0% | 0.0% | `v25dpo_20260808_0910.json` |
+
+### Final cross-model verdict (2026-08-08)
+
+All four model lines completed SFT + DPO on the identical v3 dataset
+(23,746 pairs). See [Docs/FINAL_VERDICT.md](../../Docs/FINAL_VERDICT.md).
+
+| Line | Params | Origin | SFT | +DPO | Best category |
+|---|---|---|---|---|---|
+| SecGPTv2.5 | 98M | scratch (108.7M tokens) | 17.9% | 7.6% (DPO destructive) | classification 82% |
+| SecGPTv3 (GPT-2) | 124M | OpenAI pretrained | 37.8% | 33.7% | **rule 94% (global best)** |
+| SecGPT-Prod (Qwen) | 3B | Alibaba pretrained | 57.0% | **58.8%** | ref 54%, rule 74% |
 
 ### The v3 corpus experiment (2026-08-05)
 

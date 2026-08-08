@@ -1,0 +1,7 @@
+{
+  "steps": 1500,
+  "lr": 5e-05,
+  "best_val": 2.0499,
+  "total_min": 6.6,
+  "sft_tokens": 5164120
+}

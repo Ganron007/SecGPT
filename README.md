@@ -48,7 +48,7 @@
 | **Pretrain corpus** | 77.8 MB (25M tok) | 333 MB (108.7M tok, 16K BPE) | — (OpenAI) | — (Alibaba) |
 | **SFT data** | 600 pairs (v1 corpus) | 23,746 pairs (v3) | 23,746 pairs (v3) | 23,746 pairs (v3) |
 | **Pipeline** | Pretrain → SFT → DPO | Pretrain ✅ → SFT → DPO | SFT → DPO | SFT → DPO |
-| **291-prompt benchmark** | legacy only | pending (SFT next) | **37.8%** SFT / 33.7% DPO | **58.8%** SFT+DPO (best) |
+| **291-prompt benchmark** | legacy only | **17.9%** SFT / 7.6% DPO | **37.8%** SFT / 33.7% DPO | **58.8%** SFT+DPO (best) |
 | **Headline** | Pipeline mechanics | The honest from-scratch ceiling | Format learned, knowledge can't be held | Working security assistant |
 
 All models train on the **same v3 dataset** (23,746 pairs: STIX-verified MITRE,
@@ -152,7 +152,7 @@ Current stage history (291-prompt harness, full tables in `SecGPT-Prod/eval/`):
 | **Qwen SFT v3 + DPO** | **58.8%** | 66.7% | **current Prod reference** |
 | GPT-2 SFT v3 data | 37.8% | 0.0% | rule 94% (best of all models) |
 | GPT-2 SFT v3 + DPO | 33.7% | 62.5% | DPO hurts accuracy again |
-| SecGPTv2.5 (98M scratch) | pending | pending | pretrain ✅, SFT next |
+| SecGPTv2.5 (98M scratch) | 17.9% | 0.0% | classification 82% (matches Qwen); DPO destructive (7.6%) |
 
 **Prompt sample:** *"Write a Sigma detection rule for suspicious PowerShell encoded command execution."*
 
@@ -184,8 +184,8 @@ Current stage history (291-prompt harness, full tables in `SecGPT-Prod/eval/`):
 - [x] Data-quality iterations v2/v2.1/v3 → hallucination 87.5% → 65.2% ([spec](Docs/V3_DATA_SPEC.md))
 - [x] SecGPTv3 fairness run: GPT-2 + SFT/DPO on v3 data (label-shift bug found & fixed)
 - [x] SecGPTv2.5 pretrain: 98M from scratch, 108.7M tokens, val loss 1.73
-- [ ] **SecGPTv2.5 SFT + DPO on v3 data + benchmark (current focus)**
-- [ ] Final 4-model verdict + per-model documentation
+- [x] SecGPTv2.5 SFT + DPO on v3 data + benchmark → 17.9% / 7.6% (DPO destructive at 98M)
+- [x] Final 4-model verdict → [Docs/FINAL_VERDICT.md](Docs/FINAL_VERDICT.md)
 - [ ] Scale to Qwen2.5-7B for better reasoning
 - [ ] Multi-turn conversation support
 - [ ] RAG integration (post-cutoff facts only; corpus already baked into weights)
