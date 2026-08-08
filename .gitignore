@@ -17,8 +17,7 @@ stage3_alignment/output/model/
 SecGPTv2/stage1_pre-training/step5_training/output/
 SecGPTv2/stage1_pre-training/step0_corpus/output/corpus.txt
 SecGPTv2.5/stage1_pre-training/step0_corpus/output/corpus.txt
-SecGPTv2.5/stage1_pre-training/step5_training/output/
-!SecGPTv2.5/stage1_pre-training/step5_training/output/train_log.json
+SecGPTv2.5/stage1_pre-training/step5_training/output/*.pt
 SecGPTv2.5/stage2_sft/output/sft_corpus.txt
 SecGPTv2.5/stage2_sft/output/checkpoint_sft.pt
 SecGPTv2.5/stage3_alignment/output/dpo_data.jsonl
