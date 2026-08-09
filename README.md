@@ -16,11 +16,13 @@ language model on consumer hardware (RTX 4060 Laptop, 8 GB VRAM).
 </div>
 
 > [!NOTE]
-> **Study complete (2026-08-08).** All three model lines were trained through
-> SFT and DPO on the identical v3 dataset and scored on the same 291-prompt
-> harness. Results and analysis: [Docs/FINAL_VERDICT.md](Docs/FINAL_VERDICT.md).
-> Model weights remain local-only (see [DATA.md](DATA.md)); code, configs,
-> benchmark harness, and full documentation are in the repo.
+> **Phase 1 complete (2026-08-08) — Phase 2 in progress.** All three model
+> lines were trained through SFT and DPO on the identical v3 dataset and
+> scored on the same 291-prompt harness. Phase 2 evaluates the models
+> against the OWASP GenAI LLM Top 10 and ML Top 10, mapped to MITRE ATLAS
+> (see [Docs/PLAN.md](Docs/PLAN.md)). Model weights remain local-only
+> (see [DATA.md](DATA.md)); code, configs, benchmark harness, and full
+> documentation are in the repo.
 
 ---
 
@@ -35,8 +37,9 @@ language model on consumer hardware (RTX 4060 Laptop, 8 GB VRAM).
 - [Benchmark](#benchmark)
 - [Hardware Requirements](#hardware-requirements)
 - [Datasets Used](#datasets-used)
-- [Study Status](#study-status)
-- [Roadmap](#roadmap)
+- [Phase 1 — Core Study (complete)](#phase-1--core-study-complete)
+- [Phase 2 — Adversarial Evaluation (in progress)](#phase-2--adversarial-evaluation-in-progress)
+- [Roadmap (later)](#roadmap-later)
 - [License](#license)
 - [Author](#author)
 
@@ -192,10 +195,10 @@ Current stage history (291-prompt harness, full tables in `SecGPT-Prod/eval/`):
 | UCI SMS Spam Collection | 5,574 | Spam/ham classification |
 | NSL-KDD | 148,517 | Network intrusion detection |
 
-## Study Status
+## Phase 1 — Core Study (complete)
 
-The core study is complete. All three model lines were trained through SFT and
-DPO on the identical v3 dataset and scored on the same 291-prompt harness.
+All three model lines were trained through SFT and DPO on the identical v3
+dataset and scored on the same 291-prompt harness.
 
 | Milestone | Outcome |
 |---|---|
@@ -206,7 +209,20 @@ DPO on the identical v3 dataset and scored on the same 291-prompt harness.
 | SecGPTv2.5 (98M from scratch) | Pretrain (val 1.73) + SFT 18.2% + DPO 7.6% (destructive at this scale) |
 | Final verdict | [Docs/FINAL_VERDICT.md](Docs/FINAL_VERDICT.md) |
 
-## Roadmap
+## Phase 2 — Adversarial Evaluation (in progress)
+
+Demonstrating the OWASP GenAI LLM Top 10 and OWASP ML Top 10 against all
+three models, mapped to MITRE ATLAS and NIST AI RMF. Full plan:
+[Docs/PLAN.md](Docs/PLAN.md).
+
+| Tier | Scope | Status |
+|---|---|---|
+| 1 | No-retraining attacks: prompt injection, overreliance, membership inference, data extraction, classification perturbation | planned |
+| 2 | Pipeline attacks: training-data poisoning, model skewing (retrain per attack, ~2 h) | planned |
+| 3 | Extraction/supply-chain/DoS: model theft via distillation, artifact verification, resource exhaustion | planned |
+| N/A | Insecure plugin design, excessive agency | documented as mitigations by design (no plugin/agent architecture) |
+
+## Roadmap (later)
 
 | Item | Rationale |
 |---|---|

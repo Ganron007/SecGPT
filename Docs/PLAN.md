@@ -92,15 +92,35 @@ JSON results, `--compare A B` stage-to-stage diff tables.
 
 ## Execution sequence
 
-1. **Benchmark harness** Done — `SecGPT-Prod/eval/` (240 accuracy + 51 practical,
- objective scorers, leakage splits, `--compare`). Baseline `sft500`: 62.2% overall,
- 79.2% held-out, **87.5% TTP hallucination** — findings in `SecGPT-Prod/eval/README.md`
-2. v2.5 corpus + tokenizer (CPU)
-3. v2.5 pretrain (~8-16 h GPU, overnight)
-4. SecGPTv3 SFT-31K + DPO (~1.5 h GPU)
-5. SecGPT-Prod DPO (~3 h GPU)
-6. v2.5 SFT + DPO
-7. All 4 models through the benchmark → final 3-model `BENCHMARK.md`
+**Phase 1 — Core study (complete):**
+
+1. Benchmark harness (291 prompts, objective scorers, `--compare`)
+2. Data-quality iterations v1 → v2 → v2.1 → v3 (hallucination 87.5% → 65.2%)
+3. SecGPT-Prod: SFT-v3 + DPO (58.8%, current reference checkpoint)
+4. SecGPTv3 fairness run: GPT-2 on v3 data (label-shift bug found and fixed)
+5. SecGPTv2.5: 333 MB corpus → 16K tokenizer → 98M pretrain → SFT → DPO
+6. Final 3-model verdict: [FINAL_VERDICT.md](FINAL_VERDICT.md)
+
+**Phase 2 — Adversarial evaluation (in progress):**
+
+Demonstrate the OWASP GenAI LLM Top 10 and OWASP ML Top 10 against all three
+models, mapped to MITRE ATLAS techniques and NIST AI RMF categories.
+
+| Tier | Attack | Method | Status |
+|---|---|---|---|
+| 1 | LLM01 / ML01 Prompt injection | system-prompt wrapper, override-rate across 3 models | planned |
+| 1 | LLM09 Overreliance | reuse existing hallucination data (65-87% TTP) | planned |
+| 1 | LLM06 / ML04 Sensitive info + membership inference | leaked-vs-held-out confidence gap; verbatim training-data extraction | planned |
+| 1 | ML01 Classification perturbation | typo/feature-flip on SMS + KDD classifiers | planned |
+| 2 | LLM03 / ML02 / ML10 Data poisoning | backdoored pairs → retrain 500 steps → trigger success rate | planned |
+| 2 | ML08 Model skewing | retrain on skewed slice → bias measurement | planned |
+| 3 | LLM10 / ML05 Model theft | distillation: Qwen answers → train copycat → accuracy transfer | planned |
+| 3 | LLM04 DoS / unbounded consumption | generation cost: tok/s, VRAM, context saturation | planned |
+| 3 | LLM05 / ML06 Supply chain | unverified artifact pulls; tampered-adapter detection | planned |
+| N/A | LLM07 plugins, LLM08 agency | no plugin/agent architecture — mitigations by design | documented |
+
+Deliverables: `SecGPT-Prod/src/attacks/` (one script per attack), results in
+`SecGPT-Prod/eval/results/`, report in `Docs/LLM_SECURITY_DEMO.md`.
 
 ## Documentation standard
 
