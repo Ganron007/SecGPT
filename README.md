@@ -3,7 +3,7 @@
 
 # SecGPT
 
-**Building a Cybersecurity LLM from Scratch to Production**
+**Building and Breaking Cybersecurity LLMs — From Scratch to Production**
 
 [![Python](https://img.shields.io/badge/python-3.11%2B-blue)]()
 [![PyTorch](https://img.shields.io/badge/PyTorch-2.11-ee4c2c)]()
@@ -11,8 +11,9 @@
 [![Benchmark](https://img.shields.io/badge/benchmark-291_prompts-blue)](SecGPT-Prod/eval/)
 [![License](https://img.shields.io/badge/license-educational%2Fresearch-lightgrey)](LICENSE)
 
-A comparative study of three approaches to building a domain-specific security
-language model on consumer hardware (RTX 4060 Laptop, 8 GB VRAM).
+A study of building domain-specific security language models on consumer
+hardware (RTX 4060 Laptop, 8 GB VRAM) — and attacking them with the
+OWASP GenAI LLM Top 10 / ML Top 10, mapped to MITRE ATLAS.
 </div>
 
 > [!NOTE]

@@ -62,7 +62,7 @@
 
   <!-- tagline -->
   <text x="217" y="170" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="17"
-        fill="#8b949e" letter-spacing="4">CYBERSECURITY LLM — FROM SCRATCH TO PRODUCTION</text>
+        fill="#8b949e" letter-spacing="4">CYBERSECURITY LLM — BUILD &amp; ATTACK</text>
 
   <!-- accent bar -->
   <rect x="218" y="190" width="430" height="3" rx="1.5" fill="url(#accentBar)"/>
