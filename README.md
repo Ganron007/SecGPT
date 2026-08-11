@@ -25,6 +25,14 @@ OWASP GenAI LLM Top 10 / ML Top 10, mapped to MITRE ATLAS.
 > (see [DATA.md](DATA.md)); code, configs, benchmark harness, and full
 > documentation are in the repo.
 
+> [!IMPORTANT]
+> **Coming soon — the SecGPT Study Guide.** A complete, learner-perspective
+> walkthrough of building and attacking LLMs from scratch. Written from the
+> viewpoint of someone who actually did it — covering the pipeline step by
+> step, the failure modes and their root causes, and the practical details
+> most AI-security materials gloss over. Built to be read in order, not as a
+> reference dump.
+
 ---
 
 ## Table of Contents
