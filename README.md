@@ -3,7 +3,7 @@
 
 # SecGPT
 
-**Building and Breaking Cybersecurity LLMs — From Scratch to Production**
+**Building and Breaking Cybersecurity LLMs — From Scratch**
 
 [![Python](https://img.shields.io/badge/python-3.11%2B-blue)]()
 [![PyTorch](https://img.shields.io/badge/PyTorch-2.11-ee4c2c)]()
