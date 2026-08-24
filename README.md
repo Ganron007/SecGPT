@@ -17,13 +17,15 @@ OWASP GenAI LLM Top 10 / ML Top 10, mapped to MITRE ATLAS.
 </div>
 
 > [!NOTE]
-> **Phase 1 complete (2026-08-08) — Phase 2 in progress.** All three model
-> lines were trained through SFT and DPO on the identical v3 dataset and
-> scored on the same 291-prompt harness. Phase 2 evaluates the models
-> against the OWASP GenAI LLM Top 10 and ML Top 10, mapped to MITRE ATLAS
-> (see [Docs/PLAN.md](Docs/PLAN.md)). Model weights remain local-only
-> (see [DATA.md](DATA.md)); code, configs, benchmark evidence, one
-> publishable dataset, and full documentation are in the repo.
+> **Phase 1 — Core model-building study: complete.** Three model lines
+> (from-scratch 98M, pretrained GPT-2 124M, pretrained Qwen 3B) were trained
+> through SFT and DPO on an identical dataset and scored on a shared
+> 291-prompt benchmark harness.
+>
+> **Phase 2 — Adversarial evaluation: in progress.** Those models are being
+> evaluated against the OWASP GenAI LLM Top 10 and OWASP ML Top 10, mapped
+> to MITRE ATLAS. Model weights remain local-only; code, benchmark evidence,
+> a publishable open-license dataset, and full documentation are in the repo.
 
 > [!IMPORTANT]
 > **Coming soon — the SecGPT Study Guide.** A complete, learner-perspective
