@@ -2,7 +2,17 @@
 
 Model weights and generated datasets are **not tracked in git** (too large,
 regenerable, or non-redistributable). They are intact on the author's
-machine — a fresh clone contains code, configs, and docs only.
+machine — a fresh clone contains code, configs, docs, benchmark evidence,
+and the publishable open-license dataset.
+
+## Public artifacts (tracked in git)
+
+| File | Contents |
+|---|---|
+| `SecGPT-Prod/data/v3/sft_v3_open.jsonl` (16.8 MB) | 20,434 open-license training pairs (STIX, StackExchange CC-BY-SA, HackTricks/OWASP, public rule repos) |
+| `SecGPT-Prod/eval/eval_set_public.jsonl` | 200-prompt benchmark, stripped of proprietary-derived items |
+| `SecGPT-Prod/eval/practical_set_public.jsonl` | 45 practical scenarios, stripped of proprietary-derived items |
+| `SecGPT-Prod/eval/results/*.json` | every benchmark run: prompts + model responses + scores |
 
 ## Local-only artifacts
 

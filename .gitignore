@@ -8,6 +8,11 @@
 *.safetensors
 *.gguf
 
+# Exception: publishable open-license artifacts
+!SecGPT-Prod/data/v3/sft_v3_open.jsonl
+!SecGPT-Prod/eval/eval_set_public.jsonl
+!SecGPT-Prod/eval/practical_set_public.jsonl
+
 # Model outputs (regenerable)
 stage1_sft/output/qwen_qlora/
 stage1_domain-adapt/output/model/

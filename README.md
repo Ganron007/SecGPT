@@ -22,8 +22,8 @@ OWASP GenAI LLM Top 10 / ML Top 10, mapped to MITRE ATLAS.
 > scored on the same 291-prompt harness. Phase 2 evaluates the models
 > against the OWASP GenAI LLM Top 10 and ML Top 10, mapped to MITRE ATLAS
 > (see [Docs/PLAN.md](Docs/PLAN.md)). Model weights remain local-only
-> (see [DATA.md](DATA.md)); code, configs, benchmark harness, and full
-> documentation are in the repo.
+> (see [DATA.md](DATA.md)); code, configs, benchmark evidence, one
+> publishable dataset, and full documentation are in the repo.
 
 > [!IMPORTANT]
 > **Coming soon — the SecGPT Study Guide.** A complete, learner-perspective
@@ -43,6 +43,7 @@ OWASP GenAI LLM Top 10 / ML Top 10, mapped to MITRE ATLAS.
 - [Repository Structure](#repository-structure)
 - [Quick Start (SecGPT-Prod)](#quick-start-secgpt-prod)
 - [Data Availability & Reproducing](#data-availability--reproducing)
+- [For Readers Without the Local Corpus](#for-readers-without-the-local-corpus)
 - [Benchmark](#benchmark)
 - [Hardware Requirements](#hardware-requirements)
 - [Datasets Used](#datasets-used)
@@ -158,9 +159,37 @@ See [SecGPT-Prod/USAGE.md](SecGPT-Prod/USAGE.md) for full instructions.
 
 ## Data Availability & Reproducing
 
-Model weights and generated datasets are not tracked in git (too large / regenerable / non-redistributable) — a fresh clone contains code, configs, and docs only.
+Model weights and generated datasets are not tracked in git (too large / regenerable / non-redistributable) — a fresh clone contains code, configs, docs, evidence, and one publishable dataset.
 
 See [DATA.md](DATA.md) for the annotated folder map and full reproduction pipelines.
+
+## For Readers Without the Local Corpus
+
+You cannot re-train our exact models (the full corpus contains proprietary
+course material, and the weights live only on the author's machine). But the
+repo is built so you can still get real value from it:
+
+**Evidence you can inspect** — every benchmark run ships as JSON
+(`SecGPT-Prod/eval/results/*.json`): all 291 prompts, the exact model
+responses, scores, and meta. The study's claims are not post-hoc summaries —
+you can read the raw outputs of all 3 models × all stages yourself.
+
+**A publishable dataset** — `SecGPT-Prod/data/v3/sft_v3_open.jsonl`
+(16.8 MB, 20,434 pairs): the open-license subset of the training data
+(MITRE STIX, Security StackExchange CC-BY-SA, HackTricks/OWASP KB, public
+detection-rule repos). You can train on it directly with the repo's scripts.
+
+**A public benchmark you can run** — `SecGPT-Prod/eval/eval_set_public.jsonl`
+(200 prompts) + `practical_set_public.jsonl` (45 scenarios): the same harness,
+trimmed of proprietary-derived items. Point `src/eval.py` at your own model
+and compare against our published numbers.
+
+**Code you can reuse** — the whole pipeline: data builders, QLoRA SFT, DPO,
+the 291-prompt harness, phase-2 attack scripts. Swap in your own corpus or
+your own model; the methodology is the product.
+
+**A readable journey** — README, PLAN, FINAL_VERDICT, and the four model
+build docs tell the story as it happened, failures included.
 
 ## Benchmark
 
